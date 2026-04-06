@@ -86,6 +86,12 @@ const Navbar = () => {
                 </div>
               </div>
             </div>
+
+            {/* Right side */}
+            <div className={ns.rightContainer}>
+              {/* auth */}
+              
+            </div>
           </div>
         </div>
       </nav>
