@@ -171,7 +171,7 @@ const Navbar = () => {
       <nav className={ns.navContainer}>
         <div className={ns.flexContainer}>
           <div className={ns.logoContainer}>
-            <img src={logoImg} alt="logo" classNam={ns.logoImage} />
+            <img src={logoImg} alt="logo" className={ns.logoImage} />
 
             <Link to="/">
               <div className={ns.logoLink}>MediCare</div>
