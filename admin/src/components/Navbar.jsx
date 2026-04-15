@@ -170,110 +170,113 @@ const Navbar = () => {
   return (
     <header className={ns.header}>
       <nav className={ns.navContainer}>
-        <div className={ns.flexContainer}>
-          <div className={ns.logoContainer}>
+        {/* Logo + Nav + Right */}
+        <div
+          className={ns.logoContainer + " flex items-center justify-between"}
+        >
+          {/* Left Logo */}
+          <div className="flex items-center gap-3">
             <img src={logoImg} alt="logo" className={ns.logoImage} />
 
-            <Link to="/">
-              <div className={ns.logoLink}>MediCare</div>
-              <div className={ns.logoSubtext}>Healthcare Solutions</div>
+            <Link to="/" className="flex flex-col leading-tight">
+              <div className={ns.logoLink + " text-lg font-semibold"}>
+                MediCare
+              </div>
+              <div className={ns.logoSubtext + " text-xs text-gray-500"}>
+                Healthcare Solutions
+              </div>
             </Link>
+          </div>
 
-            {/* Center navigation */}
-            <div className={ns.centerNavContainer}>
-              <div className={ns.glowEffect}>
-                <div className={ns.centerNavInner}>
-                  <div
-                    ref={navInnerRef}
-                    tabIndex={0}
-                    className={ns.centerNavScrollContainer}
-                    style={{
-                      WebkitOverflowScrolling: "touch",
-                    }}
-                  >
-                    <CenterNavItem
-                      to="/h"
-                      label="Dashboard"
-                      icon={<Home size={16} />}
-                    />
-                    <CenterNavItem
-                      to="/add"
-                      label="Add Doctor"
-                      icon={<UserPlus size={16} />}
-                    />
-                    <CenterNavItem
-                      to="/list"
-                      label="List Doctors"
-                      icon={<Users size={16} />}
-                    />
-                    <CenterNavItem
-                      to="/appointments"
-                      label="Appointments"
-                      icon={<Calendar size={16} />}
-                    />
-                    <CenterNavItem
-                      to="/service-dashboard"
-                      label="Service Dashboard"
-                      icon={<Grid size={16} />}
-                    />
-                    <CenterNavItem
-                      to="/add-service"
-                      label="Add Service"
-                      icon={<PlusSquare size={16} />}
-                    />
-                    <CenterNavItem
-                      to="/list-service"
-                      label="List Services"
-                      icon={<List size={16} />}
-                    />
-                    <CenterNavItem
-                      to="/service-appointments"
-                      label="Service Appointments"
-                      icon={<Calendar size={16} />}
-                    />
-                  </div>
+          {/* Center Nav */}
+          <div className={ns.centerNavContainer}>
+            <div className={ns.glowEffect}>
+              <div className={ns.centerNavInner}>
+                <div
+                  ref={navInnerRef}
+                  tabIndex={0}
+                  className={ns.centerNavScrollContainer}
+                  style={{ WebkitOverflowScrolling: "touch" }}
+                >
+                  <CenterNavItem
+                    to="/h"
+                    label="Dashboard"
+                    icon={<Home size={16} />}
+                  />
+                  <CenterNavItem
+                    to="/add"
+                    label="Add Doctor"
+                    icon={<UserPlus size={16} />}
+                  />
+                  <CenterNavItem
+                    to="/list"
+                    label="Doctors"
+                    icon={<Users size={16} />}
+                  />
+                  <CenterNavItem
+                    to="/appointments"
+                    label="Appointments"
+                    icon={<Calendar size={16} />}
+                  />
+                  <CenterNavItem
+                    to="/service-dashboard"
+                    label="Services"
+                    icon={<Grid size={16} />}
+                  />
+                  <CenterNavItem
+                    to="/add-service"
+                    label="Add Service"
+                    icon={<PlusSquare size={16} />}
+                  />
+                  <CenterNavItem
+                    to="/list-service"
+                    label="Service List"
+                    icon={<List size={16} />}
+                  />
+                  <CenterNavItem
+                    to="/service-appointments"
+                    label="Service Appointments"
+                    icon={<Calendar size={16} />}
+                  />
                 </div>
               </div>
             </div>
-
-            {/* Right side */}
-            <div className={ns.rightContainer}>
-              {/* auth */}
-              {isSignedIn ? (
-                <button
-                  onClick={handleSignOut}
-                  className={ns.signOutButton + " " + ns.cursorPointer}
-                >
-                  Sign Out
-                </button>
-              ) : (
-                <div className="hidden lg:flex items-center gap-2">
-                  <button
-                    onClick={handleOpenSignIn}
-                    className={ns.loginButton + " " + ns.cursorPointer}
-                  >
-                    Login
-                  </button>
-                </div>
-              )}
-
-              {/* Mobile toggle */}
-              <button
-                onClick={() => setOpen((v) => !v)}
-                className={ns.mobileMenuButton}
-              >
-                {open ? <X size={18} /> : <Menu size={18} />}
-              </button>
-            </div>
           </div>
 
-          {/* Mobile navigation */}
-          {open && (
-            <div className={ns.mobileOverlay} onClick={() => setOpen(false)} />
-          )}
+          {/* Right Side */}
+          <div className={ns.rightContainer + " flex items-center gap-4"}>
+            {isSignedIn ? (
+              <button
+                onClick={handleSignOut}
+                className={ns.signOutButton + " px-4 py-1.5"}
+              >
+                Sign Out
+              </button>
+            ) : (
+              <button
+                onClick={handleOpenSignIn}
+                className={ns.loginButton + " px-4 py-1.5"}
+              >
+                Login
+              </button>
+            )}
 
-          {open && (
-            <div className={ns.mobileMenuContainer} id="mobile-menu">
+            {/* Mobile Button */}
+            <button
+              onClick={() => setOpen((v) => !v)}
+              className={ns.mobileMenuButton}
+            >
+              {open ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Nav */}
+        {open && (
+          <>
+            <div className={ns.mobileOverlay} onClick={() => setOpen(false)} />
+
+            <div className={ns.mobileMenuContainer}>
               <div className={ns.mobileMenuInner}>
                 <MobileItem
                   to="/h"
@@ -281,7 +284,6 @@ const Navbar = () => {
                   icon={<Home size={16} />}
                   onClick={() => setOpen(false)}
                 />
-
                 <MobileItem
                   to="/add"
                   label="Add Doctor"
@@ -290,7 +292,7 @@ const Navbar = () => {
                 />
                 <MobileItem
                   to="/list"
-                  label="List Doctors"
+                  label="Doctors"
                   icon={<Users size={16} />}
                   onClick={() => setOpen(false)}
                 />
@@ -303,7 +305,7 @@ const Navbar = () => {
 
                 <MobileItem
                   to="/service-dashboard"
-                  label="Service Dashboard"
+                  label="Services"
                   icon={<Grid size={16} />}
                   onClick={() => setOpen(false)}
                 />
@@ -315,7 +317,7 @@ const Navbar = () => {
                 />
                 <MobileItem
                   to="/list-service"
-                  label="List Services"
+                  label="Service List"
                   icon={<List size={16} />}
                   onClick={() => setOpen(false)}
                 />
@@ -338,25 +340,21 @@ const Navbar = () => {
                       Sign Out
                     </button>
                   ) : (
-                    <div className="space-y-2">
-                      <button
-                        onClick={() => {
-                          handleOpenSignIn();
-                          setOpen(false);
-                        }}
-                        className={
-                          ns.mobileLoginButton + " " + ns.cursorPointer
-                        }
-                      >
-                        Login
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => {
+                        handleOpenSignIn();
+                        setOpen(false);
+                      }}
+                      className={ns.mobileLoginButton}
+                    >
+                      Login
+                    </button>
                   )}
                 </div>
               </div>
             </div>
-          )}
-        </div>
+          </>
+        )}
       </nav>
     </header>
   );
