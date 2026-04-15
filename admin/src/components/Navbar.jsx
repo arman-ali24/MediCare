@@ -17,6 +17,7 @@ import {
   PlusSquare,
   List,
   Menu,
+  X,
 } from "lucide-react";
 import { useAuth, useClerk, useUser } from "@clerk/clerk-react";
 
