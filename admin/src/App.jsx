@@ -3,6 +3,7 @@ import { Route, Routes, Link } from "react-router-dom";
 import Hero from "./pages/Hero";
 import { useUser } from "@clerk/clerk-react";
 import Home from "./pages/Home";
+import Add from "./pages/Add";
 
 function RequireAuth({ children }) {
   const { isLoaded, isSignedIn } = useUser();
@@ -45,6 +46,14 @@ const App = () => {
         element={
           <RequireAuth>
             <Home />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/add"
+        element={
+          <RequireAuth>
+            <Add />
           </RequireAuth>
         }
       />
