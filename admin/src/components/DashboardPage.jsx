@@ -283,13 +283,108 @@ const DashboardPage = () => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className={s.searchInput}
-                placeholder="Search name / Specialization / fee"
+                placeholder="Search name / Specialization / Fee"
               />
               <Search className={s.searchIcon} />
             </div>
-            <button>
-              
+            <button
+              onClick={() => {
+                setQuery("");
+                setShowAll(false);
+              }}
+              className={s.clearButton + " " + s.cursorPointer}
+            >
+              Clear
             </button>
+          </div>
+        </div>
+
+        <div className={s.tableContainer}>
+          <div className={s.tableHeader}>
+            <h2 className={s.tableTitle}>Doctors</h2>
+            <p className={s.tableCount}>
+              {loading
+                ? "Loading.."
+                : `Showing ${visibleDoctors.length} of ${filteredDoctors.length}`}
+            </p>
+          </div>
+
+          {error && (
+            <div className={s.errorContainer}>
+              Error loading doctors: {error}
+            </div>
+          )}
+
+          <div className={s.tableWrapper}>
+            <table className={s.table}>
+              <thead className={s.tableHead}>
+                <tr>
+                  <th className={s.tableHeaderCell}>Doctor</th>
+                  <th className={s.tableHeaderCell}>Specialization</th>
+                  <th className={s.tableHeaderCell}>Fee</th>
+                  <th className={s.tableHeaderCell}>Appointments</th>
+                  <th className={s.tableHeaderCell}>Completed</th>
+                  <th className={s.tableHeaderCell}>Canceled</th>
+                  <th className={s.tableHeaderCell}>Total Earnings</th>
+                </tr>
+              </thead>
+
+              <tbody className={s.tableBody}>
+                {visibleDoctors.map((d, idx) => (
+                  <tr
+                    key={d.id}
+                    className={
+                      s.tableRow +
+                      " " +
+                      (idx % 2 === 0 ? s.tableRowEven : s.tableRowOdd)
+                    }
+                  >
+                    <td className={s.tableCell + " " + s.tableCellFlex}>
+                      <div className={s.verticalLine} />
+                      <img
+                        src={d.image}
+                        alt={d.name}
+                        className={s.doctorImage}
+                      />
+                      <div>
+                        <div className={s.doctorName}>{d.name}</div>
+                        <div className={s.doctorId}>ID: {d.id}</div>
+                      </div>
+                    </td>
+
+                    <td className={s.tableCell + " " + s.doctorSpecialization}>
+                      {d.specialization}
+                    </td>
+
+                    <td className={s.tableCell + " " + s.feeText}>₹ {d.fee}</td>
+
+                    <td className={s.tableCell + " " + s.appointmentsText}>
+                      {d.appointments.total}
+                    </td>
+
+                    <td className={s.tableCell + " " + s.completedText}>
+                      {d.appointments.completed}
+                    </td>
+
+                    <td className={s.tableCell + " " + s.canceledText}>
+                      {d.appointments.canceled}
+                    </td>
+
+                    <td className={s.tableCell + " " + s.earningsText}>
+                      ₹ {d.earnings.toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className={s.mobileDoctorContainer}>
+            <div className={s.mobileDoctorGrid}>
+              {visibleDoctors.map((d) => (
+                <MobileDoctorCard key={d.id} d={d}/>
+              ))}
+            </div>
           </div>
         </div>
       </div>
