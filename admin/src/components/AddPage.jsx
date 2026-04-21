@@ -1,6 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { doctorDetailStyles as s } from "../assets/dummyStyles";
-import { Calendar, Eye, EyeClosed, Plus, Trash2, User, XCircle } from "lucide-react";
+import {
+  Calendar,
+  CheckCircle,
+  Eye,
+  EyeClosed,
+  Plus,
+  Trash2,
+  User,
+  XCircle,
+} from "lucide-react";
 
 // HELPERS FUNCTIONS
 // This function will give output in minutes and according to that it will manage am : pm
@@ -573,10 +582,68 @@ const AddPage = () => {
             </div>
           </div>
 
-          <div className="">
-
+          <div className={s.submitButtonContainer}>
+            <button
+              type="submit"
+              disabled={loading}
+              className={
+                s.submitButton +
+                " " +
+                s.cursorPointer +
+                " " +
+                (loading ? s.submitButtonDisabled : s.submitButtonEnabled)
+              }
+            >
+              {loading ? "Adding..." : "Add Doctor to Team"}
+            </button>
           </div>
         </form>
+      </div>
+
+      {/* TOAST */}
+      {toast.show && (
+        <div
+          className={
+            s.toastContainer +
+            " " +
+            (toast.type === "success" ? s.toastSuccess : s.toastError)
+          }
+        >
+          {toast.type === "success" ? (
+            <CheckCircle size={22} />
+          ) : (
+            <XCircle size={22} />
+          )}
+          <span>{toast.message}</span>
+        </div>
+      )}
+
+      {/* Simple overview of added doc */}
+      <div className={s.doctorListContainer}>
+        {doctorList.length ? (
+          <div className={s.doctorListGrid}>
+            {doctorList.map((d) => (
+              <div key={d.id || d._id} className={s.doctorCard}>
+                <div className={s.doctorCardContent}>
+                  <img
+                    src={s.imageUrl || d.imagePreview}
+                    alt={d.name}
+                    className={s.doctorImage}
+                  />
+
+                  <div>
+                    <div className={s.doctorName}>{d.name}</div>
+                    <div className={s.doctorSpecialization}>
+                      {d.specialization}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className={s.emptyState}>No doctors Yet</p>
+        )}
       </div>
     </div>
   );
