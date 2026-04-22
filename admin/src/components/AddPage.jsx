@@ -405,7 +405,7 @@ const AddPage = () => {
             className={s.inputBase}
             placeholder="Consultation Fee"
             value={form.fee}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            onChange={(e) => setForm({ ...form, fee: e.target.value })}
           />
 
           <input
