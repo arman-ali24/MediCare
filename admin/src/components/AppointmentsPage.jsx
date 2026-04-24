@@ -4,7 +4,7 @@ import {
   statusClasses,
   keyframesStyles,
 } from "../assets/dummyStyles";
-import { Calendar } from "lucide-react";
+import { Calendar, Search } from "lucide-react";
 
 const API_BASE = "http://localhost:4000";
 
@@ -264,8 +264,35 @@ const AppointmentsPage = () => {
               <div className={pageStyles.filterContainer}>
                 <div className={pageStyles.dateFilter}>
                   <Calendar size={14} className={pageStyles.dateFilterIcon} />
-                  <input type="" />
+                  <input
+                    type="date"
+                    className={pageStyles.dateInput}
+                    value={filterDate}
+                    onChange={(e) => setFilterDate(e.target.value)}
+                  />
                 </div>
+
+                <select
+                  className={pageStyles.selectFilter}
+                  value={filterSpeciality}
+                  onChange={(e) => setFilterSpeciality(e.target.value)}
+                >
+                  {specialities.map((s) => (
+                    <option value={s} key={s}>
+                      {s === "all" ? "All Specialities" : s}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  onClick={() => {
+                    setQuery("");
+                    setFilterDate("");
+                    setFilterSpeciality("all");
+                    setShowAll(false);
+                    setError(null);
+                  }}
+                ></button>
               </div>
             </div>
           </div>
