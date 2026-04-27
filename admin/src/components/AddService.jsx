@@ -2,9 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { addServiceStyles } from "../assets/dummyStyles";
 import {
   AlertTriangle,
+  Calendar,
   CheckCircle,
   Clock,
   Image,
+  Plus,
+  Trash2,
   XCircle,
 } from "lucide-react";
 
@@ -446,10 +449,347 @@ const AddService = ({ serviceId }) => {
                   </div>
                 )}
               </div>
+              <div className="w-full flex gap-2 items-center">
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileRef}
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  className={addServiceStyles.buttons.uploadImage}
+                >
+                  <Plus className="w-4 h-4" />{" "}
+                  {imagePreview ? "Replace Image" : "Upload Image"}
+                </button>
+
+                {(imagePreview || hasExistingImage) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // If current preview is a blob URL, revoke it
+                      if (imagePreview && imagePreview.startsWith("blob:")) {
+                        try {
+                          URL.revokeObjectURL(imagePreview);
+                        } catch (err) {}
+                      }
+                      setImagePreview(null);
+                      setImageFile(null);
+                      // mark that user wants to remove the existing image
+                      if (hasExistingImage) {
+                        setRemoveImage(true);
+                        setHasExistingImage(false);
+                      }
+                      if (fileRef.current) fileRef.current.value = null;
+                    }}
+                    className={addServiceStyles.buttons.removeImage}
+                  >
+                    <Trash2 className="w-4 h-4 text-red-500" />
+                  </button>
+                )}
+              </div>
+              {hasExistingImage && (
+                <div className="w-full text-xs text-gray-600 mt-2 flex items-center gap-2">
+                  <input
+                    id="remove-img"
+                    type="checkbox"
+                    checked={removeImage}
+                    onChange={(e) => {
+                      setRemoveImage(Boolean(e.target.checked));
+                      if (e.target.checked) {
+                        setImagePreview(null);
+                        setImageFile(null);
+                        setHasExistingImage(false);
+                      }
+                    }}
+                    className="rounded"
+                  />
+                  <label htmlFor="remove-img">Remove existing image</label>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* right column - main fields */}
+          <div className="lg:col-span-2 md:col-span-1 col-span-1 space-y-6">
+            <div className={addServiceStyles.grids.formFields}>
+              <div>
+                <label className={addServiceStyles.labels.standard}>
+                  Service name
+                </label>
+                <input
+                  value={serviceName}
+                  onChange={(e) => setServiceName(e.target.value)}
+                  placeholder="e.g. General Consultation"
+                  className={addServiceStyles.formFields.input(
+                    errors.serviceName,
+                  )}
+                />
+              </div>
+
+              <div>
+                <label className={addServiceStyles.labels.standard}>
+                  Price
+                </label>
+                <input
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="₹ 499"
+                  className={addServiceStyles.formFields.input(errors.price)}
+                  inputMode="numeric"
+                />
+
+                <div className="mt-3">
+                  <label className={addServiceStyles.labels.standard}>
+                    Availability
+                  </label>
+                  <select
+                    value={availability}
+                    onChange={(e) => setAvailability(e.target.value)}
+                    className={addServiceStyles.formFields.select}
+                  >
+                    <option value="available">Available</option>
+                    <option value="unavailable">Unavailable</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className={addServiceStyles.labels.standard}>
+                About this service
+              </label>
+              <textarea
+                value={about}
+                onChange={(e) => setAbout(e.target.value)}
+                placeholder="Short description"
+                rows={4}
+                className={addServiceStyles.formFields.textarea(errors.about)}
+              />
+            </div>
+
+            {/* instructions */}
+            <div>
+              <div className="flex items-center justify-between">
+                <label className={addServiceStyles.labels.standard}>
+                  Instructions (point wise)
+                </label>
+                <button
+                  type="button"
+                  onClick={addInstruction}
+                  className={addServiceStyles.buttons.addInstruction}
+                >
+                  <Plus className="w-4 h-4" /> Add
+                </button>
+              </div>
+
+              <div
+                className={addServiceStyles.instructions.container(
+                  errors.instructions,
+                )}
+              >
+                {instructions.map((ins, idx) => (
+                  <div key={idx} className={addServiceStyles.instructions.item}>
+                    <div className={addServiceStyles.icon.number}>
+                      {idx + 1}.
+                    </div>
+                    <input
+                      value={ins}
+                      onChange={(e) => updateInstruction(idx, e.target.value)}
+                      placeholder={`Instruction ${idx + 1}`}
+                      className={addServiceStyles.instructions.input}
+                    />
+                    {instructions.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeInstruction(idx)}
+                        className={addServiceStyles.instructions.removeButton}
+                      >
+                        <Trash2
+                          className={addServiceStyles.icon.removeInstruction}
+                        />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* slot controls */}
+            <div className={addServiceStyles.slots.container(errors.slots)}>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 text-emerald-700 font-medium">
+                  <Calendar className="w-5 h-5" /> Slots & Schedule
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-sm text-gray-500">
+                    {slots.length} slot{slots.length !== 1 ? "s" : ""} added
+                  </div>
+                </div>
+              </div>
+
+              <div className={addServiceStyles.grids.timeGrid}>
+                <div className="min-w-0">
+                  <label className={addServiceStyles.labels.small}>Day</label>
+                  <select
+                    value={slotDay}
+                    onChange={(e) => setSlotDay(e.target.value)}
+                    className={addServiceStyles.formFields.smallSelect}
+                  >
+                    {days.map((d) => {
+                      const dNum = Number(d);
+                      const disabled =
+                        Number(slotYear) === currentYear &&
+                        Number(slotMonth) === currentMonth &&
+                        dNum < currentDate;
+                      return (
+                        <option key={d} value={d} disabled={disabled}>
+                          {d}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+
+                <div className="min-w-0">
+                  <label className={addServiceStyles.labels.small}>Month</label>
+                  <select
+                    value={slotMonth}
+                    onChange={(e) => setSlotMonth(e.target.value)}
+                    className={addServiceStyles.formFields.smallSelect}
+                  >
+                    {months.map((m, idx) => {
+                      const disabled =
+                        Number(slotYear) === currentYear && idx < currentMonth;
+                      return (
+                        <option key={m} value={String(idx)} disabled={disabled}>
+                          {m}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+
+                <div className="min-w-0">
+                  <label className={addServiceStyles.labels.small}>Year</label>
+                  <select
+                    value={slotYear}
+                    onChange={(e) => setSlotYear(e.target.value)}
+                    className={addServiceStyles.formFields.smallSelect}
+                  >
+                    {years.map((y) => (
+                      <option key={y} value={String(y)}>
+                        {y}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={addServiceStyles.grids.timeSubGrid}>
+                  <div className="min-w-0">
+                    <label className={addServiceStyles.labels.small}>
+                      Hour
+                    </label>
+                    <select
+                      value={slotHour}
+                      onChange={(e) => setSlotHour(e.target.value)}
+                      className={addServiceStyles.formFields.timeSelect}
+                    >
+                      {hours.map((h) => (
+                        <option key={h} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="min-w-0">
+                    <label className={addServiceStyles.labels.small}>
+                      Minute
+                    </label>
+                    <select
+                      value={slotMinute}
+                      onChange={(e) => setSlotMinute(e.target.value)}
+                      className={addServiceStyles.formFields.timeSelect}
+                    >
+                      {minutes.map((m) => (
+                        <option key={m} value={m}>
+                          {m}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="min-w-0">
+                    <label className={addServiceStyles.labels.small}>
+                      AM/PM
+                    </label>
+                    <select
+                      value={slotAmPm}
+                      onChange={(e) => setSlotAmPm(e.target.value)}
+                      className={addServiceStyles.formFields.ampmSelect}
+                    >
+                      {ampm.map((a) => (
+                        <option key={a} value={a}>
+                          {a}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <button
+                  type="button"
+                  onClick={addSlot}
+                  className={addServiceStyles.buttons.addSlot}
+                >
+                  <Plus className="w-4 h-4" /> Add This Time Slot
+                </button>
+              </div>
+
+              <div>
+                <div className="text-xs text-gray-500 mb-2">
+                  Added Slots ({slots.length})
+                </div>
+
+                <div className={addServiceStyles.grids.slotsGrid}>
+                  {slots.length === 0 ? (
+                    <div className="text-sm text-gray-400 italic px-4 py-2">
+                      No slots added yet. Select a time and click "Add This Time
+                      Slot"
+                    </div>
+                  ) : (
+                    slots.map((s, idx) => (
+                      <div key={s} className={addServiceStyles.slots.slotItem}>
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Clock className={addServiceStyles.icon.clock} />
+                          <div className={addServiceStyles.slots.slotText}>
+                            {s}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeSlot(idx)}
+                          className={addServiceStyles.buttons.slotRemove}
+                        >
+                          <Trash2 className={addServiceStyles.icon.trash} />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </form>
+
+      <style>{addServiceStyles.customCSS}</style>
     </div>
   );
 };
