@@ -60,6 +60,7 @@ export default function ListServicePage() {
     return `${yyyy}-${mm}-${dd}`;
   })();
 
+  // Sort the slots as latest come first by date
   function sortSlotsForDisplay(slots = []) {
     if (!Array.isArray(slots)) return [];
 
@@ -107,6 +108,7 @@ export default function ListServicePage() {
     return arr;
   }
 
+  // To fetch service from the server
   async function fetchServices() {
     try {
       const res = await fetch(`${API_BASE}/api/services`);
@@ -149,6 +151,7 @@ export default function ListServicePage() {
     fetchServices();
   }, []);
 
+  // Convert array of slots into slot object
   function convertSlotsForUI(slotStrings = []) {
     return (slotStrings || []).map((s, idx) => {
       const raw = String(s || "");
@@ -214,6 +217,7 @@ export default function ListServicePage() {
         };
       }
 
+      // For slot we req date, time
       return {
         id: `s-${idx}`,
         date: "",
@@ -225,6 +229,7 @@ export default function ListServicePage() {
     });
   }
 
+  // Convert map-like slots to array slots of object
   function convertSlotsMapToArray(slotsMap) {
     try {
       const out = [];
@@ -249,6 +254,7 @@ export default function ListServicePage() {
     }
   }
 
+  // Gives output with date and time like DD-MM-YYYY with HH:MM AM/PM
   function parseFrontendSlotString(date, timeStr) {
     const slot = {
       date: date || "",
@@ -295,8 +301,9 @@ export default function ListServicePage() {
 
   function toggleDetails(id) {
     setOpenDetails((prev) => ({ [id]: !prev[id] }));
-  }
+  } // To toggle
 
+  // To edit any service
   async function startEdit(service) {
     let latest = service;
     if (service.id) {
@@ -340,6 +347,7 @@ export default function ListServicePage() {
     setEditForm(null);
   }
 
+  // To validate the slot is not previous days or time
   function validateSlots(slots = []) {
     for (let i = 0; i < slots.length; i++) {
       const slot = slots[i];
@@ -393,6 +401,7 @@ export default function ListServicePage() {
     return { valid: true };
   }
 
+  // To prevent from duplicate slots to be present
   function findDuplicateInSlots(slots = []) {
     const seen = new Set();
     for (let s of slots) {
@@ -405,6 +414,7 @@ export default function ListServicePage() {
     return null;
   }
 
+  // Formate the slot for backend
   function slotsToFormattedStrings(slots = []) {
     return (slots || []).map((s) => {
       if (typeof s === "string") return s;
@@ -426,6 +436,7 @@ export default function ListServicePage() {
     });
   }
 
+  // Convert slot obj to timestamp in local timezone
   function slotDateTimeToMs(slot) {
     const [y, m, d] = (slot.date || "").split("-");
     if (!y || !m || !d) return 0;
@@ -440,6 +451,7 @@ export default function ListServicePage() {
     return new Date(Number(y), Number(m) - 1, Number(d), h, mm, 0, 0).getTime();
   }
 
+  // To edit any service we save then for a particular service
   async function saveEdit() {
     if (!editForm) return;
 
@@ -537,6 +549,7 @@ export default function ListServicePage() {
     }
   }
 
+  // To delete any service by id
   async function removeService(id) {
     if (!window.confirm("Are you sure you want to remove this service?"))
       return;
@@ -559,6 +572,7 @@ export default function ListServicePage() {
     }
   }
 
+  // For image handling
   function onImageFileChange(e) {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -571,6 +585,7 @@ export default function ListServicePage() {
     setEditForm((prev) => ({ ...prev, imagePreview: url, imageFile: f }));
   }
 
+  // To add new slot
   function addNewSlot() {
     const nextId =
       (editForm.slots?.reduce((a, b) => {
@@ -588,6 +603,7 @@ export default function ListServicePage() {
     setEditForm((p) => ({ ...p, slots: [...(p.slots || []), newSlot] }));
   }
 
+  // To update any slot
   function updateSlot(slotId, field, value) {
     setEditForm((p) => {
       const oldSlot = (p.slots || []).find((s) => s.id === slotId) || {};
@@ -623,6 +639,7 @@ export default function ListServicePage() {
     });
   }
 
+  // Remove any slot by id
   function removeSlot(slotId) {
     setEditForm((p) => ({
       ...p,
@@ -630,6 +647,7 @@ export default function ListServicePage() {
     }));
   }
 
+  // To filter
   const filtered = services
     .filter((s) => s.name.toLowerCase().includes(search.trim().toLowerCase()))
     .filter((s) => {
@@ -639,6 +657,7 @@ export default function ListServicePage() {
       return true;
     });
 
+  // Formate date helper
   function formatDateHuman(dateStr) {
     if (!dateStr) return "";
     const parts = dateStr.split("-");
@@ -649,6 +668,7 @@ export default function ListServicePage() {
     return `${String(Number(d))} ${mon} ${y}`;
   }
 
+  // THE UI
   return (
     <div className={s.pageContainer}>
       {/* Header */}
