@@ -19,7 +19,7 @@ function RequireAuth({ children }) {
   if (!isSignedIn)
     return (
       <div
-        className="min-h-screen font-mono flex items-center justify-center bg-gradient-to-b
+        className="min-h-screen font-mono flex items-center justify-center bg-linear-to-b
        from-emerald-50 via-green-50 to-emerald-100 px-4"
       >
         <div className="text-center">
