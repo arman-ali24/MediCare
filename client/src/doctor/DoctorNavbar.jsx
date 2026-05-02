@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { navbarStylesDr } from "../assets/dummyStyles";
 import logo from "../assets/logo.png";
 import { NavLink, useLocation, useParams } from "react-router-dom";
-import { Home, Calendar, Edit, LogOut } from "lucide-react";
+import { Home, Calendar, Edit, LogOut, X, Menu } from "lucide-react";
 
 const DoctorNavbar = () => {
   const [open, setOpen] = useState(false);
@@ -28,59 +28,113 @@ const DoctorNavbar = () => {
   ];
 
   return (
-    <nav className={navbarStylesDr.navContainer}>
-      <div className={navbarStylesDr.leftBrand}>
-        <div className={navbarStylesDr.logoContainer}>
-          <img src={logo} alt="logo" className={navbarStylesDr.logoImage} />
-        </div>
+    <>
+      <nav className={navbarStylesDr.navContainer}>
+        <div className={navbarStylesDr.leftBrand}>
+          <div className={navbarStylesDr.logoContainer}>
+            <img src={logo} alt="logo" className={navbarStylesDr.logoImage} />
+          </div>
 
-        <div className={navbarStylesDr.brandTextContainer}>
-          <div className={navbarStylesDr.brandTitle}>MedTek</div>
-          <div className={navbarStylesDr.brandSubtitle}>
-            Healthcare Solutions
+          <div className={navbarStylesDr.brandTextContainer}>
+            <div className={navbarStylesDr.brandTitle}>MedTek</div>
+            <div className={navbarStylesDr.brandSubtitle}>
+              Healthcare Solutions
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Desktop navigations */}
+        {/* Desktop navigations */}
 
-      <div className={navbarStylesDr.desktopMenu}>
-        <div className={navbarStylesDr.desktopMenuItems}>
+        <div className={navbarStylesDr.desktopMenu}>
+          <div className={navbarStylesDr.desktopMenuItems}>
+            {navItems.map(({ name, to, Icon }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={to === basePath}
+                className={({ isActive }) =>
+                  `${navbarStylesDr.baseLink} ${
+                    isActive
+                      ? navbarStylesDr.activeLink
+                      : navbarStylesDr.inactiveLink
+                  }`
+                }
+                onClick={() => setOpen(false)}
+              >
+                <span className={navbarStylesDr.linkContent}>
+                  <Icon size={16} className={navbarStylesDr.linkIcon} />
+                  <span className={navbarStylesDr.linkText}>{name}</span>
+                </span>
+              </NavLink>
+            ))}
+          </div>
+        </div>
+
+        <div className={navbarStylesDr.rightActions}>
+          <button
+            onClick={() => {
+              window.location.href = "/doctor-admin/login";
+            }}
+            className={navbarStylesDr.logoutButtonDesktop}
+          >
+            <LogOut size={16} />
+            <span>Logout</span>
+          </button>
+
+          {/* To toggle */}
+          <button
+            onClick={() => setOpen((s) => !s)}
+            className={navbarStylesDr.hamburgerButtonMd}
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
+          <button
+            onClick={() => setOpen((s) => !s)}
+            className={navbarStylesDr.hamburgerButtonLg}
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </nav>
+
+      <div className={navbarStylesDr.mobileMenuContainer(open)}>
+        <div className={navbarStylesDr.mobileMenuContent}>
           {navItems.map(({ name, to, Icon }) => (
             <NavLink
               key={to}
               to={to}
               end={to === basePath}
               className={({ isActive }) =>
-                `${navbarStylesDr.baseLink} ${
+                `${navbarStylesDr.mobileBaseLink} ${
                   isActive
-                    ? navbarStylesDr.activeLink
-                    : navbarStylesDr.inactiveLink
+                    ? navbarStylesDr.mobileActiveLink
+                    : navbarStylesDr.mobileInactiveLink
                 }`
               }
               onClick={() => setOpen(false)}
             >
-              <span className={navbarStylesDr.linkContent}>
-                <Icon size={16} className={navbarStylesDr.linkIcon} />
-                <span className={navbarStylesDr.linkText}>{name}</span>
-              </span>
+              <Icon size={18} className="text-emerald-400" />
+              <span>{name}</span>
             </NavLink>
           ))}
+
+          <button
+            onClick={() => {
+              setOpen(false);
+              window.location.href = "/doctor-admin/login";
+            }}
+            className={navbarStylesDr.mobileLogoutButton}
+          >
+            <div className={navbarStylesDr.mobileLogoutContent}>
+              <LogOut size={16} />
+              Logout
+            </div>
+          </button>
         </div>
       </div>
 
-      <div className={navbarStylesDr.rightActions}>
-        <button
-          onClick={() => {
-            window.location.href = "/doctor-admin/login";
-          }}
-          className={navbarStylesDr.logoutButtonDesktop}
-        >
-          <LogOut size={16} />
-          <span>Logout</span>
-        </button>
-      </div>
-    </nav>
+      <div className={navbarStylesDr.spacer}></div>
+    </>
   );
 };
 
