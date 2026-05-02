@@ -8,6 +8,7 @@ import ServiceDetailPage from "./pages/ServiceDetailPage";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import DHome from "./pages/DHome";
+import List from "./doctor/List";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
 
         <Route path="/doctor-admin/login" element={<Login />} />
         <Route path="/doctor-admin/:id" element={<DHome />} />
+        <Route path="/doctor-admin/:id/appointments" element={<List />} /> 
       </Routes>
     </div>
   );
