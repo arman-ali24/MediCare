@@ -481,25 +481,122 @@ const AppointmentPage = () => {
 
   return (
     <div className={appointmentPageStyles.pageContainer}>
-        <Toaster position="top-right" />
-        <div className={appointmentPageStyles.maxWidthContainer}>
-            <h1 className={appointmentPageStyles.doctorTitle}> 
-                Your Doctor Appointments
-            </h1>
-            {loadingDoctors && (
-                <div className={appointmentPageStyles.loadingText}>
-                    Loading Doctors...
-                </div>
-            )}
+      <Toaster position="top-right" />
+      <div className={appointmentPageStyles.maxWidthContainer}>
+        <h1 className={appointmentPageStyles.doctorTitle}>
+          Your Doctor Appointments
+        </h1>
+        {loadingDoctors && (
+          <div className={appointmentPageStyles.loadingText}>
+            Loading Doctors...
+          </div>
+        )}
 
-            {!loadingDoctors && appointmentData.length === 0 && (
-                <div className={appointmentPageStyles.emptyStateText}>
-                    No doctor appointment found.
+        {!loadingDoctors && appointmentData.length === 0 && (
+          <div className={appointmentPageStyles.emptyStateText}>
+            No doctor appointment found.
+          </div>
+        )}
+
+        <div className={appointmentPageStyles.doctorGrid}>
+          {appointmentData.map((item) => (
+            <div key={item.id} className={cardStyles.doctorCard}>
+              <div className={cardStyles.doctorImageContainer}>
+                <img
+                  src={item.image || "/placeholder-doctor.png"}
+                  alt={item.doctor}
+                  className={cardStyles.image}
+                  loading="lazy"
+                />
+              </div>
+
+              <h2 className={cardStyles.doctorName}>{item.doctor}</h2>
+              <div className={cardStyles.specialization}>
+                {item.specialization}{" "}
+                {item.experience ? `• ${item.experience} ` : ""}
+              </div>
+
+              <p className={cardStyles.dateContainer}>
+                <CalendarDays className={iconSize.medium} /> {item.date}
+              </p>
+              <p className={cardStyles.timeContainer}>
+                <Clock className={iconSize.medium} /> {item.time}
+              </p>
+
+              <div className={cardStyles.badgesContainer}>
+                <PaymentBadge payment={item.payment} />
+                <StatusBadge itemStatus={item.status} />
+              </div>
+
+              {item.status === "Rescheduled" && item.rescheduledTo ? (
+                <div className={cardStyles.rescheduledText}>
+                  Reschedule to{" "}
+                  <span className={cardStyles.rescheduledSpan}>
+                    {item.rescheduledTo.date} : {item.rescheduledTo.time}
+                  </span>
                 </div>
-            )}
+              ) : null}
+            </div>
+          ))}
         </div>
+
+        <h2 className={appointmentPageStyles.serviceTitle}>
+          Your Booked Services
+        </h2>
+        {loadingServices && (
+          <div className={appointmentPageStyles.serviceLoadingText}>
+            Loading Service Bookings...
+          </div>
+        )}
+
+        {!loadingServices && serviceData.length === 0 && (
+          <div className={appointmentPageStyles.serviceEmptyStateText}>
+            No service bookings found.
+          </div>
+        )}
+        <div className={appointmentPageStyles.serviceGrid}>
+          {serviceData.map((srv) => (
+            <div key={srv.id} className={cardStyles.serviceCard}>
+              <div className={cardStyles.serviceImageContainer}>
+                <img
+                  src={srv.image || "/placeholder-service.png"}
+                  alt={srv.name}
+                  className={cardStyles.image}
+                  loading="lazy"
+                />
+              </div>
+
+              <h3 className={cardStyles.serviceName}>{srv.name}</h3>
+
+              <p className={cardStyles.price}>₹{srv.price}</p>
+
+              <p className={cardStyles.serviceDateContainer}>
+                <CalendarDays className={iconSize.medium} /> {srv.date}
+              </p>
+
+              <p className={cardStyles.serviceTimeContainer}>
+                <Clock className={iconSize.medium} /> {srv.time}
+              </p>
+
+              <div className={cardStyles.badgesContainer}>
+                <PaymentBadge payment={srv.payment} />
+                <StatusBadge itemStatus={srv.status} />
+              </div>
+
+              {srv.status === "Rescheduled" && srv.rescheduledTo ? (
+                <div className={cardStyles.serviceRescheduledText}>
+                  Rescheduled to{" "}
+                  <span className={cardStyles.rescheduledSpan}>
+                    {srv.rescheduledTo.date} : {srv.rescheduledTo.time}
+                  </span>
+                </div>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
-  )
+  );
 };
 
 export default AppointmentPage;
