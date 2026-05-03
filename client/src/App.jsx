@@ -12,6 +12,7 @@ import List from "./doctor/List";
 import EditProfile from "./doctor/EditProfile";
 import Appointments from "./pages/Appointments";
 import { CircleChevronUp } from "lucide-react";
+import VerifyPaymentPage from "../VerifyPaymentPage";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -84,6 +85,10 @@ const App = () => {
             path="/doctor-admin/:id/profile/edit"
             element={<EditProfile />}
           />
+
+          {/* for the payment verifications */}
+          <Route path="/appointment/success" element={<VerifyPaymentPage />} />
+          <Route path="/appointment/cancel" element={<VerifyPaymentPage />} />
         </Routes>
       </div>
 
