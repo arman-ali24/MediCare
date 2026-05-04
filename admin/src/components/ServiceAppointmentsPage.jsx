@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { serviceAppointmentsStyles } from "../assets/dummyStyles";
-import { Loader2, SearchIcon, XIcon } from "lucide-react";
+import { Loader2, SearchIcon, XIcon, User, Phone, BadgeIndianRupee, Calendar, Clock, CheckCircle, XCircle } from "lucide-react";
 
 const API_BASE = "http://localhost:4000";
 // HELPER FUNCTIONS
@@ -690,7 +690,7 @@ const ServiceAppointmentsPage = () => {
             </div>
           ) : (
             displayList.map((a) => {
-              const isLoacked =
+              const isLocked =
                 a.status === "Completed" || a.status === "Canceled";
               return (
                 <article

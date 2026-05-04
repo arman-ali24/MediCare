@@ -4,7 +4,7 @@ import {
   statusClasses,
   keyframesStyles,
 } from "../assets/dummyStyles";
-import { Calendar, Search } from "lucide-react";
+import { Calendar, Search, BadgeIndianRupee } from "lucide-react";
 
 const API_BASE = "http://localhost:4000";
 
