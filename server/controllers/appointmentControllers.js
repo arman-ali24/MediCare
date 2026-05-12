@@ -86,10 +86,10 @@ export const getAppointments = async (req, res) => {
 
     const total = await Appointment.countDocuments(filter);
     return res.json({
-      success: true,
-      Appointments: items,
-      meta: { page, limit, total, count: items.length },
-    });
+  success: true,
+  appointments: items,
+  meta: { page, limit, total, count: items.length },
+});
   } catch (err) {
     console.error("GetAppointments Error:", err);
     return res.status(500).json({ success: false, message: "Server Error" });
