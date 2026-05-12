@@ -313,42 +313,54 @@ const ListPage = () => {
 
   // to fetch the appointment using the id
   async function fetchAppointments() {
-    setLoading(true);
-    setError(null);
-    try {
-      const url = `${API_BASE}/api/appointments/doctor/${encodeURIComponent(
-        doctorId,
-      )}`;
+  setLoading(true);
+  setError(null);
 
-      const res = await fetch(url);
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(
-          body?.message || `Failed to fetch appointments (${res.status})`,
-        );
-      }
-      const body = await res.json();
-      const list = Array.isArray(body.appointments)
-        ? body.appointments
-        : Array.isArray(body)
-          ? body
-          : (body.items ?? body.data ?? []);
-      const normalized = (Array.isArray(list) ? list : [])
-        .map(normalizeAppointment)
-        .filter(Boolean);
-      setAppointments(normalized);
-    } catch (err) {
-      console.error("fetchAppointments:", err);
-      setError(err.message || "Failed to load appointments");
-      setAppointments([]);
-    } finally {
-      setLoading(false);
+  try {
+    const url = `${API_BASE}/api/appointments/doctor/${doctorId}`;
+
+    console.log("Fetching:", url);
+
+    const res = await fetch(url);
+
+    const body = await res.json();
+
+    console.log("API RESPONSE:", body);
+
+    if (!res.ok) {
+      throw new Error(
+        body?.message || `Failed to fetch appointments (${res.status})`,
+      );
     }
+
+    // FIXED RESPONSE HANDLING
+    const list =
+      body?.appointments ||
+      body?.data ||
+      body?.items ||
+      [];
+
+    console.log("Appointments:", list);
+
+    const normalized = list
+      .map(normalizeAppointment)
+      .filter(Boolean);
+
+    setAppointments(normalized);
+  } catch (err) {
+    console.error(err);
+    setError(err.message || "Failed to load appointments");
+    setAppointments([]);
+  } finally {
+    setLoading(false);
   }
+}
 
   useEffect(() => {
+  if (doctorId) {
     fetchAppointments();
-  }, []);
+  }
+}, [doctorId]);
 
   // to update the status it is similar to dashboard page
   async function updateStatusRemote(id, newStatus) {
