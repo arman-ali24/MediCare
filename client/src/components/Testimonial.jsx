@@ -83,39 +83,52 @@ const Testimonial = () => {
   );
 
   useEffect(() => {
-    const scrollLeft = scrollRefLeft.current;
-    const scrollRight = scrollRefRight.current;
+  const leftContainer = scrollRefLeft.current;
+  const rightContainer = scrollRefRight.current;
 
-    if (!scrollLeft || !scrollRight) return;
+  if (!leftContainer || !rightContainer) return;
 
-    let scrollSpeed = 0.5;
-    let rafId;
+  let animationFrame;
 
-    const smoothScroll = () => {
-      if (!isPaused) {
-        scrollLeft.scrollTop += scrollSpeed;
-        scrollRight.scrollTop -= scrollSpeed;
+  const speed = 0.5;
 
-        if (
-          scrollLeft.scrollTop >=
-          scrollLeft.scrollHeight / 2
-        ) {
-          scrollLeft.scrollTop = 0;
-        }
+  // Start right column from middle
+  rightContainer.scrollTop =
+    rightContainer.scrollHeight / 2;
 
-        if (scrollRight.scrollTop <= 0) {
-          scrollRight.scrollTop =
-            scrollRight.scrollHeight / 2;
-        }
+  const animate = () => {
+    if (!isPaused) {
+      // LEFT COLUMN
+      leftContainer.scrollTop += speed;
+
+      const leftLimit =
+        leftContainer.scrollHeight -
+        leftContainer.clientHeight;
+
+      if (leftContainer.scrollTop >= leftLimit / 2) {
+        leftContainer.scrollTop = 1;
       }
 
-      rafId = requestAnimationFrame(smoothScroll);
-    };
+      // RIGHT COLUMN
+      rightContainer.scrollTop -= speed;
 
-    rafId = requestAnimationFrame(smoothScroll);
+      if (rightContainer.scrollTop <= 0) {
+        rightContainer.scrollTop =
+          rightContainer.scrollHeight / 2;
+      }
+    }
 
-    return () => cancelAnimationFrame(rafId);
-  }, [isPaused]);
+    animationFrame =
+      requestAnimationFrame(animate);
+  };
+
+  animationFrame =
+    requestAnimationFrame(animate);
+
+  return () => {
+    cancelAnimationFrame(animationFrame);
+  };
+}, [isPaused]);
 
   const renderStars = (rating) =>
     Array.from({ length: 5 }, (_, i) => (
@@ -134,7 +147,6 @@ const Testimonial = () => {
     direction,
   }) => (
     <div className="group bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
-      {/* Top */}
       <div className="flex items-start gap-4">
         <img
           src={testimonial.image}
@@ -165,7 +177,6 @@ const Testimonial = () => {
             </div>
           </div>
 
-          {/* Quote */}
           <div className="mt-5 relative">
             <Quote className="absolute -top-2 -left-1 w-8 h-8 text-slate-100" />
 
@@ -174,7 +185,6 @@ const Testimonial = () => {
             </p>
           </div>
 
-          {/* Mobile Stars */}
           <div className="flex sm:hidden items-center gap-1 mt-4">
             {renderStars(testimonial.rating)}
           </div>
@@ -185,13 +195,11 @@ const Testimonial = () => {
 
   return (
     <section className="relative overflow-hidden py-20 bg-gradient-to-b from-[#f8fbff] to-[#eef7ff]">
-      {/* Background Blur */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-100/40 rounded-full blur-3xl"></div>
 
       <div className="absolute bottom-0 right-0 w-72 h-72 bg-cyan-100/40 rounded-full blur-3xl"></div>
 
       <div className="relative max-w-7xl mx-auto px-5 lg:px-10">
-        {/* Header */}
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-emerald-100 shadow-sm text-emerald-600 text-sm font-semibold">
             <ShieldCheck size={16} />
@@ -211,7 +219,6 @@ const Testimonial = () => {
           </p>
         </div>
 
-        {/* Grid */}
         <div
           className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-16"
           onMouseEnter={() => setIsPaused(true)}
@@ -225,7 +232,7 @@ const Testimonial = () => {
 
             <div
               ref={scrollRefLeft}
-              className="h-[560px] overflow-hidden mt-5 space-y-5"
+              className="h-[560px] overflow-y-scroll scrollbar-hide mt-5"
               onTouchStart={() => setIsPaused(true)}
               onTouchEnd={() => setIsPaused(false)}
             >
@@ -251,7 +258,7 @@ const Testimonial = () => {
 
             <div
               ref={scrollRefRight}
-              className="h-[560px] overflow-hidden mt-5 space-y-5"
+              className="h-[560px] overflow-y-scroll scrollbar-hide mt-5"
               onTouchStart={() => setIsPaused(true)}
               onTouchEnd={() => setIsPaused(false)}
             >
@@ -270,6 +277,17 @@ const Testimonial = () => {
           </div>
         </div>
       </div>
+
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </section>
   );
 };
