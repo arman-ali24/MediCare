@@ -75,7 +75,7 @@ const ServicePage = () => {
   const visible = showAll ? filtered : filtered.slice(0, 8);
 
   return (
-    <section className="relative overflow-hidden py-4 bg-gradient-to-b from-[#f8fbff] to-[#eef7ff] min-h-screen">
+    <section className="relative overflow-hidden py-4 pb-24 bg-gradient-to-b from-[#f8fbff] to-[#eef7ff] min-h-screen">
 
       {/* Background blur (same as doctors page) */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-100/40 rounded-full blur-3xl"></div>

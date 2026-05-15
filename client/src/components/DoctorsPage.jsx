@@ -93,7 +93,7 @@ const DoctorsPage = () => {
             image,
             experience:
               d.experience ||
-              d.experience === 0
+                d.experience === 0
                 ? String(d.experience)
                 : "—",
             fee: d.fee ?? d.price ?? 0,
@@ -167,7 +167,7 @@ const DoctorsPage = () => {
       if (!res.ok) {
         setError(
           (json && json.message) ||
-            `Failed to load (${res.status})`
+          `Failed to load (${res.status})`
         );
 
         setAllDoctors([]);
@@ -195,7 +195,7 @@ const DoctorsPage = () => {
           fee: d.fee ?? d.price ?? 0,
           available:
             d.availability ===
-              "Available" ||
+            "Available" ||
             d.available === true,
           raw: d,
         };
@@ -217,7 +217,7 @@ const DoctorsPage = () => {
   };
 
   return (
-    <section className="relative overflow-hidden py-4 bg-gradient-to-b from-[#f8fbff] to-[#eef7ff] min-h-screen">
+    <section className="relative overflow-hidden py-4 pb-24 bg-gradient-to-b from-[#f8fbff] to-[#eef7ff] min-h-screen">
       {/* Background Blur */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-100/40 rounded-full blur-3xl"></div>
 
@@ -226,7 +226,7 @@ const DoctorsPage = () => {
       <div className="relative max-w-7xl mx-auto px-5 lg:px-10">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto">
-          
+
 
           <h1 className="mt-6 text-4xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
             Meet Our
@@ -311,18 +311,17 @@ const DoctorsPage = () => {
             {/* Doctors Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
               {displayedDoctors.length >
-              0 ? (
+                0 ? (
                 displayedDoctors.map(
                   (doctor, index) => (
                     <div
                       key={
                         doctor.id || index
                       }
-                      className={`group bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] p-5 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 ${
-                        !doctor.available
-                          ? "opacity-75"
-                          : ""
-                      }`}
+                      className={`group bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] p-5 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 ${!doctor.available
+                        ? "opacity-75"
+                        : ""
+                        }`}
                       style={{
                         animationDelay: `${index * 90}ms`,
                       }}
@@ -336,11 +335,10 @@ const DoctorsPage = () => {
                           }
                           alt={doctor.name}
                           loading="lazy"
-                          className={`w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105 ${
-                            !doctor.available
-                              ? "grayscale"
-                              : ""
-                          }`}
+                          className={`w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105 ${!doctor.available
+                            ? "grayscale"
+                            : ""
+                            }`}
                           onError={(e) => {
                             e.currentTarget.onerror =
                               null;
@@ -427,27 +425,27 @@ const DoctorsPage = () => {
             {/* Show More */}
             {filteredDoctors.length >
               8 && (
-              <div className="flex justify-center mt-14">
-                <button
-                  onClick={() =>
-                    setShowAll(!showAll)
-                  }
-                  className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg text-slate-700 font-semibold transition-all duration-300"
-                >
-                  {showAll ? (
-                    <>
-                      <CircleChevronUp className="w-5 h-5 text-emerald-500" />
-                      Show Less
-                    </>
-                  ) : (
-                    <>
-                      <CircleChevronDown className="w-5 h-5 text-cyan-500" />
-                      Show More
-                    </>
-                  )}
-                </button>
-              </div>
-            )}
+                <div className="flex justify-center mt-14">
+                  <button
+                    onClick={() =>
+                      setShowAll(!showAll)
+                    }
+                    className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg text-slate-700 font-semibold transition-all duration-300"
+                  >
+                    {showAll ? (
+                      <>
+                        <CircleChevronUp className="w-5 h-5 text-emerald-500" />
+                        Show Less
+                      </>
+                    ) : (
+                      <>
+                        <CircleChevronDown className="w-5 h-5 text-cyan-500" />
+                        Show More
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
           </>
         )}
       </div>

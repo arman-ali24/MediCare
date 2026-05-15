@@ -480,122 +480,159 @@ const AppointmentPage = () => {
   }, [serviceAppts]);
 
   return (
-    <div className={appointmentPageStyles.pageContainer}>
-      <Toaster position="top-right" />
-      <div className={appointmentPageStyles.maxWidthContainer}>
-        <h1 className={appointmentPageStyles.doctorTitle}>
+    <section className="relative overflow-hidden py-6 pb-6 bg-gradient-to-b from-[#f8fbff] to-[#eef7ff] min-h-screen">
+
+      {/* Background blur (DoctorsPage style) */}
+      <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-100/40 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-cyan-100/40 rounded-full blur-3xl"></div>
+
+      <div className="relative max-w-7xl mx-auto px-5 lg:px-10">
+
+        <Toaster position="top-right" />
+
+        {/* HEADER */}
+        <div className="text-center max-w-3xl mx-auto">
+          <h1 className="mt-6 text-4xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+            Your
+            <span className="block bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+              Appointments
+            </span>
+          </h1>
+
+          <p className="mt-6 text-slate-600 text-lg leading-relaxed">
+            Manage your doctor consultations and service bookings in one unified dashboard.
+          </p>
+        </div>
+
+        {/* DOCTOR APPOINTMENTS TITLE */}
+        <h2 className="mt-14 text-2xl font-bold text-slate-800">
           Your Doctor Appointments
-        </h1>
+        </h2>
+
         {loadingDoctors && (
-          <div className={appointmentPageStyles.loadingText}>
+          <div className="mt-4 text-slate-500 font-medium">
             Loading Doctors...
           </div>
         )}
 
         {!loadingDoctors && appointmentData.length === 0 && (
-          <div className={appointmentPageStyles.emptyStateText}>
+          <div className="mt-4 text-slate-500">
             No doctor appointment found.
           </div>
         )}
 
-        <div className={appointmentPageStyles.doctorGrid}>
+        {/* DOCTOR GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-8">
           {appointmentData.map((item) => (
-            <div key={item.id} className={cardStyles.doctorCard}>
-              <div className={cardStyles.doctorImageContainer}>
+            <div
+              key={item.id}
+              className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] p-5 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500"
+            >
+              <div className="rounded-3xl overflow-hidden">
                 <img
                   src={item.image || "/placeholder-doctor.png"}
                   alt={item.doctor}
-                  className={cardStyles.image}
+                  className="w-full h-56 object-cover"
                   loading="lazy"
                 />
               </div>
 
-              <h2 className={cardStyles.doctorName}>{item.doctor}</h2>
-              <div className={cardStyles.specialization}>
+              <h2 className="mt-4 text-slate-900 font-bold text-xl">
+                {item.doctor}
+              </h2>
+
+              <div className="mt-1 text-sm font-medium text-emerald-600">
                 {item.specialization}{" "}
-                {item.experience ? `• ${item.experience} ` : ""}
+                {item.experience ? `• ${item.experience}` : ""}
               </div>
 
-              <p className={cardStyles.dateContainer}>
-                <CalendarDays className={iconSize.medium} /> {item.date}
-              </p>
-              <p className={cardStyles.timeContainer}>
-                <Clock className={iconSize.medium} /> {item.time}
+              <p className="mt-3 text-slate-600 text-sm">
+                📅 {item.date}
               </p>
 
-              <div className={cardStyles.badgesContainer}>
+              <p className="text-slate-600 text-sm">
+                🕒 {item.time}
+              </p>
+
+              <div className="mt-4 flex flex-wrap gap-2">
                 <PaymentBadge payment={item.payment} />
                 <StatusBadge itemStatus={item.status} />
               </div>
 
               {item.status === "Rescheduled" && item.rescheduledTo ? (
-                <div className={cardStyles.rescheduledText}>
-                  Reschedule to{" "}
-                  <span className={cardStyles.rescheduledSpan}>
-                    {item.rescheduledTo.date} : {item.rescheduledTo.time}
-                  </span>
+                <div className="mt-3 text-xs text-slate-500">
+                  Reschedule → {item.rescheduledTo.date} : {item.rescheduledTo.time}
                 </div>
               ) : null}
             </div>
           ))}
         </div>
 
-        <h2 className={appointmentPageStyles.serviceTitle}>
+        {/* SERVICE TITLE */}
+        <h2 className="mt-20 text-2xl font-bold text-slate-800">
           Your Booked Services
         </h2>
+
         {loadingServices && (
-          <div className={appointmentPageStyles.serviceLoadingText}>
+          <div className="mt-4 text-slate-500 font-medium">
             Loading Service Bookings...
           </div>
         )}
 
         {!loadingServices && serviceData.length === 0 && (
-          <div className={appointmentPageStyles.serviceEmptyStateText}>
+          <div className="mt-4 text-slate-500">
             No service bookings found.
           </div>
         )}
-        <div className={appointmentPageStyles.serviceGrid}>
+
+        {/* SERVICE GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-8 pb-20">
           {serviceData.map((srv) => (
-            <div key={srv.id} className={cardStyles.serviceCard}>
-              <div className={cardStyles.serviceImageContainer}>
+            <div
+              key={srv.id}
+              className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] p-5 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500"
+            >
+              <div className="rounded-3xl overflow-hidden">
                 <img
                   src={srv.image || "/placeholder-service.png"}
                   alt={srv.name}
-                  className={cardStyles.image}
+                  className="w-full h-56 object-cover"
                   loading="lazy"
                 />
               </div>
 
-              <h3 className={cardStyles.serviceName}>{srv.name}</h3>
+              <h3 className="mt-4 text-slate-900 font-bold text-xl">
+                {srv.name}
+              </h3>
 
-              <p className={cardStyles.price}>₹{srv.price}</p>
-
-              <p className={cardStyles.serviceDateContainer}>
-                <CalendarDays className={iconSize.medium} /> {srv.date}
+              <p className="mt-1 text-emerald-600 font-semibold">
+                ₹{srv.price}
               </p>
 
-              <p className={cardStyles.serviceTimeContainer}>
-                <Clock className={iconSize.medium} /> {srv.time}
+              <p className="mt-3 text-slate-600 text-sm">
+                📅 {srv.date}
               </p>
 
-              <div className={cardStyles.badgesContainer}>
+              <p className="text-slate-600 text-sm">
+                🕒 {srv.time}
+              </p>
+
+              <div className="mt-4 flex flex-wrap gap-2">
                 <PaymentBadge payment={srv.payment} />
                 <StatusBadge itemStatus={srv.status} />
               </div>
 
               {srv.status === "Rescheduled" && srv.rescheduledTo ? (
-                <div className={cardStyles.serviceRescheduledText}>
-                  Rescheduled to{" "}
-                  <span className={cardStyles.rescheduledSpan}>
-                    {srv.rescheduledTo.date} : {srv.rescheduledTo.time}
-                  </span>
+                <div className="mt-3 text-xs text-slate-500">
+                  Rescheduled → {srv.rescheduledTo.date} : {srv.rescheduledTo.time}
                 </div>
               ) : null}
             </div>
           ))}
         </div>
+
       </div>
-    </div>
+    </section>
   );
 };
 
