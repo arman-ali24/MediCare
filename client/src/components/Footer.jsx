@@ -87,7 +87,7 @@ const Footer = () => {
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          
+
           {/* Company Section */}
           <div>
             <div className={footerStyles.logoContainer}>
@@ -145,7 +145,7 @@ const Footer = () => {
                 </div>
 
                 <span className="text-sm">
-                  Gopalganj, India
+                  Bhopal, India
                 </span>
               </div>
             </div>
@@ -210,25 +210,25 @@ const Footer = () => {
             </p>
 
             {/* Newsletter Input */}
-<div className="relative flex items-center p-1.5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg shadow-black/10 overflow-hidden">
+            <div className="relative flex items-center p-1.5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg shadow-black/10 overflow-hidden">
 
-  {/* Soft Glow */}
-  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-cyan-500/5 rounded-2xl"></div>
+              {/* Soft Glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-cyan-500/5 rounded-2xl"></div>
 
-  {/* Input */}
-  <input
-    type="email"
-    placeholder="Enter your email"
-    className="relative flex-1 bg-transparent px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none"
-  />
+              {/* Input */}
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="relative flex-1 bg-transparent px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none"
+              />
 
-  {/* Button */}
-  <button className="relative group flex items-center justify-center min-w-[48px] h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 transition-all duration-300 shadow-md hover:shadow-emerald-500/30 hover:scale-105">
-    
-    <Send className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
-  
-  </button>
-</div>
+              {/* Button */}
+              <button className="relative group flex items-center justify-center min-w-[48px] h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 transition-all duration-300 shadow-md hover:shadow-emerald-500/30 hover:scale-105">
+
+                <Send className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
+
+              </button>
+            </div>
 
             {/* Social Icons */}
             <div className="flex items-center gap-4 mt-8">
