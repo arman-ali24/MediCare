@@ -70,6 +70,49 @@ const Navbar = () => {
 
   return (
     <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+        .nav-logo-title {
+          font-family: 'Plus Jakarta Sans', sans-serif !important;
+          font-weight: 800 !important;
+          letter-spacing: -0.5px !important;
+          background: linear-gradient(135deg, #1e40af, #2563eb) !important;
+          -webkit-background-clip: text !important;
+          -webkit-text-fill-color: transparent !important;
+          background-clip: text !important;
+        }
+        .nav-logo-sub {
+          font-family: 'DM Sans', sans-serif !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.9px !important;
+          color: #64748b !important;
+          text-transform: uppercase !important;
+          font-size: 9.5px !important;
+        }
+        .nav-item-link {
+          font-family: 'DM Sans', sans-serif !important;
+          font-weight: 500 !important;
+          letter-spacing: 0.01em !important;
+        }
+        .nav-item-link-active {
+          font-family: 'DM Sans', sans-serif !important;
+          font-weight: 700 !important;
+          color: #2563eb !important;
+        }
+        .nav-doctor-btn {
+          font-family: 'DM Sans', sans-serif !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.02em !important;
+        }
+        .nav-login-btn {
+          font-family: 'DM Sans', sans-serif !important;
+          font-weight: 700 !important;
+          letter-spacing: 0.04em !important;
+          background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+        }
+      `}</style>
+
       <div className={navbarStyles.navbarBorder}></div>
       <nav
         ref={navRef}
@@ -91,8 +134,8 @@ const Navbar = () => {
                 </div>
               </div>
               <div className={navbarStyles.logoTextContainer}>
-                <h1 className={navbarStyles.logoTitle}>MediCare</h1>
-                <p className={navbarStyles.logoSubtitle}>
+                <h1 className={`${navbarStyles.logoTitle} nav-logo-title`}>MediCare</h1>
+                <p className={`${navbarStyles.logoSubtitle} nav-logo-sub`}>
                   Healthcare Solutions
                 </p>
               </div>
@@ -108,8 +151,8 @@ const Navbar = () => {
                       to={item.href}
                       className={`${navbarStyles.navItem} ${
                         isActive
-                          ? navbarStyles.navItemActive
-                          : navbarStyles.navItemInactive
+                          ? `${navbarStyles.navItemActive} nav-item-link-active`
+                          : `${navbarStyles.navItemInactive} nav-item-link`
                       }`}
                     >
                       {item.label}
@@ -124,7 +167,7 @@ const Navbar = () => {
               <SignedOut>
                 <Link
                   to="/doctor-admin/login"
-                  className={navbarStyles.doctorAdminButton}
+                  className={`${navbarStyles.doctorAdminButton} nav-doctor-btn`}
                 >
                   <User className={navbarStyles.doctorAdminIcon} />
                   <span className={navbarStyles.doctorAdminText}>
@@ -134,7 +177,7 @@ const Navbar = () => {
                 {/* patient login */}
                 <button
                   onClick={() => clerk.openSignIn()}
-                  className={navbarStyles.loginButton}
+                  className={`${navbarStyles.loginButton} nav-login-btn`}
                 >
                   <Key className={navbarStyles.loginIcon} />
                   Login
@@ -171,8 +214,8 @@ const Navbar = () => {
                     onClick={() => setIsOpen(false)}
                     className={`${navbarStyles.mobileMenuItem} ${
                       isActive
-                        ? navbarStyles.mobileMenuItemActive
-                        : navbarStyles.mobileMenuItemInactive
+                        ? `${navbarStyles.mobileMenuItemActive} nav-item-link-active`
+                        : `${navbarStyles.mobileMenuItemInactive} nav-item-link`
                     }`}
                   >
                     {item.label}
@@ -183,7 +226,7 @@ const Navbar = () => {
               <SignedOut>
                 <Link
                   to="/doctor-admin/login"
-                  className={navbarStyles.mobileDoctorAdminButton}
+                  className={`${navbarStyles.mobileDoctorAdminButton} nav-doctor-btn`}
                   onClick={() => setIsOpen(false)}
                 >
                   Doctor Admin
@@ -195,7 +238,7 @@ const Navbar = () => {
                       setIsOpen(false);
                       clerk.openSignIn();
                     }}
-                    className={navbarStyles.mobileLoginButton}
+                    className={`${navbarStyles.mobileLoginButton} nav-login-btn`}
                   >
                     Login
                   </button>

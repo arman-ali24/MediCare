@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { homeDoctorsStyles, iconSize } from "../assets/dummyStyles";
 import { Link } from "react-router-dom";
-import { ChevronRight, Medal, MousePointer2Off } from "lucide-react";
+import {
+  ChevronRight,
+  Medal,
+  MousePointer2Off,
+  ShieldCheck,
+} from "lucide-react";
 
 const HomeDoctors = ({ previewCount = 8 }) => {
   const API_BASE = "http://localhost:4000";
+
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // To fetch doctors from the server side
   useEffect(() => {
     let mounted = true;
+
     async function load() {
       setLoading(true);
       setError("");
+
       try {
         const res = await fetch(`${API_BASE}/api/doctors`);
         const json = await res.json().catch(() => null);
@@ -22,30 +28,40 @@ const HomeDoctors = ({ previewCount = 8 }) => {
         if (!res.ok) {
           const msg =
             (json && json.message) || `Failed to load doctors (${res.status})`;
+
           if (!mounted) return;
+
           setError(msg);
           setDoctors([]);
           setLoading(false);
           return;
         }
+
         const items = (json && (json.data || json)) || [];
+
         const normalized = (Array.isArray(items) ? items : []).map((d) => {
           const id = d._id || d.id;
+
           const image =
             d.imageUrl || d.image || d.imageSmall || d.imageSrc || "";
+
           const available =
             (typeof d.availability === "string"
               ? d.availability.toLowerCase() === "available"
               : typeof d.available === "boolean"
-                ? d.available
-                : d.availability === true) || d.availability === "Available";
+              ? d.available
+              : d.availability === true) ||
+            d.availability === "Available";
+
           return {
             id,
             name: d.name || "Unknown",
             specialization: d.specialization || "",
             image,
             experience:
-              d.experience || d.experience === 0 ? String(d.experience) : "",
+              d.experience || d.experience === 0
+                ? String(d.experience)
+                : "",
             fee: d.fee ?? d.price ?? 0,
             available,
             raw: d,
@@ -53,17 +69,22 @@ const HomeDoctors = ({ previewCount = 8 }) => {
         });
 
         if (!mounted) return;
+
         setDoctors(normalized);
       } catch (err) {
         if (!mounted) return;
+
         console.error("load doctors error:", err);
+
         setError("Network error while loading doctors.");
         setDoctors([]);
       } finally {
         if (mounted) setLoading(false);
       }
     }
+
     load();
+
     return () => {
       mounted = false;
     };
@@ -72,167 +93,151 @@ const HomeDoctors = ({ previewCount = 8 }) => {
   const preview = doctors.slice(0, previewCount);
 
   return (
-    <section className={homeDoctorsStyles.section}>
-      <div className={homeDoctorsStyles.container}>
-        <div className={homeDoctorsStyles.header}>
-          <h1 className={homeDoctorsStyles.title}>
-            Our{" "}
-            <span className={homeDoctorsStyles.titleSpan}>Medical Team</span>
+    <section className="relative overflow-hidden py-20 bg-gradient-to-b from-[#f8fbff] to-[#eef7ff]">
+      {/* Background Blur */}
+      <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-100/40 rounded-full blur-3xl"></div>
+
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-cyan-100/40 rounded-full blur-3xl"></div>
+
+      <div className="relative max-w-7xl mx-auto px-5 lg:px-10">
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-emerald-100 shadow-sm text-emerald-600 text-sm font-semibold">
+            <ShieldCheck size={16} />
+            Verified Medical Specialists
+          </div>
+
+          <h1 className="mt-6 text-4xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+            Meet Our
+            <span className="block bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+              Expert Doctors
+            </span>
           </h1>
-          <p className={homeDoctorsStyles.subtitle}>
-            Book appointments quickly with our verified specialists.
+
+          <p className="mt-6 text-slate-600 text-lg leading-relaxed">
+            Book appointments instantly with highly experienced and trusted
+            healthcare professionals.
           </p>
         </div>
-        {/* error / retry */}
+
+        {/* Error */}
         {error ? (
-          <div className={homeDoctorsStyles.errorContainer}>
-            <div className={homeDoctorsStyles.errorText}>{error}</div>
+          <div className="mt-10 bg-red-50 border border-red-100 text-red-600 rounded-3xl p-6 text-center">
+            <p className="font-medium">{error}</p>
+
             <button
-              onClick={() => {
-                setLoading(true);
-                setError("");
-                (async () => {
-                  try {
-                    const res = await fetch(`${API_BASE}/api/doctors`);
-                    const json = await res.json().catch(() => null);
-                    const items = (json && (json.data || json)) || [];
-                    const normalized = (Array.isArray(items) ? items : []).map(
-                      (d) => {
-                        const id = d._id || d.id;
-                        const image = d.imageUrl || d.image || "";
-                        const available =
-                          (typeof d.availability === "string"
-                            ? d.availability.toLowerCase() === "available"
-                            : typeof d.available === "boolean"
-                              ? d.available
-                              : d.availability === true) ||
-                          d.availability === "Available";
-                        return {
-                          id,
-                          name: d.name || "Unknown",
-                          specialization: d.specialization || "",
-                          image,
-                          experience: d.experience || "",
-                          fee: d.fee ?? d.price ?? 0,
-                          available,
-                          raw: d,
-                        };
-                      },
-                    );
-                    setDoctors(normalized);
-                    setError("");
-                  } catch (err) {
-                    console.error(err);
-                    setError("Network error while loading doctors.");
-                    setDoctors([]);
-                  } finally {
-                    setLoading(false);
-                  }
-                })();
-              }}
-              className={homeDoctorsStyles.retryButton}
+              onClick={() => window.location.reload()}
+              className="mt-4 px-5 py-2 rounded-xl bg-red-500 text-white font-medium hover:bg-red-600 transition-all"
             >
               Retry
             </button>
           </div>
-        ) : null}{" "}
-        {/* SO HERE IT WILL RE FETCH THE API TO GET RESPONSE */}
+        ) : null}
+
+        {/* Loading */}
         {loading ? (
-          <div className={homeDoctorsStyles.skeletonGrid}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 mt-16">
             {Array.from({ length: previewCount }).map((_, i) => (
-              <div key={i} className={homeDoctorsStyles.skeletonCard}>
-                <div className={homeDoctorsStyles.skeletonImage}></div>
-                <div className={homeDoctorsStyles.skeletonText1}></div>
-                <div className={homeDoctorsStyles.skeletonText2}></div>
-                <div className="flex gap-2 mt-auto">
-                  <div className={homeDoctorsStyles.skeletonButton}></div>
+              <div
+                key={i}
+                className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm animate-pulse"
+              >
+                <div className="h-72 bg-slate-200"></div>
+
+                <div className="p-5">
+                  <div className="h-5 bg-slate-200 rounded w-3/4"></div>
+
+                  <div className="h-4 bg-slate-100 rounded w-1/2 mt-3"></div>
+
+                  <div className="h-10 bg-slate-200 rounded-xl mt-6"></div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className={homeDoctorsStyles.doctorsGrid}>
-            {preview.map((doctor) => (
-              <article
-                key={doctor.id || doctor.name}
-                className={homeDoctorsStyles.article}
-              >
-                {doctor.available ? (
-                  <Link
-                    to={`/doctors/${doctor.id}`}
-                    state={{
-                      doctor: doctor.raw || doctor,
-                    }}
-                  >
-                    <div className={homeDoctorsStyles.imageContainerAvailable}>
-                      <img
-                        src={doctor.image || "/placeholder-doctor.jpg"}
-                        alt={doctor.name}
-                        loading="lazy"
-                        className={homeDoctorsStyles.image}
-                        onError={(e) => {
-                          e.currentTarget.onerror = null;
-                          e.currentTarget.src = "/placeholder-doctor.jpg";
+          <>
+            {/* Doctors Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 mt-16">
+              {preview.map((doctor) => (
+                <article
+                  key={doctor.id || doctor.name}
+                  className="group bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+                >
+                  {/* Image */}
+                  <div className="relative overflow-hidden">
+                    {doctor.available ? (
+                      <Link
+                        to={`/doctors/${doctor.id}`}
+                        state={{
+                          doctor: doctor.raw || doctor,
                         }}
-                      />
-                    </div>
-                  </Link>
-                ) : (
-                  <div className={homeDoctorsStyles.imageContainerUnavailable}>
-                    <img
-                      src={doctor.image || "/placeholder-doctor.jpg"}
-                      alt={doctor.name}
-                      loading="lazy"
-                      className={homeDoctorsStyles.image}
-                      onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src = "/placeholder-doctor.jpg";
-                      }}
-                    />
+                      >
+                        <img
+                          src={doctor.image || "/placeholder-doctor.jpg"}
+                          alt={doctor.name}
+                          loading="lazy"
+                          className="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-500"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src =
+                              "/placeholder-doctor.jpg";
+                          }}
+                        />
+                      </Link>
+                    ) : (
+                      <>
+                        <img
+                          src={doctor.image || "/placeholder-doctor.jpg"}
+                          alt={doctor.name}
+                          loading="lazy"
+                          className="w-full h-72 object-cover grayscale"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src =
+                              "/placeholder-doctor.jpg";
+                          }}
+                        />
 
-                    <div className={homeDoctorsStyles.unavailableBadge}>
-                      Not available
-                    </div>
-                  </div>
-                )}
-
-                {/* Body */}
-                <div className={homeDoctorsStyles.cardBody}>
-                  <h3
-                    className={homeDoctorsStyles.doctorName}
-                    id={`doctor-${doctor.id}-name`}
-                  >
-                    {doctor.name}
-                  </h3>
-
-                  <p className={homeDoctorsStyles.specialization}>
-                    {doctor.specialization}
-                  </p>
-
-                  <div className={homeDoctorsStyles.experienceContainer}>
-                    <div className={homeDoctorsStyles.experienceBadge}>
-                      <Medal className={`${iconSize.small} h-4`} />
-                      <span>{doctor.experience} years Experience</span>
-                    </div>
+                        <div className="absolute top-4 right-4 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
+                          Not Available
+                        </div>
+                      </>
+                    )}
                   </div>
 
-                  <div className={homeDoctorsStyles.buttonContainer}>
-                    <div className="w-full">
+                  {/* Content */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-slate-900">
+                      {doctor.name}
+                    </h3>
+
+                    <p className="mt-2 text-slate-500 text-sm">
+                      {doctor.specialization}
+                    </p>
+
+                    {/* Experience */}
+                    <div className="mt-5 inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-2xl text-emerald-700 text-sm font-medium">
+                      <Medal className="w-4 h-4" />
+                      {doctor.experience} Years Experience
+                    </div>
+
+                    {/* Button */}
+                    <div className="mt-6">
                       {doctor.available ? (
                         <Link
                           to={`/doctors/${doctor.id}`}
                           state={{
                             doctor: doctor.raw || doctor,
                           }}
-                          className={homeDoctorsStyles.buttonAvailable}
+                          className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold py-3 rounded-2xl shadow-lg hover:shadow-emerald-200 transition-all duration-300"
                         >
-                          <ChevronRight className="w-5 h-5" />
                           Book Now
+                          <ChevronRight className="w-5 h-5" />
                         </Link>
                       ) : (
                         <button
                           disabled
-                          className={homeDoctorsStyles.buttonUnavailable}
+                          className="w-full inline-flex items-center justify-center gap-2 bg-slate-100 text-slate-500 font-semibold py-3 rounded-2xl cursor-not-allowed"
                         >
                           <MousePointer2Off className="w-5 h-5" />
                           Not Available
@@ -240,14 +245,23 @@ const HomeDoctors = ({ previewCount = 8 }) => {
                       )}
                     </div>
                   </div>
-                </div>
-              </article>
-            ))}
-          </div>
+                </article>
+              ))}
+            </div>
+
+            {/* Bottom CTA */}
+            <div className="flex justify-center mt-14">
+              <Link
+                to="/doctors"
+                className="inline-flex items-center gap-2 px-7 py-3 rounded-2xl bg-white border border-slate-200 text-slate-700 font-semibold shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              >
+                View All Doctors
+                <ChevronRight className="w-5 h-5" />
+              </Link>
+            </div>
+          </>
         )}
       </div>
-
-      <style>{homeDoctorsStyles.customCSS}</style>
     </section>
   );
 };
