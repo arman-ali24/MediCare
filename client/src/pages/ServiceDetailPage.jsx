@@ -440,132 +440,230 @@ export default function ServiceDetail() {
 
   // rest is the UI part
   return (
-    <div className={serviceDetailStyles.pageContainer}>
+    <div className="min-h-screen bg-gradient-to-b from-[#f8fbff] to-[#eef7ff] overflow-hidden">
       <Toaster />
-      <div className={serviceDetailStyles.navBar}>
-        <div className={serviceDetailStyles.navContainer}>
-          <Link to="/services" className={serviceDetailStyles.backButton}>
-            <ArrowLeft size={18} />
-            Back
+
+      {/* Background Blur */}
+      <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-100/40 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-cyan-100/40 rounded-full blur-3xl"></div>
+
+      {/* NAVBAR */}
+      <div className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-4 flex items-center justify-between gap-4">
+
+          <Link
+            to="/services"
+            className="
+        group
+        inline-flex items-center gap-2
+        px-4 py-2.5
+        rounded-2xl
+        bg-white
+        border border-slate-200
+        shadow-sm
+        text-slate-700
+        font-semibold
+        hover:bg-white
+        hover:text-emerald-600
+        hover:border-emerald-300
+        hover:shadow-lg
+        hover:-translate-y-0.5
+        transition-all duration-300
+      "
+          >
+            <ArrowLeft
+              size={18}
+              className="transition-transform duration-300 group-hover:-translate-x-1"
+            />
+
+            <span className="text-sm sm:text-base">
+              Back
+            </span>
           </Link>
+
+          <div className="flex-1 text-center">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+              <span className="bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+                Service Description
+              </span>
+            </h1>
+          </div>
+
+          {/* Spacer for center alignment */}
+          <div className="w-[110px] hidden sm:block"></div>
+
         </div>
       </div>
 
-      <div className={serviceDetailStyles.mainGrid}>
-        {/* LEFT */}
-        <div className={serviceDetailStyles.leftColumn}>
-          <div className={serviceDetailStyles.imageContainer}>
-            <img
-              src={service.image || "/placeholder-service.png"}
-              alt={service.name}
-              className={serviceDetailStyles.image}
-            />
-          </div>
+      {/* CONTENT */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-8 lg:py-12">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
 
-          <div className={serviceDetailStyles.detailsContainer}>
-            <h3 className={serviceDetailStyles.detailsTitle}>
-              <Phone size={20} />
-              Your Details
-            </h3>
+          {/* ================= LEFT ================= */}
+          <div className="space-y-8">
 
-            <div className={serviceDetailStyles.detailsGrid}>
-              <input
-                required
-                type="text"
-                placeholder="Full Name *"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                className={serviceDetailStyles.input}
-              />
+            {/* IMAGE CARD */}
+            <div className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] p-5 sm:p-8 shadow-sm">
+              <div className="flex flex-col items-center text-center">
 
-              <input
-                type="text"
-                required
-                placeholder="Mobile (10 digits) *"
-                maxLength={10}
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value.replace(/\D/g, ""))}
-                className={
-                  mobile && !isValidMobile(mobile)
-                    ? serviceDetailStyles.invalidInput
-                    : serviceDetailStyles.input
-                }
-              />
+                {/* Circle Image */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-cyan-400 blur-2xl opacity-20 rounded-full"></div>
 
-              <input
-                type="number"
-                required
-                placeholder="Age *"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                className={serviceDetailStyles.input}
-              />
-
-              <select
-                value={gender}
-                required
-                onChange={(e) => setGender(e.target.value)}
-                className={serviceDetailStyles.input}
-              >
-                <option value="">Select Gender *</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </select>
-
-              <input
-                type="email"
-                placeholder="Email (optional)"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={serviceDetailStyles.emailInput}
-              />
-            </div>
-
-            <div className={serviceDetailStyles.dateSection}>
-              <label className={serviceDetailStyles.paymentLabel}>
-                Payment Method
-              </label>
-              <div className={serviceDetailStyles.paymentOptions}>
-                <label
-                  className={serviceDetailStyles.paymentOption(
-                    paymentMethod === "Cash",
-                  )}
-                >
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="Cash"
-                    checked={paymentMethod === "Cash"}
-                    onChange={() => setPaymentMethod("Cash")}
-                    className={serviceDetailStyles.paymentInput}
+                  <img
+                    src={service.image || "/placeholder-service.png"}
+                    alt={service.name}
+                    className="
+                    relative
+                    w-40 h-40
+                    sm:w-52 sm:h-52
+                    lg:w-64 lg:h-64
+                    rounded-full
+                    object-cover
+                    border-[6px]
+                    border-white
+                    shadow-2xl
+                  "
                   />
-                  Cash
-                </label>
-                <label
-                  className={serviceDetailStyles.paymentOption(
-                    paymentMethod === "Online",
-                  )}
-                >
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="Online"
-                    checked={paymentMethod === "Online"}
-                    onChange={() => setPaymentMethod("Online")}
-                    className={serviceDetailStyles.paymentInput}
-                  />
-                  Online
-                </label>
+                </div>
+
+                <h1 className="mt-6 text-3xl sm:text-4xl font-black text-slate-900 leading-tight">
+                  {service.name}
+                </h1>
+
+                <div className="mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-2xl bg-emerald-50 text-emerald-700 font-semibold">
+                  <IndianRupee size={18} />
+                  ₹{service.price}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* DATE */}
-          <div>
-            <h2 className={serviceDetailStyles.dateTitle}>Select Date *</h2>
-            <div className={serviceDetailStyles.dateScrollContainer}>
-              <div className={serviceDetailStyles.dateButtonsContainer}>
+            {/* FORM CARD */}
+            <div className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] p-5 sm:p-8 shadow-sm">
+              <div className="flex items-center gap-3 mb-6">
+                <Phone className="text-emerald-500" size={22} />
+                <h2 className="text-2xl font-black text-slate-900">
+                  Your Details
+                </h2>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+
+                <input
+                  required
+                  type="text"
+                  placeholder="Full Name *"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  className="
+                  w-full rounded-2xl border border-slate-200
+                  bg-white px-4 py-4 text-slate-700
+                  outline-none focus:ring-2 focus:ring-emerald-400
+                "
+                />
+
+                <input
+                  type="text"
+                  required
+                  placeholder="Mobile Number *"
+                  maxLength={10}
+                  value={mobile}
+                  onChange={(e) =>
+                    setMobile(e.target.value.replace(/\D/g, ""))
+                  }
+                  className={`
+                  w-full rounded-2xl border px-4 py-4
+                  outline-none transition-all duration-300
+                  ${mobile && !isValidMobile(mobile)
+                      ? "border-red-400 focus:ring-2 focus:ring-red-300"
+                      : "border-slate-200 focus:ring-2 focus:ring-emerald-400"
+                    }
+                `}
+                />
+
+                <input
+                  type="number"
+                  required
+                  placeholder="Age *"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                  className="
+                  w-full rounded-2xl border border-slate-200
+                  bg-white px-4 py-4 text-slate-700
+                  outline-none focus:ring-2 focus:ring-emerald-400
+                "
+                />
+
+                <select
+                  value={gender}
+                  required
+                  onChange={(e) => setGender(e.target.value)}
+                  className="
+                  w-full rounded-2xl border border-slate-200
+                  bg-white px-4 py-4 text-slate-700
+                  outline-none focus:ring-2 focus:ring-emerald-400
+                "
+                >
+                  <option value="">Select Gender *</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+
+                <input
+                  type="email"
+                  placeholder="Email (optional)"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="
+                  sm:col-span-2
+                  w-full rounded-2xl border border-slate-200
+                  bg-white px-4 py-4 text-slate-700
+                  outline-none focus:ring-2 focus:ring-emerald-400
+                "
+                />
+              </div>
+
+              {/* PAYMENT */}
+              <div className="mt-8">
+                <h3 className="text-lg font-bold text-slate-900 mb-4">
+                  Payment Method
+                </h3>
+
+                <div className="flex flex-wrap gap-4">
+                  {["Cash", "Online"].map((method) => (
+                    <label
+                      key={method}
+                      className={`
+                      flex items-center gap-3 px-5 py-3 rounded-2xl border cursor-pointer transition-all duration-300
+                      ${paymentMethod === method
+                          ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white border-transparent shadow-lg"
+                          : "bg-white border-slate-200 text-slate-700"
+                        }
+                    `}
+                    >
+                      <input
+                        type="radio"
+                        name="payment"
+                        value={method}
+                        checked={paymentMethod === method}
+                        onChange={() => setPaymentMethod(method)}
+                        className="hidden"
+                      />
+                      {method}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* DATE */}
+            <div className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] p-5 sm:p-8 shadow-sm">
+              <h2 className="text-2xl font-black text-slate-900 mb-6">
+                Select Date
+              </h2>
+
+              <div className="flex gap-4 overflow-x-auto pb-2">
                 {service.dates.map((d) => (
                   <button
                     key={d}
@@ -573,133 +671,167 @@ export default function ServiceDetail() {
                       setSelectedDate(d);
                       setSelectedTime("");
                     }}
-                    className={serviceDetailStyles.dateButton(
-                      selectedDate === d,
-                    )}
+                    className={`
+                    min-w-[110px]
+                    px-5 py-4 rounded-2xl font-semibold transition-all duration-300
+                    ${selectedDate === d
+                        ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg"
+                        : "bg-white border border-slate-200 text-slate-700 hover:border-emerald-300"
+                      }
+                  `}
                   >
                     {d}
                   </button>
                 ))}
               </div>
             </div>
-          </div>
 
-          {/* TIME */}
-          {selectedDate && (
-            <div className={serviceDetailStyles.timeSection}>
-              <h2 className={serviceDetailStyles.timeTitle}>Select Time *</h2>
-              <div className={serviceDetailStyles.timeScrollContainer}>
-                <div className={serviceDetailStyles.timeButtonsContainer}>
+            {/* TIME */}
+            {selectedDate && (
+              <div className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] p-5 sm:p-8 shadow-sm">
+                <h2 className="text-2xl font-black text-slate-900 mb-6">
+                  Select Time
+                </h2>
+
+                <div className="flex flex-wrap gap-4">
                   {(service.slots[selectedDate] || []).map((t) => (
                     <button
                       key={t}
                       onClick={() => setSelectedTime(t)}
-                      className={serviceDetailStyles.timeButton(
-                        selectedTime === t,
-                      )}
+                      className={`
+                      inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-semibold transition-all duration-300
+                      ${selectedTime === t
+                          ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg"
+                          : "bg-white border border-slate-200 text-slate-700"
+                        }
+                    `}
                     >
-                      <Clock className={`${iconSize.small} mr-1`} />
+                      <Clock size={18} />
                       {t}
                     </button>
                   ))}
-                  {(!service.slots[selectedDate] ||
-                    service.slots[selectedDate].length === 0) && (
-                    <div className={serviceDetailStyles.noSlotsMessage}>
+                </div>
+
+                {(!service.slots[selectedDate] ||
+                  service.slots[selectedDate].length === 0) && (
+                    <div className="mt-4 text-slate-500">
                       No slots available for this date.
                     </div>
                   )}
-                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <div>
+            {/* ERROR / SUCCESS */}
             {submitError && (
-              <div className={serviceDetailStyles.errorMessage}>
+              <div className="rounded-2xl bg-red-50 border border-red-200 p-4 text-red-600 font-medium">
                 {submitError}
               </div>
             )}
+
             {successMessage && (
-              <div className={serviceDetailStyles.successMessage}>
+              <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-emerald-600 font-medium">
                 {successMessage}
               </div>
             )}
+
+            {/* SUBMIT */}
             <button
               disabled={!isFormValid() || submitting}
               onClick={handleSubmit}
-              className={serviceDetailStyles.submitButton(
-                isFormValid() && !submitting,
-                submitting,
-              )}
+              className={`
+              w-full inline-flex items-center justify-center gap-3
+              py-4 rounded-2xl text-lg font-bold transition-all duration-300
+              ${isFormValid() && !submitting
+                  ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white hover:shadow-2xl hover:-translate-y-1"
+                  : "bg-slate-200 text-slate-500 cursor-not-allowed"
+                }
+            `}
             >
-              <Send />
+              <Send size={20} />
+
               {submitting
                 ? "Submitting..."
-                : `Confirm Booking ${
-                    service.price ? `• ₹${service.price}` : ""
-                  }`}
+                : `Confirm Booking ${service.price ? `• ₹${service.price}` : ""
+                }`}
             </button>
           </div>
-        </div>
 
-        {/* RIGHT */}
-        <div className={serviceDetailStyles.rightColumn}>
-          <h1 className={serviceDetailStyles.serviceName}>{service.name}</h1>
+          {/* ================= RIGHT ================= */}
+          <div className="space-y-8">
 
-          <div className={serviceDetailStyles.aboutContainer}>
-            <h2 className={serviceDetailStyles.aboutTitle}>
-              <FileText /> About This Service
-            </h2>
-            <p className={serviceDetailStyles.aboutText}>{service.about}</p>
-          </div>
+            {/* ABOUT */}
+            <div className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] p-6 sm:p-8 shadow-sm">
+              <div className="flex items-center gap-3 mb-5">
+                <FileText className="text-cyan-500" />
+                <h2 className="text-2xl font-black text-slate-900">
+                  About This Service
+                </h2>
+              </div>
 
-          <div className={serviceDetailStyles.priceContainer}>
-            <IndianRupee />
-            <span className={serviceDetailStyles.priceText}>
-              {service.price}
-            </span>
-          </div>
+              <p className="text-slate-600 leading-relaxed text-base sm:text-lg">
+                {service.about}
+              </p>
+            </div>
 
-          <div className={serviceDetailStyles.instructionsContainer}>
-            <h3 className={serviceDetailStyles.instructionsTitle}>
-              Pre-Test Instructions
-            </h3>
-            <ul className={serviceDetailStyles.instructionsList}>
-              {service.instructions.map((i, idx) => (
-                <li key={idx}>{i}</li>
-              ))}
-            </ul>
-          </div>
+            {/* INSTRUCTIONS */}
+            <div className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] p-6 sm:p-8 shadow-sm">
+              <h3 className="text-2xl font-black text-slate-900 mb-5">
+                Pre-Test Instructions
+              </h3>
 
-          <div className={serviceDetailStyles.summaryContainer}>
-            <h3 className={serviceDetailStyles.summaryTitle}>
-              Booking Summary
-            </h3>
-            <div className={serviceDetailStyles.summaryContent}>
-              <p>
-                <b>Name:</b> {customerName || "Not filled"}
-              </p>
-              <p>
-                <b>Mobile:</b> {mobile || "Not filled"}
-              </p>
-              <p>
-                <b>Age:</b> {age || "Not filled"}
-              </p>
-              <p>
-                <b>Gender:</b> {gender || "Not filled"}
-              </p>
-              <p>
-                <b>Date:</b> {selectedDate || "Not selected"}
-              </p>
-              <p>
-                <b>Time:</b> {selectedTime || "Not selected"}
-              </p>
-              <p>
-                <b>Payment:</b> {paymentMethod}
-              </p>
-              <p>
-                <b>Price:</b> ₹{service.price}
-              </p>
+              <ul className="space-y-4">
+                {service.instructions.map((i, idx) => (
+                  <li
+                    key={idx}
+                    className="flex gap-3 text-slate-600 leading-relaxed"
+                  >
+                    <span className="mt-2 w-2 h-2 rounded-full bg-emerald-500"></span>
+                    {i}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* SUMMARY */}
+            <div className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] p-6 sm:p-8 shadow-sm sticky top-24">
+              <h3 className="text-2xl font-black text-slate-900 mb-6">
+                Booking Summary
+              </h3>
+
+              <div className="space-y-4">
+                {[
+                  ["Name", customerName || "Not filled"],
+                  ["Mobile", mobile || "Not filled"],
+                  ["Age", age || "Not filled"],
+                  ["Gender", gender || "Not filled"],
+                  ["Date", selectedDate || "Not selected"],
+                  ["Time", selectedTime || "Not selected"],
+                  ["Payment", paymentMethod],
+                ].map(([label, value]) => (
+                  <div
+                    key={label}
+                    className="flex items-center justify-between gap-4 border-b border-slate-100 pb-3"
+                  >
+                    <span className="text-slate-500 font-medium">
+                      {label}
+                    </span>
+
+                    <span className="font-semibold text-slate-900 text-right">
+                      {value}
+                    </span>
+                  </div>
+                ))}
+
+                <div className="flex items-center justify-between pt-4">
+                  <span className="text-lg font-bold text-slate-900">
+                    Total Price
+                  </span>
+
+                  <span className="text-2xl font-black bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+                    ₹{service.price}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

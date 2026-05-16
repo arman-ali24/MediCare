@@ -373,209 +373,276 @@ export default function DoctorDetail() {
     );
 
   return (
-    <div className={doctorDetailStyles.pageContainer}>
+    <section className="relative overflow-hidden min-h-screen bg-gradient-to-b from-[#f8fbff] via-white to-[#eef7ff] py-6 pb-24">
       <ToastContainer />
-      {/* Header */}
-      <div className={doctorDetailStyles.headerContainer}>
-        <div className={doctorDetailStyles.headerContent}>
-          <div className={doctorDetailStyles.headerFlex}>
-            <Link to="/doctors" className={doctorDetailStyles.headerBackButton}>
-              <ArrowLeft size={18} />
-              <span className={doctorDetailStyles.headerBackButtonText}>
-                Back
-              </span>
-            </Link>
 
-            <div className="flex items-center gap-3">
-              <h1 className={doctorDetailStyles.headerTitle}>Doctor Profile</h1>
-            </div>
+      {/* Background Blur */}
+      <div className="absolute top-0 left-0 w-72 h-72 bg-emerald-100/40 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-cyan-100/40 rounded-full blur-3xl"></div>
 
-            <div className={doctorDetailStyles.headerRatingContainer}>
-              <Star className={doctorDetailStyles.headerRatingIcon} size={18} />
-              <span className={doctorDetailStyles.headerRatingText}>
-                {doctor.rating}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="flex items-center justify-between gap-4 flex-wrap mb-10">
+
+          <Link
+            to="/doctors"
+            className="
+      group
+      inline-flex items-center gap-2
+      px-4 py-2.5
+      rounded-2xl
+      bg-white
+      border border-slate-200
+      text-slate-700
+      font-semibold
+      shadow-sm
+      hover:text-emerald-600
+      hover:border-emerald-300
+      hover:shadow-lg
+      hover:-translate-y-0.5
+      transition-all duration-300
+    "
+          >
+            <ArrowLeft
+              size={18}
+              className="transition-transform duration-300 group-hover:-translate-x-1"
+            />
+            Back
+          </Link>
+
+          <div className="text-center">
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
+              <span className="bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+                Doctor Profile
               </span>
-            </div>
+            </h1>
+          </div>
+
+
+
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border border-slate-200 shadow-sm">
+            <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+            <span className="font-bold text-slate-800">
+              {doctor.rating}
+            </span>
           </div>
         </div>
-      </div>
-      <div
-        className={`${doctorDetailStyles.mainContent} ${
-          isVisible
-            ? doctorDetailStyles.visibleState
-            : doctorDetailStyles.hiddenState
-        }`}
-      >
-        {/* profile card */}
-        <div className={doctorDetailStyles.profileCard}>
-          <div className={doctorDetailStyles.profileGrid}>
-            <div className={doctorDetailStyles.leftColumn}>
-              <div className={doctorDetailStyles.avatarContainer}>
-                <div className={doctorDetailStyles.avatarGlow}></div>
 
-                <img
-                  src={
-                    doctor.imageUrl || doctor.image || "/placeholder-doctor.jpg"
-                  }
-                  alt={doctor.name}
-                  className={doctorDetailStyles.avatarImage}
-                  style={{ objectPosition: "center" }}
-                />
+        <div
+          className={`transition-all duration-700 ${isVisible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+            }`}
+        >
+          {/* PROFILE CARD */}
+          <div className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] shadow-sm p-5 sm:p-8 lg:p-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+              {/* LEFT */}
+              <div className="flex flex-col items-center">
+                {/* IMAGE */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-cyan-400 blur-3xl opacity-20 rounded-full"></div>
+
+                  <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-full overflow-hidden border-[6px] border-white shadow-2xl">
+                    <img
+                      src={
+                        doctor.imageUrl ||
+                        doctor.image ||
+                        "/placeholder-doctor.jpg"
+                      }
+                      alt={doctor.name}
+                      className="w-full h-full object-cover"
+                      style={{ objectPosition: "center top" }}
+                    />
+                  </div>
+                </div>
+
+                {/* STATS */}
+                <div className="grid grid-cols-3 gap-3 sm:gap-5 w-full mt-8">
+                  <div className="bg-white rounded-3xl border border-slate-200 p-4 text-center shadow-sm">
+                    <Heart className="w-5 h-5 text-red-500 mx-auto mb-2" />
+                    <div className="text-lg sm:text-xl font-black text-slate-900">
+                      {doctor.success}%
+                    </div>
+                    <div className="text-xs sm:text-sm text-slate-500 font-medium">
+                      Success
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-3xl border border-slate-200 p-4 text-center shadow-sm">
+                    <Award className="w-5 h-5 text-yellow-500 mx-auto mb-2" />
+                    <div className="text-lg sm:text-xl font-black text-slate-900">
+                      {doctor.experience}
+                    </div>
+                    <div className="text-xs sm:text-sm text-slate-500 font-medium">
+                      Experience
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-3xl border border-slate-200 p-4 text-center shadow-sm">
+                    <Users className="w-5 h-5 text-cyan-500 mx-auto mb-2" />
+                    <div className="text-lg sm:text-xl font-black text-slate-900">
+                      {doctor.patients}
+                    </div>
+                    <div className="text-xs sm:text-sm text-slate-500 font-medium">
+                      Patients
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className={doctorDetailStyles.statsGrid}>
-                <div className={doctorDetailStyles.statBox}>
-                  <Heart
-                    className={`${doctorDetailStyles.statIcon} ${doctorDetailStyles.heartIcon}`}
-                  />
-                  <div className={doctorDetailStyles.statValue}>
-                    {doctor.success}%
+              {/* RIGHT */}
+              <div className="space-y-7">
+                <div>
+                  <h1 className="text-3xl sm:text-4xl font-black text-slate-900 leading-tight">
+                    {doctor.name}
+                  </h1>
+
+                  <div className="mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold shadow-lg">
+                    <Zap className="w-4 h-4" />
+                    {doctor.specialization ||
+                      doctor.speciality}
                   </div>
-                  <div className={doctorDetailStyles.statLabel}>Success</div>
                 </div>
-                <div className={doctorDetailStyles.statBox}>
-                  <Award
-                    className={`${doctorDetailStyles.statIcon} ${doctorDetailStyles.awardIcon}`}
-                  />
-                  <div className={doctorDetailStyles.statValue}>
-                    {doctor.experience} Years
+
+                {/* INFO GRID */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm">
+                    <GraduationCap className="w-6 h-6 text-emerald-500 mb-3" />
+
+                    <p className="text-sm text-slate-500 font-medium">
+                      Qualifications
+                    </p>
+
+                    <h3 className="text-slate-900 font-bold mt-1">
+                      {doctor.qualifications}
+                    </h3>
                   </div>
-                  <div className={doctorDetailStyles.statLabel}>Experience</div>
+
+                  <div className="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm">
+                    <MapPin className="w-6 h-6 text-cyan-500 mb-3" />
+
+                    <p className="text-sm text-slate-500 font-medium">
+                      Location
+                    </p>
+
+                    <h3 className="text-slate-900 font-bold mt-1">
+                      {doctor.location}
+                    </h3>
+                  </div>
+
+                  <div className="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm">
+                    <Clock className="w-6 h-6 text-orange-500 mb-3" />
+
+                    <p className="text-sm text-slate-500 font-medium">
+                      Consultation Fee
+                    </p>
+
+                    <h3 className="text-2xl font-black text-slate-900 mt-1">
+                      ₹{fee}
+                    </h3>
+                  </div>
+
+                  <div className="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm">
+                    <Shield className="w-6 h-6 text-green-500 mb-3" />
+
+                    <p className="text-sm text-slate-500 font-medium">
+                      Availability
+                    </p>
+
+                    <h3 className="text-slate-900 font-bold mt-1">
+                      {doctor.availability === "Available" ||
+                        doctor.available
+                        ? "Available"
+                        : "Available Soon"}
+                    </h3>
+                  </div>
                 </div>
-                <div className={doctorDetailStyles.statBox}>
-                  <Users
-                    className={`${doctorDetailStyles.statIcon} ${doctorDetailStyles.usersIcon}`}
-                  />
-                  <div className={doctorDetailStyles.statValue}>
-                    {doctor.patients}
+
+                {/* ABOUT */}
+                <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+                  <div className="flex items-center gap-3 mb-4">
+                    <BadgeInfo className="w-5 h-5 text-emerald-500" />
+
+                    <h3 className="text-xl font-bold text-slate-900">
+                      About Doctor
+                    </h3>
                   </div>
-                  <div className={doctorDetailStyles.statLabel}>Patients</div>
+
+                  <p className="text-slate-600 leading-relaxed">
+                    {doctor.about || doctor.bio}
+                  </p>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* RIGHT */}
-            <div className={doctorDetailStyles.rightColumn}>
-              <div className="space-y-3">
-                <h1 className={doctorDetailStyles.doctorName}>{doctor.name}</h1>
-                <div className={doctorDetailStyles.specializationBadge}>
-                  <Zap className={doctorDetailStyles.badgeIcon} />
-                  {doctor.specialization ||
-                    doctor.speciality ||
-                    doctor.specialization}
-                </div>
+          {/* APPOINTMENT SECTION */}
+          <div className="mt-10 bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[32px] shadow-sm p-5 sm:p-8 lg:p-10">
+            {/* TITLE */}
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center shadow-lg">
+                <CalendarCheck className="w-6 h-6 text-white" />
               </div>
 
-              <div className={doctorDetailStyles.infoGrid}>
-                <div className={doctorDetailStyles.infoItem}>
-                  <GraduationCap className={doctorDetailStyles.infoIcon} />
-                  <div>
-                    <div className={doctorDetailStyles.infoLabel}>
-                      Qualifications
-                    </div>
-                    <div className={doctorDetailStyles.infoValue}>
-                      {doctor.qualifications}
-                    </div>
-                  </div>
-                </div>
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
+                  Book Your Appointment
+                </h2>
 
-                <div className={doctorDetailStyles.infoItem}>
-                  <MapPin className={doctorDetailStyles.infoIcon} />
-                  <div>
-                    <div className={doctorDetailStyles.infoLabel}>Location</div>
-                    <div className={doctorDetailStyles.infoValue}>
-                      {doctor.location}
-                    </div>
-                  </div>
-                </div>
-
-                <div className={doctorDetailStyles.infoItem}>
-                  <Clock className={doctorDetailStyles.infoIcon} />
-                  <div>
-                    <div className={doctorDetailStyles.infoLabel}>
-                      Consultation Fee
-                    </div>
-                    <div className={doctorDetailStyles.feeValue}>₹{fee}</div>
-                  </div>
-                </div>
-
-                <div className={doctorDetailStyles.infoItem}>
-                  <Shield className={doctorDetailStyles.infoIcon} />
-                  <div>
-                    <div className={doctorDetailStyles.infoLabel}>
-                      Availability
-                    </div>
-                    <div className={doctorDetailStyles.infoValue}>
-                      {doctor.availability === "Available" || doctor.available
-                        ? "Available"
-                        : "Available Soon"}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className={doctorDetailStyles.aboutContainer}>
-                <div className={doctorDetailStyles.aboutHeader}>
-                  <BadgeInfo className={doctorDetailStyles.aboutIcon} />
-                  <h3 className={doctorDetailStyles.aboutTitle}>
-                    About Doctor
-                  </h3>
-                </div>
-                <p className={doctorDetailStyles.aboutText}>
-                  {doctor.about || doctor.bio}
+                <p className="text-slate-500 mt-1">
+                  Select date and available slot
                 </p>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* APPOINTMENT */}
-        <div className={doctorDetailStyles.appointmentContainer}>
-          <div className={doctorDetailStyles.appointmentContent}>
-            <div className={doctorDetailStyles.appointmentHeader}>
-              <CalendarCheck className={doctorDetailStyles.appointmentIcon} />
-              <h2 className={doctorDetailStyles.appointmentTitle}>
-                Book Your Appointment
-              </h2>
-            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* LEFT */}
+              <div>
+                {/* DATE */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-slate-900 mb-5 flex items-center gap-2">
+                    <CalendarCheck className="w-5 h-5 text-emerald-500" />
+                    Select Date
+                  </h3>
 
-            <div className={doctorDetailStyles.appointmentGrid}>
-              {/* LEFT COLUMN */}
-              <div className={doctorDetailStyles.dateSection}>
-                <h3 className={doctorDetailStyles.dateTitle}>
-                  <CalendarCheck className={doctorDetailStyles.dateTitleIcon} />{" "}
-                  Select Date
-                </h3>
-
-                <div className={doctorDetailStyles.dateScrollContainer}>
-                  <div className={doctorDetailStyles.dateButtonsContainer}>
+                  <div className="flex gap-3 overflow-x-auto pb-2">
                     {next7.map((date) => {
                       const isSelected =
-                        selectedDate?.toDateString() === date.toDateString();
+                        selectedDate?.toDateString() ===
+                        date.toDateString();
+
                       return (
                         <button
                           key={date.toISOString()}
-                          onClick={() => setSelectedDate(date)}
-                          className={`${doctorDetailStyles.dateButton} ${
-                            isSelected
-                              ? doctorDetailStyles.dateButtonSelected
-                              : doctorDetailStyles.dateButtonUnselected
-                          }`}
+                          onClick={() =>
+                            setSelectedDate(date)
+                          }
+                          className={`min-w-[90px] rounded-3xl p-4 border transition-all duration-300 ${isSelected
+                            ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white border-transparent shadow-lg scale-105"
+                            : "bg-white border-slate-200 text-slate-700 hover:border-emerald-300 hover:shadow-md"
+                            }`}
                         >
-                          <div className={doctorDetailStyles.dateContent}>
-                            <div className={doctorDetailStyles.dateWeekday}>
-                              {date.toLocaleDateString("en-US", {
+                          <div className="text-sm font-semibold">
+                            {date.toLocaleDateString(
+                              "en-US",
+                              {
                                 weekday: "short",
-                              })}
-                            </div>
-                            <div className={doctorDetailStyles.dateDay}>
-                              {date.getDate()}
-                            </div>
-                            <div className={doctorDetailStyles.dateMonth}>
-                              {date.toLocaleDateString("en-US", {
+                              }
+                            )}
+                          </div>
+
+                          <div className="text-2xl font-black mt-1">
+                            {date.getDate()}
+                          </div>
+
+                          <div className="text-xs mt-1">
+                            {date.toLocaleDateString(
+                              "en-US",
+                              {
                                 month: "short",
-                              })}
-                            </div>
+                              }
+                            )}
                           </div>
                         </button>
                       );
@@ -583,215 +650,269 @@ export default function DoctorDetail() {
                   </div>
                 </div>
 
-                {/* PATIENT FORM */}
-                <div className={doctorDetailStyles.patientForm}>
-                  <h3 className={doctorDetailStyles.patientFormTitle}>
+                {/* FORM */}
+                <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+                  <h3 className="text-xl font-bold text-slate-900 mb-5">
                     Patient Details
                   </h3>
 
-                  <div className={doctorDetailStyles.patientFormGrid}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <input
                       type="text"
                       placeholder="Full Name"
-                      className={doctorDetailStyles.formInput}
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-400"
                       value={formData.name}
                       onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
+                        setFormData({
+                          ...formData,
+                          name: e.target.value,
+                        })
                       }
                     />
 
                     <input
                       type="number"
                       placeholder="Age"
-                      className={doctorDetailStyles.formInput}
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-400"
                       value={formData.age}
                       onChange={(e) =>
-                        setFormData({ ...formData, age: e.target.value })
+                        setFormData({
+                          ...formData,
+                          age: e.target.value,
+                        })
                       }
                     />
 
                     <input
                       type="tel"
-                      inputMode="numeric"
-                      pattern="\d{10}"
-                      maxLength={10}
-                      placeholder="Mobile Number (10 digits)"
-                      className={doctorDetailStyles.formInput}
+                      placeholder="Mobile Number"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-400"
                       value={formData.mobile}
-                      onChange={(e) => handleMobileChange(e.target.value)}
-                      onPaste={handleMobilePaste}
+                      onChange={(e) =>
+                        handleMobileChange(
+                          e.target.value
+                        )
+                      }
                     />
 
                     <select
-                      className={doctorDetailStyles.formSelect}
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-400"
                       value={formData.gender}
                       onChange={(e) =>
-                        setFormData({ ...formData, gender: e.target.value })
+                        setFormData({
+                          ...formData,
+                          gender: e.target.value,
+                        })
                       }
                     >
-                      <option value="">Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
+                      <option value="">
+                        Gender
+                      </option>
+                      <option value="Male">
+                        Male
+                      </option>
+                      <option value="Female">
+                        Female
+                      </option>
+                      <option value="Other">
+                        Other
+                      </option>
                     </select>
 
                     <input
                       type="email"
-                      placeholder="Email (optional - for receipts)"
-                      className={doctorDetailStyles.emailInput}
+                      placeholder="Email (optional)"
+                      className="sm:col-span-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-400"
                       value={formData.email}
                       onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
+                        setFormData({
+                          ...formData,
+                          email: e.target.value,
+                        })
                       }
                     />
                   </div>
                 </div>
               </div>
 
-              {/* RIGHT COLUMN */}
-              <div className={doctorDetailStyles.timeSlotsSection}>
-                <h3 className={doctorDetailStyles.timeSlotsTitle}>
-                  <Clock className={doctorDetailStyles.timeSlotsIcon} />{" "}
-                  Available Time Slots
-                </h3>
+              {/* RIGHT */}
+              <div>
+                {/* TIME SLOTS */}
+                <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+                  <h3 className="text-xl font-bold text-slate-900 mb-5 flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-cyan-500" />
+                    Available Time Slots
+                  </h3>
 
-                <div className={doctorDetailStyles.timeSlotsContainer}>
-                  {slots.length === 0 && (
-                    <p className={doctorDetailStyles.noSlotsMessage}>
-                      No time slots for this date.
-                    </p>
-                  )}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {slots.length === 0 && (
+                      <p className="text-slate-500">
+                        No slots available
+                      </p>
+                    )}
 
-                  {slots.map((slot) => (
-                    <button
-                      key={slot}
-                      onClick={() => setSelectedSlot(slot)}
-                      className={`${doctorDetailStyles.timeSlotButton} ${
-                        selectedSlot === slot
-                          ? doctorDetailStyles.timeSlotButtonSelected
-                          : doctorDetailStyles.timeSlotButtonUnselected
-                      }`}
-                    >
-                      <div className={doctorDetailStyles.timeSlotContent}>
-                        <Clock className={doctorDetailStyles.timeSlotIcon} />
-                        <span>{slot}</span>
-                      </div>
-                    </button>
-                  ))}
+                    {slots.map((slot) => (
+                      <button
+                        key={slot}
+                        onClick={() =>
+                          setSelectedSlot(slot)
+                        }
+                        className={`rounded-2xl py-3 px-3 font-semibold transition-all duration-300 ${selectedSlot === slot
+                          ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                          }`}
+                      >
+                        {slot}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* SUMMARY */}
-                <div className={doctorDetailStyles.summaryContainer}>
-                  <div className={doctorDetailStyles.summaryItem}>
-                    <div className={doctorDetailStyles.summaryRow}>
-                      <span className={doctorDetailStyles.summaryLabel}>
-                        Selected Doctor:
+                <div className="mt-6 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+                  <h3 className="text-xl font-bold text-slate-900 mb-5">
+                    Booking Summary
+                  </h3>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-slate-500">
+                        Doctor
                       </span>
-                      <span className={doctorDetailStyles.summaryValue}>
+
+                      <span className="font-bold text-slate-900 text-right">
                         {doctor?.name || "—"}
                       </span>
                     </div>
 
-                    <div className={doctorDetailStyles.summaryRow}>
-                      <span className={doctorDetailStyles.summaryLabel}>
-                        Doctor Speciality:
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-slate-500">
+                        Speciality
                       </span>
-                      <span className={doctorDetailStyles.summaryValue}>
-                        {doctor?.specialization || doctor?.speciality || "—"}
+
+                      <span className="font-bold text-slate-900 text-right">
+                        {doctor?.specialization ||
+                          doctor?.speciality ||
+                          "—"}
                       </span>
                     </div>
 
-                    <div className={doctorDetailStyles.summaryRow}>
-                      <span className={doctorDetailStyles.summaryLabel}>
-                        Selected Date:
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-slate-500">
+                        Date
                       </span>
-                      <span className={doctorDetailStyles.summaryValue}>
+
+                      <span className="font-bold text-slate-900 text-right">
                         {selectedDate
-                          ? selectedDate.toLocaleDateString("en-US", {
-                              weekday: "long",
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })
+                          ? selectedDate.toLocaleDateString()
                           : "Not selected"}
                       </span>
                     </div>
 
-                    <div className={doctorDetailStyles.summaryRow}>
-                      <span className={doctorDetailStyles.summaryLabel}>
-                        Selected Time:
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-slate-500">
+                        Time
                       </span>
-                      <span className={doctorDetailStyles.summaryValue}>
-                        {selectedSlot || "Not selected"}
+
+                      <span className="font-bold text-slate-900 text-right">
+                        {selectedSlot ||
+                          "Not selected"}
                       </span>
                     </div>
 
-                    <div className={doctorDetailStyles.summaryRow}>
-                      <span className={doctorDetailStyles.summaryLabel}>
-                        Consultation Fee:
+                    <div className="flex items-center justify-between gap-4 border-t border-slate-200 pt-4">
+                      <span className="text-slate-500">
+                        Consultation Fee
                       </span>
-                      <span className={doctorDetailStyles.feeDisplay}>
+
+                      <span className="text-2xl font-black text-slate-900">
                         ₹{fee}
                       </span>
                     </div>
                   </div>
 
-                  {/* PAYMENT METHOD SELECTOR */}
-                  <div className={doctorDetailStyles.paymentContainer}>
-                    <label className={doctorDetailStyles.paymentLabel}>
-                      Payment:
+                  {/* PAYMENT */}
+                  <div className="mt-6">
+                    <label className="text-slate-700 font-semibold mb-3 block">
+                      Payment Method
                     </label>
-                    <div className={doctorDetailStyles.paymentOptions}>
+
+                    <div className="flex gap-3">
                       <label
-                        className={`${doctorDetailStyles.paymentOption} ${
-                          paymentMethod === "Cash"
-                            ? doctorDetailStyles.paymentOptionSelected
-                            : doctorDetailStyles.paymentOptionUnselected
-                        }`}
+                        className={`flex-1 rounded-2xl border px-4 py-3 text-center font-semibold cursor-pointer transition-all duration-300 ${paymentMethod === "Cash"
+                          ? "bg-emerald-500 text-white border-emerald-500"
+                          : "bg-slate-100 text-slate-700 border-slate-200"
+                          }`}
                       >
                         <input
                           type="radio"
                           name="payment"
                           value="Cash"
-                          checked={paymentMethod === "Cash"}
-                          onChange={() => setPaymentMethod("Cash")}
-                          className={doctorDetailStyles.paymentRadio}
+                          checked={
+                            paymentMethod ===
+                            "Cash"
+                          }
+                          onChange={() =>
+                            setPaymentMethod(
+                              "Cash"
+                            )
+                          }
+                          className="hidden"
                         />
+
                         Cash
                       </label>
+
                       <label
-                        className={`${doctorDetailStyles.paymentOption} ${
-                          paymentMethod === "Online"
-                            ? doctorDetailStyles.paymentOptionSelected
-                            : doctorDetailStyles.paymentOptionUnselected
-                        }`}
+                        className={`flex-1 rounded-2xl border px-4 py-3 text-center font-semibold cursor-pointer transition-all duration-300 ${paymentMethod ===
+                          "Online"
+                          ? "bg-cyan-500 text-white border-cyan-500"
+                          : "bg-slate-100 text-slate-700 border-slate-200"
+                          }`}
                       >
                         <input
                           type="radio"
                           name="payment"
                           value="Online"
-                          checked={paymentMethod === "Online"}
-                          onChange={() => setPaymentMethod("Online")}
-                          className={doctorDetailStyles.paymentRadio}
+                          checked={
+                            paymentMethod ===
+                            "Online"
+                          }
+                          onChange={() =>
+                            setPaymentMethod(
+                              "Online"
+                            )
+                          }
+                          className="hidden"
                         />
+
                         Online
                       </label>
                     </div>
                   </div>
 
+                  {/* BUTTON */}
                   <button
                     onClick={handleBooking}
-                    disabled={!selectedDate || !selectedSlot || isSubmitting}
-                    className={`${doctorDetailStyles.bookingButton} ${
-                      !selectedDate || !selectedSlot || isSubmitting
-                        ? doctorDetailStyles.bookingButtonDisabled
-                        : doctorDetailStyles.bookingButtonEnabled
-                    }`}
+                    disabled={
+                      !selectedDate ||
+                      !selectedSlot ||
+                      isSubmitting
+                    }
+                    className={`w-full mt-7 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${!selectedDate ||
+                      !selectedSlot ||
+                      isSubmitting
+                      ? "bg-slate-300 text-slate-500 cursor-not-allowed"
+                      : "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg hover:shadow-2xl hover:-translate-y-1"
+                      }`}
                   >
-                    <div className={doctorDetailStyles.bookingButtonContent}>
-                      <Phone className={doctorDetailStyles.bookingIcon} />
+                    <div className="flex items-center justify-center gap-3">
+                      <Phone className="w-5 h-5" />
+
                       <span>
-                        {isSubmitting ? "Booking..." : "Confirm Booking"}
+                        {isSubmitting
+                          ? "Booking..."
+                          : "Confirm Booking"}
                       </span>
                     </div>
                   </button>
@@ -800,7 +921,7 @@ export default function DoctorDetail() {
             </div>
           </div>
         </div>
-      </div>{" "}
-    </div>
+      </div>
+    </section>
   );
 }
