@@ -1,11 +1,19 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { listPageStyles } from "../assets/dummyStyles";
 import { useParams } from "react-router-dom";
-import { Calendar, Phone, Search, X } from "lucide-react";
+import {
+  Calendar,
+  Phone,
+  Search,
+  X,
+  RefreshCw,
+  Users,
+} from "lucide-react";
 
 const API_BASE = "http://localhost:4000";
 
-// helper functions similar to dashboard page
+// ================= HELPERS =================
+
 function parseDateTime(date, time) {
   return new Date(`${date}T${time}:00`);
 }
@@ -22,6 +30,7 @@ function formatTimeAMPM(time24) {
 function formatDate(dateStr) {
   if (!dateStr) return "";
   const d = new Date(`${dateStr}T00:00:00`);
+
   return d.toLocaleDateString("en-GB", {
     day: "numeric",
     month: "short",
@@ -31,85 +40,121 @@ function formatDate(dateStr) {
 
 function to24HourFromMaybe12(timeStr) {
   if (!timeStr) return "00:00";
+
   const m = timeStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+
   if (!m) return timeStr;
+
   let hh = Number(m[1]);
   const mm = m[2];
   const ampm = m[3];
-  if (!ampm) return `${String(hh).padStart(2, "0")}:${mm}`;
+
+  if (!ampm) {
+    return `${String(hh).padStart(2, "0")}:${mm}`;
+  }
+
   const up = ampm.toUpperCase();
+
   if (up === "AM") {
     if (hh === 12) hh = 0;
   } else {
     if (hh !== 12) hh += 12;
   }
+
   return `${String(hh).padStart(2, "0")}:${mm}`;
 }
 
 function to12HourFrom24(hhmm) {
   if (!hhmm) return "12:00 AM";
+
   const [hh, mm] = hhmm.split(":").map(Number);
+
   const ampm = hh >= 12 ? "PM" : "AM";
   const h12 = hh % 12 === 0 ? 12 : hh % 12;
+
   return `${String(h12)}:${String(mm).padStart(2, "0")} ${ampm}`;
 }
 
 function backendToFrontendStatus(s) {
   if (!s) return "pending";
+
   const v = String(s).toLowerCase();
+
   if (v === "pending") return "pending";
   if (v === "confirmed") return "confirmed";
   if (v === "completed" || v === "complete") return "complete";
   if (v === "canceled" || v === "cancelled") return "cancelled";
   if (v === "rescheduled") return "rescheduled";
+
   return v;
 }
 
 function frontendToBackendStatus(fs) {
   if (!fs) return "Pending";
+
   const v = String(fs).toLowerCase();
+
   if (v === "pending") return "Pending";
   if (v === "confirmed") return "Confirmed";
   if (v === "complete") return "Completed";
   if (v === "cancelled") return "Canceled";
   if (v === "rescheduled") return "Rescheduled";
+
   return fs;
 }
 
 function normalizeAppointment(a) {
   if (!a) return null;
+
   const id = a._id || a.id || String(Math.random()).slice(2);
+
   const patient = a.patientName || a.patient || a.name || "Unknown";
+
   const age = a.age ?? a.patientAge ?? "";
+
   const gender = a.gender || "";
+
   const doctorName =
-    (a.doctorId && a.doctorId.name) || a.doctorName || a.doctor || "";
+    (a.doctorId && a.doctorId.name) ||
+    a.doctorName ||
+    a.doctor ||
+    "";
+
   const doctorImage =
     (a.doctorId && (a.doctorId.imageUrl || a.doctorId.image)) ||
     a.doctorImage ||
     a.doctorImageUrl ||
     "";
+
   const speciality =
-    (a.doctorId && (a.doctorId.specialization || a.doctorId.speciality)) ||
+    (a.doctorId &&
+      (a.doctorId.specialization || a.doctorId.speciality)) ||
     a.speciality ||
     a.specialization ||
     "";
+
   const mobile = a.mobile || a.phone || "";
-  const fee = Number(a.fees ?? a.fee ?? a.payment?.amount ?? 0) || 0;
+
+  const fee =
+    Number(a.fees ?? a.fee ?? a.payment?.amount ?? 0) || 0;
+
   const date = a.date || (a.slot && a.slot.date) || "";
+
   const rawTime =
     a.time ||
     (a.slot && a.slot.time) ||
     (a.hour != null
-      ? `${String(a.hour).padStart(2, "0")}:${String(a.minute || 0).padStart(
-          2,
-          "0",
-        )}`
+      ? `${String(a.hour).padStart(2, "0")}:${String(
+        a.minute || 0,
+      ).padStart(2, "0")}`
       : "");
+
   const time = to24HourFromMaybe12(rawTime);
+
   const status = backendToFrontendStatus(
     a.status || a.payment?.status || "pending",
   );
+
   return {
     id,
     patient,
@@ -127,396 +172,399 @@ function normalizeAppointment(a) {
   };
 }
 
-// for status badge a small function
+// ================= STATUS BADGE =================
+
 function StatusBadge({ status }) {
-  const base = listPageStyles.statusBadgeBase;
-  if (status === "complete")
-    return (
-      <span className={`${base} ${listPageStyles.statusBadgeComplete}`}>
-        Completed
-      </span>
-    );
-  if (status === "cancelled")
-    return (
-      <span className={`${base} ${listPageStyles.statusBadgeCancelled}`}>
-        Cancelled
-      </span>
-    );
-  if (status === "confirmed")
-    return (
-      <span className={`${base} ${listPageStyles.statusBadgeConfirmed}`}>
-        Confirmed
-      </span>
-    );
-  if (status === "rescheduled")
-    return (
-      <span className={`${base} ${listPageStyles.statusBadgeRescheduled}`}>
-        Rescheduled
-      </span>
-    );
+  const styles = {
+    pending:
+      "bg-amber-50 text-amber-700 border border-amber-200",
+    confirmed:
+      "bg-blue-50 text-blue-700 border border-blue-200",
+    complete:
+      "bg-emerald-50 text-emerald-700 border border-emerald-200",
+    cancelled:
+      "bg-rose-50 text-rose-700 border border-rose-200",
+    rescheduled:
+      "bg-purple-50 text-purple-700 border border-purple-200",
+  };
+
   return (
-    <span className={`${base} ${listPageStyles.statusBadgePending}`}>
-      Pending
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-semibold ${styles[status]
+        }`}
+    >
+      {status === "complete"
+        ? "Completed"
+        : status === "cancelled"
+          ? "Cancelled"
+          : status === "confirmed"
+            ? "Confirmed"
+            : status === "rescheduled"
+              ? "Rescheduled"
+              : "Pending"}
     </span>
   );
 }
 
+// ================= STATUS SELECT =================
+
 function StatusSelect({ appointment, onChange }) {
   const terminal =
-    appointment.status === "complete" || appointment.status === "cancelled";
-
-  if (appointment.status === "rescheduled") {
-    return (
-      <select
-        value={appointment.status}
-        onChange={(e) => onChange(e.target.value)}
-        className={`${listPageStyles.statusSelect} ${
-          terminal
-            ? listPageStyles.statusSelectDisabled
-            : listPageStyles.statusSelectEnabled
-        }`}
-        title="After reschedule you can mark Completed or Cancelled"
-      >
-        <option value="rescheduled" disabled>
-          Rescheduled
-        </option>
-        <option value="complete">Completed</option>
-        <option value="cancelled">Cancelled</option>
-      </select>
-    );
-  }
-
-  const options = [
-    { value: "pending", label: "Pending" },
-    { value: "confirmed", label: "Confirmed" },
-    { value: "complete", label: "Completed" },
-    { value: "cancelled", label: "Cancelled" },
-  ];
+    appointment.status === "complete" ||
+    appointment.status === "cancelled";
 
   return (
     <select
       value={appointment.status}
       onChange={(e) => onChange(e.target.value)}
       disabled={terminal}
-      className={`${listPageStyles.statusSelect} ${
-        terminal
-          ? listPageStyles.statusSelectDisabled
-          : listPageStyles.statusSelectEnabled
-      }`}
-      title={terminal ? "Status cannot be changed" : "Change status"}
+      className={`
+        px-3 py-2 rounded-xl text-sm font-medium outline-none
+        border border-slate-200 bg-white
+        transition-all duration-300
+        ${terminal
+          ? "opacity-60 cursor-not-allowed"
+          : "hover:border-emerald-300 focus:border-emerald-400"
+        }
+      `}
     >
-      {options.map((opt) => (
-        <option key={opt.value} value={opt.value} className="text-sm">
-          {opt.label}
-        </option>
-      ))}
+      <option value="pending">Pending</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="complete">Completed</option>
+      <option value="cancelled">Cancelled</option>
+      <option value="rescheduled">Rescheduled</option>
     </select>
   );
 }
 
+// ================= RESCHEDULE =================
+
 function RescheduleButton({ appointment, onReschedule }) {
   const terminal =
-    appointment.status === "complete" || appointment.status === "cancelled";
+    appointment.status === "complete" ||
+    appointment.status === "cancelled";
+
   const [editing, setEditing] = useState(false);
+
   const [date, setDate] = useState(appointment.date || "");
-  const [time, setTime] = useState(appointment.time || "09:00");
+
+  const [time, setTime] = useState(
+    appointment.time || "09:00",
+  );
 
   const minDate = useMemo(() => {
     const d = new Date();
+
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
+
     return `${y}-${m}-${day}`;
   }, []);
 
-  useEffect(() => {
-    const apptRaw = appointment.date ? String(appointment.date) : "";
-    const apptDate = apptRaw.slice(0, 10);
-    setDate(apptDate && apptDate >= minDate ? apptDate : minDate);
-    setTime(appointment.time || "09:00");
-  }, [appointment.date, appointment.time, minDate]);
-
   function save() {
-    if (!date || !time) return;
-    if (date < minDate) {
-      setDate(minDate);
-      return;
-    }
     onReschedule(date, time);
     setEditing(false);
   }
 
-  function cancel() {
-    const apptRaw = appointment.date ? String(appointment.date) : "";
-    const apptDate = apptRaw.slice(0, 10);
-    setDate(apptDate && apptDate >= minDate ? apptDate : minDate);
-    setTime(appointment.time || "09:00");
-    setEditing(false);
+  if (!editing) {
+    return (
+      <button
+        onClick={() => setEditing(true)}
+        disabled={terminal}
+        className={`
+          px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300
+          ${terminal
+            ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+            : "bg-emerald-500 text-white hover:bg-emerald-600 hover:-translate-y-0.5"
+          }
+        `}
+      >
+        Reschedule
+      </button>
+    );
   }
 
   return (
-    <div className="w-full">
-      {!editing ? (
-        <div className="flex justify-end">
-          <button
-            onClick={() => setEditing(true)}
-            disabled={terminal}
-            title={
-              terminal ? "Cannot reschedule completed/cancelled" : "Reschedule"
-            }
-            className={`${listPageStyles.rescheduleButton} ${
-              terminal
-                ? listPageStyles.rescheduleButtonDisabled
-                : listPageStyles.rescheduleButtonEnabled
-            }`}
-          >
-            Reschedule
-          </button>
-        </div>
-      ) : (
-        <div className={listPageStyles.rescheduleForm}>
-          <input
-            type="date"
-            value={date}
-            min={minDate}
-            onChange={(e) => setDate(e.target.value)}
-            className={listPageStyles.dateInput}
-          />
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            className={listPageStyles.timeInput}
-          />
-          <div className={listPageStyles.rescheduleButtons}>
-            <button onClick={save} className={listPageStyles.saveButton}>
-              Save
-            </button>
-            <button onClick={cancel} className={listPageStyles.cancelButton}>
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
+    <div className="flex flex-col gap-3 mt-3">
+      <input
+        type="date"
+        min={minDate}
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        className="px-3 py-2 rounded-xl border border-slate-200 outline-none"
+      />
+
+      <input
+        type="time"
+        value={time}
+        onChange={(e) => setTime(e.target.value)}
+        className="px-3 py-2 rounded-xl border border-slate-200 outline-none"
+      />
+
+      <div className="flex gap-2">
+        <button
+          onClick={save}
+          className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-xl font-semibold transition-all duration-300"
+        >
+          Save
+        </button>
+
+        <button
+          onClick={() => setEditing(false)}
+          className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl font-semibold transition-all duration-300"
+        >
+          Cancel
+        </button>
+      </div>
     </div>
   );
 }
 
+// ================= MAIN PAGE =================
+
 const ListPage = () => {
-  const [appointments, setAppointments] = useState([]);
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const params = useParams();
+
   const doctorId = params.id;
 
-  // to fetch the appointment using the id
+  const [appointments, setAppointments] = useState([]);
+
+  const [search, setSearch] = useState("");
+
+  const [statusFilter, setStatusFilter] = useState("");
+
+  const [loading, setLoading] = useState(true);
+
+  const [error, setError] = useState(null);
+
+  // ================= FETCH =================
+
   async function fetchAppointments() {
-  setLoading(true);
-  setError(null);
+    setLoading(true);
+    setError(null);
 
-  try {
-    const url = `${API_BASE}/api/appointments/doctor/${doctorId}`;
+    try {
+      const url = `${API_BASE}/api/appointments/doctor/${doctorId}`;
 
-    console.log("Fetching:", url);
+      const res = await fetch(url);
 
-    const res = await fetch(url);
+      const body = await res.json();
 
-    const body = await res.json();
+      if (!res.ok) {
+        throw new Error(
+          body?.message ||
+          `Failed to fetch appointments`,
+        );
+      }
 
-    console.log("API RESPONSE:", body);
+      const list =
+        body?.appointments ||
+        body?.data ||
+        body?.items ||
+        [];
 
-    if (!res.ok) {
-      throw new Error(
-        body?.message || `Failed to fetch appointments (${res.status})`,
-      );
+      const normalized = list
+        .map(normalizeAppointment)
+        .filter(Boolean);
+
+      setAppointments(normalized);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-
-    // FIXED RESPONSE HANDLING
-    const list =
-      body?.appointments ||
-      body?.data ||
-      body?.items ||
-      [];
-
-    console.log("Appointments:", list);
-
-    const normalized = list
-      .map(normalizeAppointment)
-      .filter(Boolean);
-
-    setAppointments(normalized);
-  } catch (err) {
-    console.error(err);
-    setError(err.message || "Failed to load appointments");
-    setAppointments([]);
-  } finally {
-    setLoading(false);
   }
-}
 
   useEffect(() => {
-  if (doctorId) {
-    fetchAppointments();
-  }
-}, [doctorId]);
+    if (doctorId) {
+      fetchAppointments();
+    }
+  }, [doctorId]);
 
-  // to update the status it is similar to dashboard page
+  // ================= UPDATE STATUS =================
+
   async function updateStatusRemote(id, newStatus) {
-    const appt = appointments.find((p) => p.id === id);
-    if (!appt) return;
-    if (appt.status === "complete" || appt.status === "cancelled") return;
-
-    const backendStatus = frontendToBackendStatus(newStatus);
+    const backendStatus =
+      frontendToBackendStatus(newStatus);
 
     setAppointments((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)),
+      prev.map((p) =>
+        p.id === id ? { ...p, status: newStatus } : p,
+      ),
     );
 
     try {
-      const res = await fetch(`${API_BASE}/api/appointments/${id}`, {
+      await fetch(`${API_BASE}/api/appointments/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: backendStatus }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: backendStatus,
+        }),
       });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(
-          body?.message || `Status update failed (${res.status})`,
-        );
-      }
-      const body = await res.json();
-      const updated = body.appointment || body;
-      setAppointments((prev) =>
-        prev.map((p) =>
-          p.id === id
-            ? normalizeAppointment(updated) || {
-                ...p,
-                status: backendToFrontendStatus(
-                  updated.status || backendStatus,
-                ),
-              }
-            : p,
-        ),
-      );
     } catch (err) {
-      console.error("updateStatusRemote:", err);
-      setAppointments((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, status: appt.status } : p)),
-      );
-      setError(err.message || "Failed to update status");
+      console.error(err);
     }
   }
 
-  async function rescheduleRemote(id, newDate, newTime24) {
-    const appt = appointments.find((p) => p.id === id);
-    if (!appt) return;
-    if (appt.status === "complete" || appt.status === "cancelled") return;
+  // ================= RESCHEDULE =================
 
+  async function rescheduleRemote(
+    id,
+    newDate,
+    newTime24,
+  ) {
     const time12 = to12HourFrom24(newTime24);
 
     setAppointments((prev) =>
       prev.map((p) =>
         p.id === id
-          ? { ...p, date: newDate, time: newTime24, status: "rescheduled" }
+          ? {
+            ...p,
+            date: newDate,
+            time: newTime24,
+            status: "rescheduled",
+          }
           : p,
       ),
     );
 
     try {
-      const res = await fetch(`${API_BASE}/api/appointments/${id}`, {
+      await fetch(`${API_BASE}/api/appointments/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ date: newDate, time: time12 }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          date: newDate,
+          time: time12,
+        }),
       });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body?.message || `Reschedule failed (${res.status})`);
-      }
-      const body = await res.json();
-      const updated = body.appointment || body;
-      setAppointments((prev) =>
-        prev.map((p) =>
-          p.id === id
-            ? normalizeAppointment(updated) || {
-                ...p,
-                date: newDate,
-                time: newTime24,
-                status: backendToFrontendStatus(
-                  updated.status || "Rescheduled",
-                ),
-              }
-            : p,
-        ),
-      );
     } catch (err) {
-      console.error("rescheduleRemote:", err);
-      setError(err.message || "Failed to reschedule — reloading");
-      await fetchAppointments();
+      console.error(err);
     }
   }
 
-  function updateStatus(id, newStatus) {
-    updateStatusRemote(id, newStatus);
-  }
-
-  function updateDateTime(id, newDate, newTime) {
-    rescheduleRemote(id, newDate, newTime);
-  }
+  // ================= FILTER =================
 
   const filtered = useMemo(() => {
     return [...appointments]
       .filter((a) =>
         search
-          ? (a.patient || "").toLowerCase().includes(search.toLowerCase())
+          ? a.patient
+            .toLowerCase()
+            .includes(search.toLowerCase())
           : true,
       )
-      .filter((a) => (statusFilter ? a.status === statusFilter : true))
+      .filter((a) =>
+        statusFilter ? a.status === statusFilter : true,
+      )
       .sort(
-        (a, b) => parseDateTime(b.date, b.time) - parseDateTime(a.date, a.time),
+        (a, b) =>
+          parseDateTime(b.date, b.time) -
+          parseDateTime(a.date, a.time),
       );
   }, [appointments, search, statusFilter]);
 
+  // ================= UI =================
+
   return (
-    <div className={listPageStyles.pageContainer}>
-      <div className={listPageStyles.contentWrapper}>
-        <div className={listPageStyles.headerContainer}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto">
+
+        {/* HEADER */}
+
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-10">
           <div>
-            <h1 className={listPageStyles.headerTitle}>All Appointments</h1>
-            <p className={listPageStyles.headerSubtitle}>
-              Latest at top - search by patient name
+            <h1 className="text-4xl font-black tracking-tight text-slate-900">
+              Appointments
+            </h1>
+
+            <p className="text-slate-500 mt-2">
+              Manage doctor appointments easily
             </p>
           </div>
 
-          <div className={listPageStyles.searchFilterContainer}>
-            <div className={listPageStyles.searchContainer}>
-              <div className={listPageStyles.searchIconContainer}>
-                <Search className={listPageStyles.searchIcon} />
-              </div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={fetchAppointments}
+              className="
+                inline-flex items-center gap-2
+                px-5 py-3 rounded-2xl
+                bg-white border border-slate-200
+                shadow-sm text-slate-700 font-semibold
+                hover:text-emerald-600
+                hover:border-emerald-300
+                hover:shadow-lg
+                hover:-translate-y-0.5
+                transition-all duration-300
+              "
+            >
+              <RefreshCw size={18} />
+              Refresh
+            </button>
+
+            <div className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500 text-white shadow-lg">
+              <Users size={18} />
+              {appointments.length} Total
+            </div>
+          </div>
+        </div>
+
+        {/* SEARCH */}
+
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-3xl p-5 shadow-sm mb-8">
+          <div className="flex flex-col lg:flex-row gap-4">
+
+            <div className="relative flex-1">
+              <Search
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              />
+
               <input
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className={listPageStyles.searchInput}
-                placeholder="Search Patient Name"
+                onChange={(e) =>
+                  setSearch(e.target.value)
+                }
+                placeholder="Search patient..."
+                className="
+                  w-full pl-11 pr-10 py-3
+                  rounded-2xl border border-slate-200
+                  bg-white outline-none
+                  focus:border-emerald-400
+                  transition-all duration-300
+                "
               />
+
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  className={listPageStyles.clearSearchButton}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-500"
                 >
-                  <X className={listPageStyles.clearSearchIcon} />
+                  <X size={16} />
                 </button>
               )}
             </div>
 
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className={listPageStyles.statusFilter}
-              title="Filter by status"
+              onChange={(e) =>
+                setStatusFilter(e.target.value)
+              }
+              className="
+                px-5 py-3 rounded-2xl
+                border border-slate-200 bg-white
+                outline-none
+                focus:border-emerald-400
+              "
             >
-              <option value="">All</option>
+              <option value="">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
               <option value="complete">Completed</option>
               <option value="cancelled">Cancelled</option>
               <option value="rescheduled">Rescheduled</option>
@@ -524,88 +572,112 @@ const ListPage = () => {
           </div>
         </div>
 
+        {/* CONTENT */}
+
         {loading ? (
-          <div className={listPageStyles.loadingContainer}>
-            Loading Appointments...
+          <div className="text-center py-20 text-slate-500 text-lg font-semibold">
+            Loading appointments...
           </div>
         ) : error ? (
-          <div className={listPageStyles.errorContainer}>Error: {error}</div>
+          <div className="bg-red-50 border border-red-200 text-red-600 rounded-3xl p-6 text-center font-semibold">
+            {error}
+          </div>
         ) : (
-          <div className={listPageStyles.appointmentsGrid}>
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filtered.map((a) => (
-              <article key={a.id} className={listPageStyles.appointmentCard}>
-                <header className={listPageStyles.cardHeader}>
-                  <div className={listPageStyles.cardAvatar}>
+              <div
+                key={a.id}
+                className="
+                  group bg-white/90 backdrop-blur-xl
+                  border border-slate-200
+                  rounded-3xl p-6
+                  shadow-sm hover:shadow-2xl
+                  hover:-translate-y-1
+                  transition-all duration-300
+                "
+              >
+                {/* TOP */}
+
+                <div className="flex items-start gap-4 mb-5">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center">
                     {a.doctorImage ? (
                       <img
                         src={a.doctorImage}
                         alt={a.doctorName}
-                        className={listPageStyles.cardAvatarImage}
-                        onError={(e) =>
-                          (e.currentTarget.style.display = "none")
-                        }
+                        className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className={listPageStyles.cardAvatarFallback}>
-                        {(a.doctorName || "D").charAt(0)}
-                      </div>
+                      <span className="text-xl font-bold text-slate-500">
+                        {a.doctorName?.charAt(0)}
+                      </span>
                     )}
                   </div>
 
-                  <div className={listPageStyles.cardContent}>
-                    <div className={listPageStyles.cardPatientName}>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-slate-900">
                       {a.patient}
-                    </div>
-                    <div className={listPageStyles.cardPatientInfo}>
-                      {a.age} yrs &middot; {a.gender}
-                    </div>
-                    <div className={listPageStyles.cardDoctorInfo}>
-                      <span className={listPageStyles.cardDoctorName}>
-                        {a.doctorName}
-                      </span>
-                    </div>
-                    <div className={listPageStyles.cardSpeciality}>
+                    </h3>
+
+                    <p className="text-sm text-slate-500">
+                      {a.age} yrs • {a.gender}
+                    </p>
+
+                    <p className="mt-1 font-semibold text-emerald-600">
+                      {a.doctorName}
+                    </p>
+
+                    <p className="text-sm text-slate-500">
                       {a.speciality}
-                    </div>
-                  </div>
-                </header>
-
-                <div className={listPageStyles.dateTimeSection}>
-                  <div className={listPageStyles.dateTimeContainer}>
-                    <Calendar className={listPageStyles.calendarIcon} />
-                    <span className={listPageStyles.dateText}>
-                      {formatDate(a.date)}
-                    </span>
-                    <span className=" sm:inline">:</span>
-                    <span>{formatTimeAMPM(a.time)}</span>
-                  </div>
-                  <div className={listPageStyles.feeText}>₹{a.fee}</div>
-                </div>
-
-                <div className={listPageStyles.contactStatusSection}>
-                  <div className={listPageStyles.phoneContainer}>
-                    <Phone className={listPageStyles.phoneIcon} />
-                    <span className={listPageStyles.phoneNumber}>
-                      {a.mobile}
-                    </span>
-                  </div>
-
-                  <div className={listPageStyles.statusContainer}>
-                    <StatusBadge status={a.status} />
-                    <StatusSelect
-                      appointment={a}
-                      onChange={(s) => updateStatus(a.id, s)}
-                    />
+                    </p>
                   </div>
                 </div>
 
-                <div className={listPageStyles.rescheduleContainer}>
+                {/* DATE */}
+
+                <div className="flex items-center justify-between bg-slate-50 rounded-2xl px-4 py-3 mb-4">
+                  <div className="flex items-center gap-2 text-slate-700 font-medium">
+                    <Calendar size={17} />
+                    {formatDate(a.date)}
+                  </div>
+
+                  <div className="text-sm font-semibold text-emerald-600">
+                    {formatTimeAMPM(a.time)}
+                  </div>
+                </div>
+
+                {/* PHONE */}
+
+                <div className="flex items-center gap-2 text-slate-600 mb-5">
+                  <Phone size={16} />
+                  <span>{a.mobile}</span>
+                </div>
+
+                {/* FOOTER */}
+
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-2xl font-black text-slate-900">
+                    ₹{a.fee}
+                  </div>
+
+                  <StatusBadge status={a.status} />
+                </div>
+
+                <div className="space-y-4">
+                  <StatusSelect
+                    appointment={a}
+                    onChange={(s) =>
+                      updateStatusRemote(a.id, s)
+                    }
+                  />
+
                   <RescheduleButton
                     appointment={a}
-                    onReschedule={(d, t) => updateDateTime(a.id, d, t)}
+                    onReschedule={(d, t) =>
+                      rescheduleRemote(a.id, d, t)
+                    }
                   />
                 </div>
-              </article>
+              </div>
             ))}
           </div>
         )}
