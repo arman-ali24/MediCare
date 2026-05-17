@@ -1,13 +1,6 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  useLayoutEffect,
-} from "react";
-import { navbarStyles as ns } from "../assets/dummyStyles";
+import React, { useEffect, useMemo, useState } from "react";
 import logoImg from "../assets/logo.png";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   Home,
   UserPlus,
@@ -18,378 +11,327 @@ import {
   List,
   Menu,
   X,
+  LogOut,
 } from "lucide-react";
+
 import { useAuth, useClerk, useUser } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const navInnerRef = useRef(null);
-  const indicatorRef = useRef(null);
-  const location = useLocation();
+
   const navigate = useNavigate();
 
   // Clerk
   const clerk = useClerk?.();
   const { getToken, isLoaded: authLoaded } = useAuth();
-  const { isSignedIn, user, isLoaded: userLoaded } = useUser();
+  const { isSignedIn, isLoaded: userLoaded } = useUser();
 
-  // Sliding active indicator
-  const moveIndicator = useCallback(() => {
-    const container = navInnerRef.current;
-    const ind = indicatorRef.current;
-    if (!container || !ind) return;
+  // NAV ITEMS
+  const navItems = useMemo(
+    () => [
+      {
+        name: "Dashboard",
+        to: "/h",
+        Icon: Home,
+      },
+      {
+        name: "Add Doctor",
+        to: "/add",
+        Icon: UserPlus,
+      },
+      {
+        name: "Doctors",
+        to: "/list",
+        Icon: Users,
+      },
+      {
+        name: "Appointments",
+        to: "/appointments",
+        Icon: Calendar,
+      },
+      {
+        name: "Services",
+        to: "/service-dashboard",
+        Icon: Grid,
+      },
+      {
+        name: "Add Service",
+        to: "/add-service",
+        Icon: PlusSquare,
+      },
+      {
+        name: "Service List",
+        to: "/list-service",
+        Icon: List,
+      },
+      {
+        name: "Service Appointments",
+        to: "/service-appointments",
+        Icon: Calendar,
+      },
+    ],
+    []
+  );
 
-    const active = container.querySelector(".nav-item.active");
-    if (!active) {
-      ind.style.opacity = "0";
-      return;
-    }
-
-    const containerRect = container.getBoundingClientRect();
-    const activeRect = active.getBoundingClientRect();
-
-    const left = activeRect.left - containerRect.left + container.scrollLeft;
-    const width = activeRect.width;
-
-    ind.style.transform = `translateX(${left}px)`;
-    ind.style.width = `${width}px`;
-    ind.style.opacity = "1";
-  }, []);
-
-  // It will be moving in 0.12 seconds
-  useLayoutEffect(() => {
-    moveIndicator();
-    const t = setTimeout(() => {
-      moveIndicator();
-    }, 120);
-    return () => clearTimeout(t);
-  }, [location.pathname, moveIndicator]);
-
-  // It will help in scrolling on x-axis
-  useEffect(() => {
-    const container = navInnerRef.current;
-    if (!container) return;
-
-    const onScroll = () => {
-      moveIndicator();
-    };
-    container.addEventListener("scroll", onScroll, { passive: true });
-
-    const ro = new ResizeObserver(() => {
-      moveIndicator();
-    });
-    ro.observe(container);
-    if (container.parentElement) ro.observe(container.parentElement);
-
-    window.addEventListener("resize", moveIndicator);
-
-    moveIndicator();
-
-    return () => {
-      container.removeEventListener("scroll", onScroll);
-      ro.disconnect();
-      window.removeEventListener("resize", moveIndicator);
-    };
-  }, [moveIndicator]);
-
-  // It will toggle the mobile menu ie: close when we click on escape key
+  // ESC CLOSE
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape" && open) setOpen(false);
+      if (e.key === "Escape" && open) {
+        setOpen(false);
+      }
     };
+
     window.addEventListener("keydown", onKey);
+
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  // When user signed in, fetch a token and save it in localstorage
+  // STORE TOKEN
   useEffect(() => {
     let mounted = true;
+
     const storeToken = async () => {
       if (!authLoaded || !userLoaded) return;
+
       if (!isSignedIn) {
-        try {
-          localStorage.removeItem("clerk_token");
-        } catch (e) {
-          // Ignore any error
-        }
+        localStorage.removeItem("clerk_token");
         return;
       }
 
       try {
         if (getToken) {
           const token = await getToken();
+
           if (!mounted) return;
+
           if (token) {
-            try {
-              localStorage.setItem("clerk_token", token);
-            } catch (e) {
-              console.warn("Failed to write clerk token in localstorage", e);
-            }
+            localStorage.setItem("clerk_token", token);
           }
         }
       } catch (err) {
         console.warn("Could not retrieve Clerk token", err);
       }
     };
+
     storeToken();
+
     return () => {
       mounted = false;
     };
   }, [isSignedIn, authLoaded, userLoaded, getToken]);
 
-  // To open clerk login box
+  // LOGIN
   const handleOpenSignIn = () => {
     if (!clerk || !clerk.openSignIn) {
       console.warn("Clerk is not available");
       return;
     }
+
     clerk.openSignIn();
     navigate("/h");
   };
 
-  // To signout
+  // LOGOUT
   const handleSignOut = async () => {
     if (!clerk || !clerk.signOut) {
       console.warn("Clerk is not available");
       return;
     }
+
     try {
       await clerk.signOut();
     } catch (err) {
       console.error("Sign out failed", err);
     } finally {
-      try {
-        localStorage.removeItem("clerk_token");
-      } catch (error) {
-        // Ignore
-      }
+      localStorage.removeItem("clerk_token");
       navigate("/");
     }
   };
 
   return (
-    <header className={ns.header}>
-      <nav className={ns.navContainer}>
-        {/* Logo + Nav + Right */}
-        <div
-          className={ns.logoContainer + " flex items-center justify-between"}
-        >
-          {/* Left Logo */}
-          <div className="flex items-center gap-3">
-            <img src={logoImg} alt="logo" className={ns.logoImage} />
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/80 border-b border-slate-200 shadow-sm">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="flex items-center justify-between h-20 gap-6">
+            {/* LEFT */}
+            <div className="flex items-center gap-3 shrink-0">
+              <img
+                src={logoImg}
+                alt="logo"
+                className="w-14 sm:w-16 object-contain"
+              />
 
-            <Link to="/" className="flex flex-col leading-tight">
-              <div className={ns.logoLink + " text-lg font-semibold"}>
-                MediCare
-              </div>
-              <div className={ns.logoSubtext + " text-xs text-gray-500"}>
-                Healthcare Solutions
-              </div>
-            </Link>
-          </div>
+              <Link to="/" className="leading-tight">
+                <h1 className="text-2xl font-black tracking-tight bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+                  MediCare
+                </h1>
 
-          {/* Center Nav */}
-          <div className={ns.centerNavContainer}>
-            <div className={ns.glowEffect}>
-              <div className={ns.centerNavInner}>
-                <div
-                  ref={navInnerRef}
-                  tabIndex={0}
-                  className={ns.centerNavScrollContainer}
-                  style={{ WebkitOverflowScrolling: "touch" }}
-                >
-                  <CenterNavItem
-                    to="/h"
-                    label="Dashboard"
-                    icon={<Home size={16} />}
-                  />
-                  <CenterNavItem
-                    to="/add"
-                    label="Add Doctor"
-                    icon={<UserPlus size={16} />}
-                  />
-                  <CenterNavItem
-                    to="/list"
-                    label="Doctors"
-                    icon={<Users size={16} />}
-                  />
-                  <CenterNavItem
-                    to="/appointments"
-                    label="Appointments"
-                    icon={<Calendar size={16} />}
-                  />
-                  <CenterNavItem
-                    to="/service-dashboard"
-                    label="Services"
-                    icon={<Grid size={16} />}
-                  />
-                  <CenterNavItem
-                    to="/add-service"
-                    label="Add Service"
-                    icon={<PlusSquare size={16} />}
-                  />
-                  <CenterNavItem
-                    to="/list-service"
-                    label="Service List"
-                    icon={<List size={16} />}
-                  />
-                  <CenterNavItem
-                    to="/service-appointments"
-                    label="Service Appointments"
-                    icon={<Calendar size={16} />}
-                  />
-                </div>
-              </div>
+                <p className="text-[11px] uppercase tracking-[0.25em] text-slate-500 font-semibold">
+                  Admin Panel
+                </p>
+              </Link>
             </div>
-          </div>
 
-          {/* Right Side */}
-          <div className={ns.rightContainer + " flex items-center gap-4"}>
-            {isSignedIn ? (
-              <button
-                onClick={handleSignOut}
-                className={ns.signOutButton + " px-4 py-1.5"}
-              >
-                Sign Out
-              </button>
-            ) : (
-              <button
-                onClick={handleOpenSignIn}
-                className={ns.loginButton + " px-4 py-1.5"}
-              >
-                Login
-              </button>
-            )}
+            {/* DESKTOP NAV */}
+            <div className="hidden lg:flex items-center gap-2 overflow-x-auto scrollbar-hide">
+              {navItems.map(({ name, to, Icon }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={to === "/h"}
+                  className={({ isActive }) =>
+                    `
+                    group relative inline-flex items-center gap-2
+                    px-4 py-2.5 rounded-2xl
+                    font-semibold text-sm whitespace-nowrap
+                    transition-all duration-300
+                    ${isActive
+                      ? "bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm"
+                      : "text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 hover:border hover:border-emerald-200"
+                    }
+                  `
+                  }
+                >
+                  <Icon
+                    size={17}
+                    className="transition-transform duration-300 group-hover:scale-110"
+                  />
 
-            {/* Mobile Button */}
-            <button
-              onClick={() => setOpen((v) => !v)}
-              className={ns.mobileMenuButton}
-            >
-              {open ? <X size={18} /> : <Menu size={18} />}
-            </button>
+                  {name}
+                </NavLink>
+              ))}
+            </div>
+
+            {/* RIGHT */}
+            <div className="flex items-center gap-3 shrink-0">
+              {isSignedIn ? (
+                <button
+                  onClick={handleSignOut}
+                  className="
+                    hidden md:inline-flex items-center gap-2
+                    px-4 py-2.5 rounded-2xl
+                    bg-white border border-slate-200
+                    shadow-sm text-slate-700 font-semibold
+                    hover:text-red-500
+                    hover:border-red-200
+                    hover:bg-red-50
+                    hover:shadow-lg
+                    hover:-translate-y-0.5
+                    transition-all duration-300
+                  "
+                >
+                  <LogOut size={16} />
+                  Logout
+                </button>
+              ) : (
+                <button
+                  onClick={handleOpenSignIn}
+                  className="
+                    hidden md:inline-flex items-center gap-2
+                    px-5 py-2.5 rounded-2xl
+                    bg-gradient-to-r from-emerald-500 to-cyan-500
+                    text-white font-semibold
+                    shadow-lg shadow-emerald-200
+                    hover:scale-[1.03]
+                    transition-all duration-300
+                  "
+                >
+                  Login
+                </button>
+              )}
+
+              {/* MOBILE BUTTON */}
+              <button
+                onClick={() => setOpen((s) => !s)}
+                className="
+                  lg:hidden
+                  inline-flex items-center justify-center
+                  w-11 h-11 rounded-2xl
+                  border border-slate-200 bg-white
+                  shadow-sm text-slate-700
+                  hover:bg-emerald-50
+                  hover:text-emerald-600
+                  hover:border-emerald-200
+                  transition-all duration-300
+                "
+              >
+                {open ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Mobile Nav */}
+        {/* MOBILE MENU */}
         {open && (
-          <>
-            <div className={ns.mobileOverlay} onClick={() => setOpen(false)} />
+          <div className="lg:hidden border-t border-slate-200 bg-white/95 backdrop-blur-xl">
+            <div className="px-4 py-5 space-y-3 max-h-[85vh] overflow-y-auto">
+              {navItems.map(({ name, to, Icon }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={to === "/h"}
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) =>
+                    `
+                    flex items-center gap-3
+                    px-4 py-3 rounded-2xl
+                    font-semibold transition-all duration-300
+                    ${isActive
+                      ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
+                      : "text-slate-700 hover:bg-emerald-50 hover:text-emerald-600"
+                    }
+                  `
+                  }
+                >
+                  <Icon size={18} />
+                  {name}
+                </NavLink>
+              ))}
 
-            <div className={ns.mobileMenuContainer}>
-              <div className={ns.mobileMenuInner}>
-                <MobileItem
-                  to="/h"
-                  label="Dashboard"
-                  icon={<Home size={16} />}
-                  onClick={() => setOpen(false)}
-                />
-                <MobileItem
-                  to="/add"
-                  label="Add Doctor"
-                  icon={<UserPlus size={16} />}
-                  onClick={() => setOpen(false)}
-                />
-                <MobileItem
-                  to="/list"
-                  label="Doctors"
-                  icon={<Users size={16} />}
-                  onClick={() => setOpen(false)}
-                />
-                <MobileItem
-                  to="/appointments"
-                  label="Appointments"
-                  icon={<Calendar size={16} />}
-                  onClick={() => setOpen(false)}
-                />
-
-                <MobileItem
-                  to="/service-dashboard"
-                  label="Services"
-                  icon={<Grid size={16} />}
-                  onClick={() => setOpen(false)}
-                />
-                <MobileItem
-                  to="/add-service"
-                  label="Add Service"
-                  icon={<PlusSquare size={16} />}
-                  onClick={() => setOpen(false)}
-                />
-                <MobileItem
-                  to="/list-service"
-                  label="Service List"
-                  icon={<List size={16} />}
-                  onClick={() => setOpen(false)}
-                />
-                <MobileItem
-                  to="/service-appointments"
-                  label="Service Appointments"
-                  icon={<Calendar size={16} />}
-                  onClick={() => setOpen(false)}
-                />
-
-                <div className={ns.mobileAuthContainer}>
-                  {isSignedIn ? (
-                    <button
-                      onClick={() => {
-                        handleSignOut();
-                        setOpen(false);
-                      }}
-                      className={ns.mobileSignOutButton}
-                    >
-                      Sign Out
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        handleOpenSignIn();
-                        setOpen(false);
-                      }}
-                      className={ns.mobileLoginButton}
-                    >
-                      Login
-                    </button>
-                  )}
-                </div>
-              </div>
+              {isSignedIn ? (
+                <button
+                  onClick={() => {
+                    handleSignOut();
+                    setOpen(false);
+                  }}
+                  className="
+                    w-full flex items-center justify-center gap-2
+                    px-4 py-3 rounded-2xl
+                    bg-red-50 text-red-500 font-semibold
+                    border border-red-100
+                    hover:bg-red-100
+                    transition-all duration-300
+                  "
+                >
+                  <LogOut size={17} />
+                  Logout
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    handleOpenSignIn();
+                    setOpen(false);
+                  }}
+                  className="
+                    w-full flex items-center justify-center gap-2
+                    px-4 py-3 rounded-2xl
+                    bg-gradient-to-r from-emerald-500 to-cyan-500
+                    text-white font-semibold
+                    transition-all duration-300
+                  "
+                >
+                  Login
+                </button>
+              )}
             </div>
-          </>
+          </div>
         )}
       </nav>
-    </header>
+
+      {/* NAVBAR SPACER */}
+      <div className="h-20" />
+    </>
   );
 };
 
 export default Navbar;
-
-function CenterNavItem({ to, icon, label }) {
-  return (
-    <NavLink
-      to={to}
-      end
-      className={({ isActive }) =>
-        `nav-item ${isActive ? "active" : ""} ${ns.centerNavItemBase} ${
-          isActive ? ns.centerNavItemActive : ns.centerNavItemInactive
-        }`
-      }
-    >
-      <span>{icon}</span>
-      <span className="font-medium">{label}</span>
-    </NavLink>
-  );
-}
-
-function MobileItem({ to, icon, label, onClick }) {
-  return (
-    <NavLink
-      to={to}
-      onClick={onClick}
-      className={({ isActive }) =>
-        `${ns.mobileItemBase} ${isActive ? ns.mobileItemActive : ns.mobileItemInactive}`
-      }
-    >
-      {icon}
-      <span className="font-medium text-sm">{label}</span>
-    </NavLink>
-  );
-}
