@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { navbarStyles } from "../assets/dummyStyles";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { SignedIn, SignedOut, useClerk, UserButton } from "@clerk/clerk-react";
 import { Key, Menu, User, X } from "lucide-react";
 import logo from "../assets/logo.png";
@@ -11,53 +11,42 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [isDoctorLoggedIn, setIsDoctorLoggedIn] = useState(() => {
-    try {
-      return Boolean(localStorage.getItem(STORAGE_KEY));
-    } catch {
-      return false;
-    }
-  });
+
   const location = useLocation();
   const navRef = useRef(null);
   const clerk = useClerk();
-  const navigate = useNavigate();
 
-  // Hide and Show Navbar on Scroll
+  // Hide / Show Navbar on Scroll
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+
       if (currentScrollY > lastScrollY && currentScrollY > 80) {
         setShowNavbar(false);
       } else {
         setShowNavbar(true);
       }
+
       setLastScrollY(currentScrollY);
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  // Sync the Doctor login state
-  useEffect(() => {
-    const onStorage = (e) => {
-      if (e.key === STORAGE_KEY) {
-        setIsDoctorLoggedIn(Boolean(e.newValue));
-      }
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
-
-  // Close the toggle menu for mobile when click outside
+  // Close mobile menu on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isOpen && navRef.current && !navRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
 
   const navItems = [
@@ -77,109 +66,189 @@ const Navbar = () => {
           font-family: 'Plus Jakarta Sans', sans-serif !important;
           font-weight: 800 !important;
           letter-spacing: -0.5px !important;
-          background: linear-gradient(135deg, #1e40af, #2563eb) !important;
+          background: linear-gradient(135deg, #059669, #06b6d4) !important;
           -webkit-background-clip: text !important;
           -webkit-text-fill-color: transparent !important;
           background-clip: text !important;
         }
+
         .nav-logo-sub {
           font-family: 'DM Sans', sans-serif !important;
           font-weight: 600 !important;
           letter-spacing: 0.9px !important;
           color: #64748b !important;
           text-transform: uppercase !important;
-          font-size: 9.5px !important;
+          font-size: 9px !important;
         }
+
         .nav-item-link {
           font-family: 'DM Sans', sans-serif !important;
           font-weight: 500 !important;
           letter-spacing: 0.01em !important;
+          position: relative;
+          transition: all 0.3s ease;
         }
+
+        .nav-item-link::after {
+          content: '';
+          position: absolute;
+          bottom: -6px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0%;
+          height: 2px;
+          background: linear-gradient(to right, #10b981, #06b6d4);
+          border-radius: 999px;
+          transition: width 0.3s ease;
+        }
+
+        .nav-item-link:hover {
+          color: #059669 !important;
+        }
+
+        .nav-item-link:hover::after {
+          width: 70%;
+        }
+
         .nav-item-link-active {
           font-family: 'DM Sans', sans-serif !important;
           font-weight: 700 !important;
-          color: #2563eb !important;
+          color: #059669 !important;
+          position: relative;
         }
+
+        .nav-item-link-active::after {
+          content: '';
+          position: absolute;
+          bottom: -6px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 70%;
+          height: 2px;
+          background: linear-gradient(to right, #10b981, #06b6d4);
+          border-radius: 999px;
+        }
+
         .nav-doctor-btn {
           font-family: 'DM Sans', sans-serif !important;
           font-weight: 600 !important;
           letter-spacing: 0.02em !important;
         }
+
         .nav-login-btn {
           font-family: 'DM Sans', sans-serif !important;
           font-weight: 700 !important;
           letter-spacing: 0.04em !important;
-          background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+          background: linear-gradient(135deg, #10b981, #06b6d4) !important;
         }
       `}</style>
 
-      <div className={navbarStyles.navbarBorder}></div>
+      <div className="fixed top-0 left-0 w-full h-[2px] bg-gradient-to-r from-emerald-500 via-cyan-400 to-emerald-500 z-[60]" />
+
       <nav
         ref={navRef}
-        className={`${navbarStyles.navbarContainer} ${
-          showNavbar ? navbarStyles.navbarVisible : navbarStyles.navbarHidden
-        }`}
+        className={`
+          fixed top-0 left-0 w-full z-50
+          backdrop-blur-2xl bg-white/80
+          border-b border-slate-200/70
+          transition-all duration-500
+          ${showNavbar
+            ? "translate-y-0 opacity-100"
+            : "-translate-y-full opacity-0"
+          }
+        `}
       >
-        <div className={navbarStyles.contentWrapper}>
-          <div className={navbarStyles.flexContainer}>
-            {/* Logo */}
-            <Link to="/" className={navbarStyles.logoLink}>
-              <div className={navbarStyles.logoContainer}>
-                <div className={navbarStyles.logoImageWrapper}>
-                  <img
-                    src={logo}
-                    alt="logo"
-                    className={navbarStyles.logoImage}
-                  />
-                </div>
-              </div>
-              <div className={navbarStyles.logoTextContainer}>
-                <h1 className={`${navbarStyles.logoTitle} nav-logo-title`}>MediCare</h1>
-                <p className={`${navbarStyles.logoSubtitle} nav-logo-sub`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="flex items-center justify-between h-[78px]">
+            {/* LOGO */}
+            <Link
+              to="/"
+              className="flex items-center gap-3 group shrink-0"
+            >
+              <img
+                src={logo}
+                alt="logo"
+                className="
+                  h-14 sm:h-16 w-auto object-contain
+                  transition-transform duration-300
+                  group-hover:scale-105
+                "
+              />
+
+              <div className="leading-tight">
+                <h1 className="text-2xl nav-logo-title">
+                  MediCare
+                </h1>
+
+                <p className="nav-logo-sub">
                   Healthcare Solutions
                 </p>
               </div>
             </Link>
 
-            <div className={navbarStyles.desktopNav}>
-              <div className={navbarStyles.navItemsContainer}>
-                {navItems.map((item) => {
-                  const isActive = location.pathname === item.href;
-                  return (
-                    <Link
-                      key={item.href}
-                      to={item.href}
-                      className={`${navbarStyles.navItem} ${
-                        isActive
-                          ? `${navbarStyles.navItemActive} nav-item-link-active`
-                          : `${navbarStyles.navItemInactive} nav-item-link`
+            {/* DESKTOP NAV */}
+            <div className="hidden lg:flex items-center gap-8">
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.href;
+
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={`text-[15px] ${isActive
+                        ? "nav-item-link-active"
+                        : "nav-item-link"
                       }`}
-                    >
-                      {item.label}
-                    </Link>
-                  );
-                })}
-              </div>
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </div>
 
-            {/* right side */}
-            <div className={navbarStyles.rightContainer}>
+            {/* RIGHT SIDE */}
+            <div className="flex items-center gap-3">
               <SignedOut>
                 <Link
                   to="/doctor-admin/login"
-                  className={`${navbarStyles.doctorAdminButton} nav-doctor-btn`}
+                  className="
+                    hidden sm:inline-flex
+                    items-center gap-2
+                    px-4 py-2.5
+                    rounded-2xl
+                    border border-slate-200
+                    bg-white
+                    text-slate-700
+                    shadow-sm
+                    hover:bg-emerald-50
+                    hover:text-emerald-600
+                    hover:border-emerald-300
+                    hover:shadow-lg
+                    hover:-translate-y-0.5
+                    transition-all duration-300
+                    nav-doctor-btn
+                  "
                 >
-                  <User className={navbarStyles.doctorAdminIcon} />
-                  <span className={navbarStyles.doctorAdminText}>
-                    Doctor Admin
-                  </span>
+                  <User size={18} />
+                  Doctor Admin
                 </Link>
-                {/* patient login */}
+
                 <button
                   onClick={() => clerk.openSignIn()}
-                  className={`${navbarStyles.loginButton} nav-login-btn`}
+                  className="
+                    hidden sm:inline-flex
+                    items-center gap-2
+                    px-5 py-2.5
+                    rounded-2xl
+                    text-white
+                    shadow-lg
+                    hover:shadow-emerald-200
+                    hover:-translate-y-0.5
+                    transition-all duration-300
+                    nav-login-btn
+                  "
                 >
-                  <Key className={navbarStyles.loginIcon} />
+                  <Key size={18} />
                   Login
                 </button>
               </SignedOut>
@@ -188,68 +257,97 @@ const Navbar = () => {
                 <UserButton afterSignOutUrl="/" />
               </SignedIn>
 
-              {/* to toggle */}
+              {/* MOBILE TOGGLE */}
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={navbarStyles.mobileToggle}
+                className="
+                  lg:hidden
+                  inline-flex items-center justify-center
+                  w-11 h-11
+                  rounded-2xl
+                  border border-slate-200
+                  bg-white
+                  text-slate-700
+                  shadow-sm
+                  hover:bg-emerald-50
+                  hover:text-emerald-600
+                  transition-all duration-300
+                "
               >
-                {isOpen ? (
-                  <X className={navbarStyles.toggleIcon} />
-                ) : (
-                  <Menu className={navbarStyles.toggleIcon} />
-                )}
+                {isOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
           </div>
 
-          {/* mobile navigations */}
+          {/* MOBILE MENU */}
           {isOpen && (
-            <div className={navbarStyles.mobileMenu}>
-              {navItems.map((item, idx) => {
-                const isActive = location.pathname === item.href;
-                return (
+            <div className="lg:hidden pb-5 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="flex flex-col gap-2 pt-3 border-t border-slate-200">
+                {navItems.map((item) => {
+                  const isActive = location.pathname === item.href;
+
+                  return (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className={`
+                        px-4 py-3 rounded-2xl text-sm font-semibold transition-all duration-300
+                        ${isActive
+                          ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
+                          : "text-slate-700 hover:bg-slate-100"
+                        }
+                      `}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+
+                <SignedOut>
                   <Link
-                    key={idx}
-                    to={item.href}
+                    to="/doctor-admin/login"
                     onClick={() => setIsOpen(false)}
-                    className={`${navbarStyles.mobileMenuItem} ${
-                      isActive
-                        ? `${navbarStyles.mobileMenuItemActive} nav-item-link-active`
-                        : `${navbarStyles.mobileMenuItemInactive} nav-item-link`
-                    }`}
+                    className="
+                      mt-3
+                      px-4 py-3
+                      rounded-2xl
+                      border border-slate-200
+                      text-slate-700
+                      font-semibold
+                      hover:bg-emerald-50
+                      hover:text-emerald-600
+                      transition-all duration-300
+                    "
                   >
-                    {item.label}
+                    Doctor Admin
                   </Link>
-                );
-              })}
 
-              <SignedOut>
-                <Link
-                  to="/doctor-admin/login"
-                  className={`${navbarStyles.mobileDoctorAdminButton} nav-doctor-btn`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Doctor Admin
-                </Link>
-
-                <div className={navbarStyles.mobileLoginContainer}>
                   <button
                     onClick={() => {
                       setIsOpen(false);
                       clerk.openSignIn();
                     }}
-                    className={`${navbarStyles.mobileLoginButton} nav-login-btn`}
+                    className="
+                      mt-2
+                      px-4 py-3
+                      rounded-2xl
+                      text-white
+                      font-bold
+                      nav-login-btn
+                    "
                   >
                     Login
                   </button>
-                </div>
-              </SignedOut>
+                </SignedOut>
+              </div>
             </div>
           )}
         </div>
-
-        <style>{navbarStyles.animationStyles}</style>
       </nav>
+
+      {/* NAVBAR SPACER */}
+      <div className="h-[78px]" />
     </>
   );
 };
