@@ -79,23 +79,49 @@ const LoginPage = () => {
   };
 
   return (
-    <div className={loginPageStyles.mainContainer}>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50 flex items-center justify-center px-4">
       <Toaster position="top-right" reverseOrder={false} />
+
       <button
         onClick={() => navigate("/")}
-        className={loginPageStyles.backButton}
+        className="
+        group absolute top-6 left-6
+        inline-flex items-center gap-2
+        px-4 py-2.5
+        rounded-2xl
+        bg-white
+        border border-slate-200
+        shadow-sm
+        text-slate-700
+        font-semibold
+        hover:text-emerald-600
+        hover:border-emerald-300
+        hover:shadow-lg
+        hover:-translate-y-0.5
+        transition-all duration-300
+      "
       >
-        <ArrowLeft className={loginPageStyles.backButtonIcon} />
+        <ArrowLeft
+          className="transition-transform duration-300 group-hover:-translate-x-1"
+          size={18}
+        />
         Back to home
       </button>
 
-      <div className={loginPageStyles.loginCard}>
+      <div className={`${loginPageStyles.loginCard} shadow-2xl border border-white/60 backdrop-blur-xl`}>
         <div className={loginPageStyles.logoContainer}>
-          <img src={logo} alt="logo" className={loginPageStyles.logo} />
+          <img
+            src={logo}
+            alt="logo"
+            className="w-28 sm:w-32 object-contain mx-auto"
+          />
         </div>
 
-        <h2 className={loginPageStyles.title}>Doctor Admin</h2>
-        <p className={loginPageStyles.subtitle}>
+        <h2 className={`${loginPageStyles.title} text-slate-900`}>
+          Doctor Admin
+        </h2>
+
+        <p className={`${loginPageStyles.subtitle} text-slate-500`}>
           Sign in to manage your profile & schedule
         </p>
 
@@ -106,7 +132,7 @@ const LoginPage = () => {
             placeholder="Email Address"
             value={formData.email}
             onChange={handleChange}
-            className={loginPageStyles.input}
+            className={`${loginPageStyles.input} focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 transition-all duration-300`}
             required
           />
 
@@ -116,14 +142,22 @@ const LoginPage = () => {
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
-            className={loginPageStyles.input}
+            className={`${loginPageStyles.input} focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 transition-all duration-300`}
             required
           />
 
           <button
             type="submit"
             disabled={busy}
-            className={loginPageStyles.submitButton}
+            className="
+            w-full py-3 rounded-2xl
+            bg-gradient-to-r from-emerald-500 to-cyan-500
+            text-white font-bold
+            shadow-lg shadow-emerald-200/50
+            hover:shadow-xl
+            hover:-translate-y-0.5
+            transition-all duration-300
+          "
           >
             {busy ? "Signing in..." : "Login"}
           </button>
