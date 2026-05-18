@@ -135,7 +135,7 @@ const ServiceDashboard = ({ services: servicesProp = null }) => {
     return () => {
       try {
         delete window.refreshServices;
-      } catch {}
+      } catch { }
     };
   }, []); // Global helper to refresh the page and fetch the services again
 
@@ -249,365 +249,342 @@ const ServiceDashboard = ({ services: servicesProp = null }) => {
     return `₹${Number(v || 0).toLocaleString()}`;
   }
 
+  // UI PART
   return (
-    <div className={serviceDashboardStyles.container}>
-      <div className={serviceDashboardStyles.innerContainer}>
-        {/* Header */}
-        <div className={serviceDashboardStyles.header.container}>
-          <div>
-            <h1 className={serviceDashboardStyles.header.title}>
-              Service Dashboard
-            </h1>
-            <p className={serviceDashboardStyles.header.subtitle}>
-              Overview of services, appointments and earnings
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50 px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto">
 
-          {/* Refresh */}
-          <div className={serviceDashboardStyles.refresh.container}>
-            <div className={serviceDashboardStyles.refresh.countText}>
-              {loading
-                ? "Loading..."
-                : `${filteredServices.length} services${
-                    filteredServices.length !== 1 ? "s" : ""
-                  }`}
+        {/* HERO SECTION */}
+        <div className="relative overflow-hidden rounded-[2rem] border border-emerald-100 bg-white/80 backdrop-blur-xl shadow-xl p-6 sm:p-8 mb-8">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-emerald-100 rounded-full blur-3xl opacity-40" />
+
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-semibold mb-4">
+                <ClipboardList size={16} />
+                Service Analytics
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl font-black text-slate-800 leading-tight">
+                Service
+                <span className="block bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+                  Dashboard Panel
+                </span>
+              </h1>
+
+              <p className="mt-4 text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+                Monitor service performance, appointments, earnings and business
+                analytics from one centralized admin dashboard.
+              </p>
             </div>
 
-            <button
-              onClick={() => {
-                if (Array.isArray(servicesProp)) return;
-                fetchServices({ showLoading: true });
-              }}
-              className={serviceDashboardStyles.refresh.button(
-                Array.isArray(servicesProp),
-              )}
-              title={
-                Array.isArray(servicesProp)
-                  ? "Services provided by parent component"
-                  : "Refresh"
-              }
-            >
-              Refresh
-            </button>
+            <div className="hidden lg:flex items-center justify-center">
+              <div className="w-44 h-44 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center shadow-2xl">
+                <ClipboardList size={80} className="text-white" />
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className={serviceDashboardStyles.statGrid}>
-          <StatCard
-            icon={<ClipboardList size={18} />}
+        {/* STATS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5 mb-8">
+
+          <PremiumStatCard
+            icon={<ClipboardList size={20} />}
             label="Total Services"
             value={totals.totalServices}
+            color="emerald"
           />
-          <StatCard
-            icon={<Calendar size={18} />}
-            label="Total Appointment"
+
+          <PremiumStatCard
+            icon={<Calendar size={20} />}
+            label="Appointments"
             value={totals.totalAppointments}
+            color="cyan"
           />
-          <StatCard
-            icon={<BadgeIndianRupee size={18} />}
-            label="Total Earnings"
-            value={formatCurrency(totals.totalEarning)}
-          />
-          <StatCard
-            icon={<CheckCircle size={18} />}
+
+          <PremiumStatCard
+            icon={<CheckCircle size={20} />}
             label="Completed"
             value={totals.totalCompleted}
+            color="green"
           />
-          <StatCard
-            icon={<XCircle size={18} />}
+
+          <PremiumStatCard
+            icon={<XCircle size={20} />}
             label="Canceled"
             value={totals.totalCanceled}
+            color="red"
+          />
+
+          <PremiumStatCard
+            icon={<BadgeIndianRupee size={20} />}
+            label="Revenue"
+            value={formatCurrency(totals.totalEarning)}
+            color="yellow"
           />
         </div>
 
-        {/* Search bar */}
-        <div className={serviceDashboardStyles.search.container}>
-          <div className={serviceDashboardStyles.search.inputContainer}>
-            <Search size={16} className="text-emerald-700" />
-            <input
-              type="text"
-              placeholder="Search Services..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={serviceDashboardStyles.search.input}
-            />
-            {searchQuery.length > 0 && (
-              <XCircle
-                size={16}
-                className="text-red-500 cursor-pointer"
-                onClick={() => setSearchQuery("")}
+        {/* SEARCH + ACTIONS */}
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-3xl shadow-lg p-5 mb-8">
+
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="Search service, price..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="
+                w-full rounded-2xl border border-slate-200
+                bg-slate-50 px-5 py-3 pr-12
+                text-sm font-medium outline-none
+                focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100
+                transition-all duration-300
+              "
               />
-            )}
+
+              <Search
+                size={18}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+              />
+            </div>
+
+            <div className="flex gap-3 flex-wrap">
+
+              <button
+                onClick={() => setSearchQuery("")}
+                className="
+                px-5 py-3 rounded-2xl
+                bg-slate-900 text-white font-semibold
+                hover:bg-slate-800 transition-all duration-300
+              "
+              >
+                Clear
+              </button>
+
+              <button
+                onClick={() => fetchServices({ showLoading: true })}
+                className="
+                px-5 py-3 rounded-2xl
+                bg-emerald-500 text-white font-semibold
+                hover:bg-emerald-600 transition-all duration-300
+              "
+              >
+                Refresh
+              </button>
+
+            </div>
           </div>
         </div>
 
-        {/* Table list for tablet */}
-        <div className={serviceDashboardStyles.table.container}>
-          <div className={serviceDashboardStyles.table.headerMd}>
-            <div className={serviceDashboardStyles.table.headerText}>
-              Service
-            </div>
-            <div className={serviceDashboardStyles.table.headerText}>
-              Appointments
-            </div>
-            <div className={serviceDashboardStyles.table.headerText}>
-              Completed
-            </div>
-            <div className={serviceDashboardStyles.table.headerText}>
-              Canceled
-            </div>
-            <div className={serviceDashboardStyles.table.headerText}>
-              Earning
-            </div>
+        {/* LOADING */}
+        {loading && (
+          <div className="bg-white rounded-3xl p-10 text-center font-semibold text-slate-500 shadow-lg">
+            Loading Services...
           </div>
+        )}
 
-          {/* For desktop */}
-          <div className={serviceDashboardStyles.table.headerLg}>
-            <div className="col-span-5">Service</div>
-            <div className="col-span-2">Price</div>
-            <div className={serviceDashboardStyles.table.headerTextLg(1)}>
-              Appointments
-            </div>
-            <div className={serviceDashboardStyles.table.headerTextLg(1)}>
-              Completed
-            </div>
-            <div className={serviceDashboardStyles.table.headerTextLg(1)}>
-              Canceled
-            </div>
-            <div className="col-span-2 text-right">Earning</div>
+        {/* ERROR */}
+        {!loading && error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 rounded-3xl p-8 text-center font-semibold shadow-lg">
+            {error}
           </div>
+        )}
 
-          <div className={serviceDashboardStyles.table.body}>
-            {loading ? (
-              <div className={serviceDashboardStyles.states.loading}>
-                Loading services...
-              </div>
-            ) : error ? (
-              <div className={serviceDashboardStyles.states.error}>
-                Error: {error}
-              </div>
-            ) : visibleServices.length === 0 ? (
-              <div className={serviceDashboardStyles.states.empty}>
-                No services found.
-              </div>
-            ) : (
-              visibleServices.map((s) => {
-                const earning = s.completed * s.price;
-                return (
-                  <div key={s.id} className={serviceDashboardStyles.table.row}>
-                    {/* For tablet */}
-                    <div className={serviceDashboardStyles.table.tabletView}>
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={serviceDashboardStyles.table.tabletImage}
-                        >
-                          <img
-                            src={s.image}
-                            alt={s.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div
-                          className={
-                            serviceDashboardStyles.table.tabletTextContainer
-                          }
-                        >
-                          <div
-                            className={
-                              serviceDashboardStyles.table.tabletServiceName
-                            }
-                          >
+        {/* EMPTY */}
+        {!loading && !error && visibleServices.length === 0 && (
+          <div className="bg-white rounded-3xl p-10 text-center font-semibold text-slate-500 shadow-lg">
+            No Services Found.
+          </div>
+        )}
+
+        {/* SERVICE GRID */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+          {visibleServices.map((s) => {
+            const earning = s.completed * s.price;
+
+            return (
+              <div
+                key={s.id}
+                className="
+                group overflow-hidden
+                rounded-[2rem]
+                border border-slate-200
+                bg-white/80 backdrop-blur-xl
+                shadow-xl
+                hover:-translate-y-1 hover:shadow-2xl
+                transition-all duration-300
+              "
+              >
+                <div className="p-6">
+
+                  {/* TOP */}
+                  <div className="flex gap-5">
+
+                    <img
+                      src={s.image}
+                      alt={s.name}
+                      className="
+                      w-28 h-28 rounded-3xl object-cover
+                      border border-slate-200 shadow-md
+                    "
+                    />
+
+                    <div className="flex-1">
+
+                      <div className="flex items-start justify-between gap-4">
+
+                        <div>
+                          <h2 className="text-2xl font-black text-slate-800">
                             {s.name}
-                          </div>
-                          <div
-                            className={serviceDashboardStyles.table.tabletPrice}
-                          >
-                            {formatCurrency(s.price)}
-                          </div>
-                        </div>
-                      </div>
+                          </h2>
 
-                      <div className={serviceDashboardStyles.table.tabletCell}>
-                        {s.totalAppointments}
-                      </div>
-                      <div
-                        className={`${serviceDashboardStyles.table.tabletCell} text-emerald-700`}
-                      >
-                        {s.completed}
-                      </div>
-                      <div
-                        className={`${serviceDashboardStyles.table.tabletCell} text-red-500`}
-                      >
-                        {s.canceled}
-                      </div>
-                      <div
-                        className={`${serviceDashboardStyles.table.tabletCell} text-right`}
-                      >
-                        {formatCurrency(earning)}
-                      </div>
-                    </div>
-
-                    {/* For desktop */}
-                    <div className={serviceDashboardStyles.table.desktopView}>
-                      <div className="col-span-5 flex items-center gap-4">
-                        <div
-                          className={serviceDashboardStyles.table.desktopImage}
-                        >
-                          <img
-                            src={s.image}
-                            alt={s.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <h3
-                          className={
-                            serviceDashboardStyles.table.desktopServiceName
-                          }
-                        >
-                          {s.name}
-                        </h3>
-                      </div>
-                      <div
-                        className={serviceDashboardStyles.table.desktopCell(2)}
-                      >
-                        {formatCurrency(s.price)}
-                      </div>
-                      <div
-                        className={serviceDashboardStyles.table.desktopCenterCell(
-                          1,
-                        )}
-                      >
-                        {s.totalAppointments}
-                      </div>
-                      <div
-                        className={serviceDashboardStyles.table.desktopCenterCell(
-                          1,
-                        )}
-                      >
-                        {s.completed}
-                      </div>
-                      <div
-                        className={serviceDashboardStyles.table.desktopCenterCell(
-                          1,
-                        )}
-                      >
-                        {s.canceled}
-                      </div>
-                      <div
-                        className={`${serviceDashboardStyles.table.desktopCell(
-                          2,
-                        )} text-right`}
-                      >
-                        {formatCurrency(earning)}
-                      </div>
-                    </div>
-
-                    {/* For mobile view */}
-                    <div className={serviceDashboardStyles.table.mobileView}>
-                      <div className="flex items-start gap-3">
-                        <div
-                          className={serviceDashboardStyles.table.mobileImage}
-                        >
-                          <img
-                            src={s.image}
-                            alt={s.name}
-                            className="w-full h-full object-cover"
-                          />
+                          <p className="text-slate-500 mt-2">
+                            Premium Healthcare Service
+                          </p>
                         </div>
 
-                        <div className="flex-1 min-w-0">
-                          <div
-                            className={
-                              serviceDashboardStyles.table.mobileServiceHeader
-                            }
-                          >
-                            <h3
-                              className={
-                                serviceDashboardStyles.table.mobileServiceName
-                              }
-                            >
-                              {s.name}
-                            </h3>
-                            <div className="text-sm font-medium">
-                              {formatCurrency(s.price)}
-                            </div>
-                          </div>
-
-                          <div
-                            className={
-                              serviceDashboardStyles.table.mobileStatsContainer
-                            }
-                          >
-                            <div
-                              className={serviceDashboardStyles.table.mobileStatItem(
-                                "emerald",
-                              )}
-                            >
-                              <Calendar size={14} />
-                              <span className="leading-none">
-                                {s.totalAppointments} Appointments
-                              </span>
-                            </div>
-
-                            <div
-                              className={serviceDashboardStyles.table.mobileStatItem(
-                                "emerald",
-                              )}
-                            >
-                              <CheckCircle size={14} />
-                              <span className="leading-none text-emerald-700">
-                                {s.completed} Completed
-                              </span>
-                            </div>
-
-                            <div
-                              className={serviceDashboardStyles.table.mobileStatItem(
-                                "red",
-                              )}
-                            >
-                              <XCircle size={14} />
-                              <span className="leading-none text-red-500">
-                                {s.canceled} Canceled
-                              </span>
-                            </div>
-
-                            <div
-                              className={serviceDashboardStyles.table.mobileStatItem(
-                                "emerald",
-                              )}
-                            >
-                              <BadgeIndianRupee size={14} />
-                              <span className="leading-none">
-                                Total Earning : {formatCurrency(earning)}
-                              </span>
-                            </div>
-                          </div>
+                        <div className="px-4 py-2 rounded-2xl bg-emerald-50 text-emerald-600 font-bold">
+                          {formatCurrency(s.price)}
                         </div>
+
+                      </div>
+
+                      {/* BADGES */}
+                      <div className="flex flex-wrap gap-3 mt-5">
+
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-50 text-cyan-600 text-sm font-semibold">
+                          <Calendar size={14} />
+                          {s.totalAppointments} Appointments
+                        </div>
+
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 text-emerald-600 text-sm font-semibold">
+                          <CheckCircle size={14} />
+                          {s.completed} Completed
+                        </div>
+
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 text-red-500 text-sm font-semibold">
+                          <XCircle size={14} />
+                          {s.canceled} Canceled
+                        </div>
+
+                      </div>
+
+                      {/* STATS */}
+                      <div className="grid grid-cols-2 gap-4 mt-6">
+
+                        <div className="rounded-2xl bg-slate-50 p-4">
+                          <p className="text-xs text-slate-500 font-semibold">
+                            Revenue
+                          </p>
+
+                          <h3 className="text-xl font-black text-emerald-600 mt-1">
+                            {formatCurrency(earning)}
+                          </h3>
+                        </div>
+
+                        <div className="rounded-2xl bg-slate-50 p-4">
+                          <p className="text-xs text-slate-500 font-semibold">
+                            Success Rate
+                          </p>
+
+                          <h3 className="text-xl font-black text-slate-800 mt-1">
+                            {s.totalAppointments > 0
+                              ? `${Math.round(
+                                (s.completed / s.totalAppointments) * 100,
+                              )}%`
+                              : "0%"}
+                          </h3>
+                        </div>
+
                       </div>
                     </div>
                   </div>
-                );
-              })
-            )}
-          </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Show more / less */}
+        {/* SHOW MORE */}
         {filteredServices.length > INITIAL_COUNT && (
-          <div className={serviceDashboardStyles.showMore.container}>
+          <div className="flex justify-center py-10">
             <button
               onClick={() => setShowAll((s) => !s)}
-              className={serviceDashboardStyles.showMore.button}
+              className="
+              px-8 py-4 rounded-2xl
+              bg-slate-900 text-white font-semibold
+              hover:scale-105 transition-all duration-300
+            "
             >
               {showAll
-                ? "Show less"
-                : `Show more (${filteredServices.length - INITIAL_COUNT})`}
+                ? "Show Less"
+                : `Show More (${filteredServices.length - INITIAL_COUNT})`}
             </button>
           </div>
         )}
+
       </div>
     </div>
   );
+
+  /* ===========================
+     PREMIUM STAT CARD
+  =========================== */
+
+  function PremiumStatCard({ icon, label, value, color }) {
+
+    const colors = {
+      emerald: "from-emerald-500 to-green-500",
+      cyan: "from-cyan-500 to-sky-500",
+      green: "from-green-500 to-emerald-500",
+      red: "from-red-500 to-rose-500",
+      yellow: "from-yellow-500 to-orange-500",
+    };
+
+    return (
+      <div className="
+      relative overflow-hidden
+      rounded-3xl border border-slate-200
+      bg-white/80 backdrop-blur-xl
+      shadow-lg p-5
+      hover:-translate-y-1 hover:shadow-2xl
+      transition-all duration-300
+    ">
+
+        <div className={`
+        absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-20
+        bg-gradient-to-br ${colors[color]}
+      `} />
+
+        <div className="relative z-10 flex items-center justify-between">
+
+          <div>
+            <p className="text-sm font-semibold text-slate-500">
+              {label}
+            </p>
+
+            <h3 className="text-3xl font-black text-slate-800 mt-2">
+              {value}
+            </h3>
+          </div>
+
+          <div className={`
+          w-14 h-14 rounded-2xl text-white
+          flex items-center justify-center shadow-lg
+          bg-gradient-to-br ${colors[color]}
+        `}>
+            {icon}
+          </div>
+
+        </div>
+      </div>
+    );
+  }
 };
 
 export default ServiceDashboard;

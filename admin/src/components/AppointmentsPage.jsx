@@ -59,9 +59,8 @@ const AppointmentsPage = () => {
       setError(null);
       try {
         const q = query.trim();
-        const url = `${API_BASE}/api/appointments?limit=200${
-          q ? `&search=${encodeURIComponent(q)}` : ""
-        }`;
+        const url = `${API_BASE}/api/appointments?limit=200${q ? `&search=${encodeURIComponent(q)}` : ""
+          }`;
         const res = await fetch(url);
         if (!res.ok) {
           const body = await res.json().catch(() => ({}));
@@ -160,8 +159,7 @@ const AppointmentsPage = () => {
     if (isCancelled || isCompleted) return;
 
     const ok = window.confirm(
-      `As admin, mark appointment for ${appt.patientName} with ${
-        appt.doctorName
+      `As admin, mark appointment for ${appt.patientName} with ${appt.doctorName
       } on ${formatDateISO(appt.slot.date)} at ${appt.slot.time} as CANCELLED?`,
     );
     if (!ok) return;
@@ -187,14 +185,14 @@ const AppointmentsPage = () => {
           prev.map((p) =>
             p.id === id
               ? {
-                  ...p,
-                  status: updated.status || "Canceled",
-                  slot: {
-                    date: updated.date || p.slot.date,
-                    time: updated.time || p.slot.time,
-                  },
-                  raw: updated,
-                }
+                ...p,
+                status: updated.status || "Canceled",
+                slot: {
+                  date: updated.date || p.slot.date,
+                  time: updated.time || p.slot.time,
+                },
+                raw: updated,
+              }
               : p,
           ),
         );
@@ -235,188 +233,273 @@ const AppointmentsPage = () => {
   }
 
   return (
-    <div className={pageStyles.container}>
-      <style>{keyframesStyles}</style>
-      <div className={pageStyles.maxWidthContainer}>
-        <header className={pageStyles.headerContainer}>
-          <div className={pageStyles.headerTitleSection}>
-            <h1 className={pageStyles.headerTitle}>Appointments</h1>
-            <p className={pageStyles.headerSubtitle}>
-              Manage and search upcoming patient appointments
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50 px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto">
+        {/* HERO */}
+        <div className="relative overflow-hidden rounded-[2rem] border border-emerald-100 bg-white/80 backdrop-blur-xl shadow-xl p-6 sm:p-8 mb-8">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-emerald-100 rounded-full blur-3xl opacity-40" />
 
-          <div className={pageStyles.headerControlsSection}>
-            <div
-              className="flex flex-col md:flex-col sm:flex-row items-center gap-3
-            w-full sm:w-auto"
-            >
-              <div className={pageStyles.searchContainer}>
-                <Search size={16} className={pageStyles.searchIcon} />
-                <input
-                  className={pageStyles.searchInput}
-                  placeholder="Search doctor, patient, speciality or mobile"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                />
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-semibold mb-4">
+                <Calendar size={16} />
+                Appointments Dashboard
               </div>
 
-              <div className={pageStyles.filterContainer}>
-                <div className={pageStyles.dateFilter}>
-                  <Calendar size={14} className={pageStyles.dateFilterIcon} />
-                  <input
-                    type="date"
-                    className={pageStyles.dateInput}
-                    value={filterDate}
-                    onChange={(e) => setFilterDate(e.target.value)}
-                  />
-                </div>
+              <h1 className="text-3xl sm:text-5xl font-black text-slate-800 leading-tight">
+                Hospital Appointment
+                <span className="block bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+                  Management Panel
+                </span>
+              </h1>
 
-                <select
-                  className={pageStyles.selectFilter}
-                  value={filterSpeciality}
-                  onChange={(e) => setFilterSpeciality(e.target.value)}
-                >
-                  {specialities.map((s) => (
-                    <option value={s} key={s}>
-                      {s === "all" ? "All Specialities" : s}
-                    </option>
-                  ))}
-                </select>
+              <p className="mt-4 text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+                Manage patient bookings, cancellations and appointment schedules
+                from one centralized admin dashboard.
+              </p>
+            </div>
 
-                <button
-                  onClick={() => {
-                    setQuery("");
-                    setFilterDate("");
-                    setFilterSpeciality("all");
-                    setShowAll(false);
-                    setError(null);
-                  }}
-                  className={pageStyles.clearButton}
-                >
-                  Clear
-                </button>
+            <div className="hidden lg:flex items-center justify-center">
+              <div className="w-44 h-44 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center shadow-2xl">
+                <Calendar size={80} className="text-white" />
               </div>
             </div>
           </div>
-        </header>
+        </div>
 
-        {loading ? (
-          <div className={pageStyles.loadingErrorContainer}>Loading...</div>
-        ) : error ? (
-          <div className={pageStyles.errorContainer}>{error}</div>
-        ) : sortedFiltered.length === 0 ? (
-          <div className={pageStyles.noResultsContainer}>
-            No appointments found.
+        {/* SEARCH + FILTER */}
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-3xl shadow-lg p-5 mb-8">
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+            <div className="relative flex-1">
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search doctor, patient, speciality or mobile..."
+                className="
+              w-full rounded-2xl border border-slate-200
+              bg-slate-50 px-5 py-3 pr-12
+              text-sm font-medium outline-none
+              focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100
+              transition-all duration-300
+            "
+              />
+
+              <Search
+                size={18}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <input
+                type="date"
+                value={filterDate}
+                onChange={(e) => setFilterDate(e.target.value)}
+                className="
+              px-4 py-3 rounded-2xl border border-slate-200
+              bg-slate-50 text-sm font-medium outline-none
+              focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100
+            "
+              />
+
+              <select
+                value={filterSpeciality}
+                onChange={(e) => setFilterSpeciality(e.target.value)}
+                className="
+              px-4 py-3 rounded-2xl border border-slate-200
+              bg-slate-50 text-sm font-medium outline-none
+              focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100
+            "
+              >
+                {specialities.map((s) => (
+                  <option key={s} value={s}>
+                    {s === "all" ? "All Specialities" : s}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                onClick={() => {
+                  setQuery("");
+                  setFilterDate("");
+                  setFilterSpeciality("all");
+                  setShowAll(false);
+                  setError(null);
+                }}
+                className="
+              px-5 py-3 rounded-2xl
+              bg-slate-900 text-white font-semibold
+              hover:bg-slate-800 transition-all duration-300
+            "
+              >
+                Clear
+              </button>
+            </div>
           </div>
-        ) : (
-          <main className={pageStyles.gridContainer}>
-            {displayed.map((a, idx) => {
-              const statusLower = (a.status || "").toLowerCase();
-              const isCancelled =
-                statusLower === "canceled" || statusLower === "cancelled";
-              const isCompleted = statusLower === "completed";
-              const isDisabled = isCancelled || isCompleted;
+        </div>
 
-              return (
-                <div
-                  key={a.id}
-                  style={{
-                    animation: `fadeUp 420ms cubic-bezier(.2,.9,.2,1) forwards`,
-                    animationDelay: `${idx * 70}ms`,
-                    opacity: 0,
-                  }}
-                  className={pageStyles.card}
-                >
-                  <div className={pageStyles.cardHeader}>
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h3 className={pageStyles.cardTitle}>
-                          {a.patientName}
-                        </h3>
+        {/* LOADING */}
+        {loading && (
+          <div className="bg-white rounded-3xl p-10 text-center font-semibold text-slate-500 shadow-lg">
+            Loading Appointments...
+          </div>
+        )}
 
-                        <div className={pageStyles.patientInfo}>
-                          <span>{a.age ? `${a.age} yrs` : ""}</span>
-                          <span> {a.age ? ":" : ""} </span>
-                          <span>{a.gender}</span>
-                          <span className="hidden md:inline"> : </span>
-                          <span className=" max-w-30">{a.mobile}</span>
-                        </div>
+        {/* ERROR */}
+        {error && (
+          <div className="bg-red-50 border border-red-100 rounded-3xl p-6 text-red-500 font-semibold shadow-lg mb-6">
+            {error}
+          </div>
+        )}
+
+        {/* EMPTY */}
+        {!loading && sortedFiltered.length === 0 && (
+          <div className="bg-white rounded-3xl p-10 text-center font-semibold text-slate-500 shadow-lg">
+            No Appointments Found.
+          </div>
+        )}
+
+        {/* APPOINTMENT GRID */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          {displayed.map((a) => {
+            const statusLower = (a.status || "").toLowerCase();
+
+            const isCancelled =
+              statusLower === "canceled" ||
+              statusLower === "cancelled";
+
+            const isCompleted = statusLower === "completed";
+
+            const isDisabled = isCancelled || isCompleted;
+
+            return (
+              <div
+                key={a.id}
+                className="
+              overflow-hidden rounded-[2rem]
+              border border-slate-200
+              bg-white/80 backdrop-blur-xl
+              shadow-xl hover:-translate-y-1
+              hover:shadow-2xl transition-all duration-300
+            "
+              >
+                <div className="p-6">
+                  {/* TOP */}
+                  <div className="flex flex-col sm:flex-row justify-between gap-5">
+                    <div>
+                      <h2 className="text-2xl font-black text-slate-800">
+                        {a.patientName}
+                      </h2>
+
+                      <div className="flex flex-wrap gap-2 mt-2 text-sm text-slate-500">
+                        <span>{a.age} yrs</span>
+                        <span>•</span>
+                        <span>{a.gender}</span>
+                        <span>•</span>
+                        <span>{a.mobile}</span>
                       </div>
 
-                      <div className={pageStyles.doctorInfo}>
-                        {a.doctorName} :{" "}
-                        <span className={pageStyles.doctorSpeciality}>
-                          {a.speciality}
-                        </span>
-                      </div>
+                      <p className="mt-3 text-slate-600 font-semibold">
+                        {a.doctorName}
+                      </p>
+
+                      <p className="text-sm text-slate-400">
+                        {a.speciality}
+                      </p>
                     </div>
 
                     <div className="text-right">
-                      <div className={pageStyles.feeLabel}>Fees</div>
-                      <div className={pageStyles.feeAmount}>
-                        <BadgeIndianRupee size={16} />
-                        <span>{a.fee}</span>
+                      <div className="text-xs font-semibold text-slate-400">
+                        Fees
+                      </div>
+
+                      <div className="flex items-center justify-end gap-1 text-2xl font-black text-emerald-600 mt-2">
+                        <BadgeIndianRupee size={20} />
+                        {a.fee}
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-3 flex-wrap">
-                    <div className={pageStyles.slotContainer}>
-                      <Calendar size={14} className={pageStyles.slotIcon} />
-                      <span>
-                        {formatDateISO(a.slot.date)} — {a.slot.time}
-                      </span>
+                  {/* DETAILS */}
+                  <div className="grid grid-cols-2 gap-4 mt-6">
+                    <div className="rounded-2xl bg-slate-50 p-4">
+                      <p className="text-xs text-slate-500 font-semibold">
+                        Appointment Date
+                      </p>
+
+                      <h3 className="text-sm font-bold text-slate-800 mt-1">
+                        {formatDateISO(a.slot.date)}
+                      </h3>
                     </div>
 
-                    <div
-                      className={`${pageStyles.statusBadge} ${statusClasses(a.status)}`}
-                    >
-                      {a.status ? a.status.toUpperCase() : "PENDING"}
-                    </div>
+                    <div className="rounded-2xl bg-slate-50 p-4">
+                      <p className="text-xs text-slate-500 font-semibold">
+                        Time Slot
+                      </p>
 
-                    <div className="flex items-center gap-2">
-                      {isAdmin && (
-                        <button
-                          onClick={() => adminCancelAppointment(a.id)}
-                          title={
-                            isDisabled
-                              ? isCompleted
-                                ? "Cannot cancel a completed appointment"
-                                : "Already cancelled"
-                              : "Admin Cancel (mark as cancelled)"
-                          }
-                          disabled={isDisabled}
-                          aria-disabled={isDisabled}
-                          className={pageStyles.cancelButton(
-                            isDisabled,
-                            isCompleted,
-                          )}
-                        >
-                          {isDisabled
-                            ? isCompleted
-                              ? "Completed"
-                              : "Admin Cancelled"
-                            : "Admin Cancel"}
-                        </button>
-                      )}
+                      <h3 className="text-sm font-bold text-slate-800 mt-1">
+                        {a.slot.time}
+                      </h3>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </main>
-        )}
 
+                  {/* FOOTER */}
+                  <div className="flex items-center justify-between gap-4 mt-6 flex-wrap">
+                    <div
+                      className={`
+                    px-4 py-2 rounded-full text-sm font-semibold
+                    ${isCompleted
+                          ? "bg-emerald-100 text-emerald-600"
+                          : isCancelled
+                            ? "bg-red-100 text-red-500"
+                            : "bg-yellow-100 text-yellow-600"
+                        }
+                  `}
+                    >
+                      {a.status?.toUpperCase()}
+                    </div>
+
+                    {isAdmin && (
+                      <button
+                        onClick={() => adminCancelAppointment(a.id)}
+                        disabled={isDisabled}
+                        className={`
+                      px-5 py-3 rounded-2xl
+                      font-semibold transition-all duration-300
+                      ${isDisabled
+                            ? "bg-slate-200 text-slate-500 cursor-not-allowed"
+                            : "bg-red-500 hover:bg-red-600 text-white"
+                          }
+                    `}
+                      >
+                        {isCompleted
+                          ? "Completed"
+                          : isCancelled
+                            ? "Cancelled"
+                            : "Cancel Appointment"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* SHOW MORE */}
         {sortedFiltered.length > 8 && (
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center py-10">
             <button
               onClick={() => setShowAll((s) => !s)}
-              className={pageStyles.showMoreButton}
+              className="
+            px-8 py-4 rounded-2xl
+            bg-slate-900 text-white font-semibold
+            hover:scale-105 transition-all duration-300
+          "
             >
               {showAll
                 ? "Show Less"
-                : `Show more (${sortedFiltered.length - 8})`}
+                : `Show More (${sortedFiltered.length - 8})`}
             </button>
           </div>
         )}

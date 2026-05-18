@@ -148,7 +148,7 @@ const AddService = ({ serviceId }) => {
     if (imagePreview && imagePreview.startsWith("blob:")) {
       try {
         URL.revokeObjectURL(imagePreview);
-      } catch (err) {}
+      } catch (err) { }
     }
     setImageFile(f);
     setImagePreview(URL.createObjectURL(f));
@@ -173,7 +173,7 @@ const AddService = ({ serviceId }) => {
     if (imagePreview && imagePreview.startsWith("blob:")) {
       try {
         URL.revokeObjectURL(imagePreview);
-      } catch (err) {}
+      } catch (err) { }
     }
     setImagePreview(null);
     setImageFile(null);
@@ -349,13 +349,12 @@ const AddService = ({ serviceId }) => {
       <div className={addServiceStyles.toast.container}>
         {toast && (
           <div
-            className={`${addServiceStyles.toast.toastBase} ${
-              toast.type === "error"
+            className={`${addServiceStyles.toast.toastBase} ${toast.type === "error"
                 ? addServiceStyles.toast.toastError
                 : toast.type === "info"
                   ? addServiceStyles.toast.toastInfo
                   : addServiceStyles.toast.toastSuccess
-            } animate-slideIn`}
+              } animate-slideIn`}
           >
             <div className={addServiceStyles.toast.iconContainer(toast.type)}>
               {toast.type === "error" ? (
@@ -474,7 +473,7 @@ const AddService = ({ serviceId }) => {
                       if (imagePreview && imagePreview.startsWith("blob:")) {
                         try {
                           URL.revokeObjectURL(imagePreview);
-                        } catch (err) {}
+                        } catch (err) { }
                       }
                       setImagePreview(null);
                       setImageFile(null);
