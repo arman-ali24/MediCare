@@ -106,7 +106,7 @@ const AddPage = () => {
     if (form.imagePreview && form.imageFile) {
       try {
         URL.revokeObjectURL(form.imagePreview);
-      } catch (err) {}
+      } catch (err) { }
     }
     setForm((p) => ({
       ...p,
@@ -120,13 +120,13 @@ const AddPage = () => {
     if (form.imagePreview && form.imageFile) {
       try {
         URL.revokeObjectURL(form.imagePreview);
-      } catch (err) {}
+      } catch (err) { }
     }
     setForm((p) => ({ ...p, imageFile: null, imagePreview: "" }));
     if (fileInputRef.current) {
       try {
         fileInputRef.current.value = "";
-      } catch (err) {}
+      } catch (err) { }
     }
   }
 
@@ -265,7 +265,7 @@ const AddPage = () => {
       if (data?.token) {
         try {
           localStorage.setItem("token", data.token);
-        } catch (err) {}
+        } catch (err) { }
       }
 
       const doctorFromServer = data?.data
@@ -278,7 +278,7 @@ const AddPage = () => {
       if (form.imagePreview && form.imageFile) {
         try {
           URL.revokeObjectURL(form.imagePreview);
-        } catch (err) {}
+        } catch (err) { }
       }
 
       // reset the field after submit is done
@@ -304,7 +304,7 @@ const AddPage = () => {
       if (fileInputRef.current) {
         try {
           fileInputRef.current.value = "";
-        } catch (err) {}
+        } catch (err) { }
       }
 
       setSlotDate("");
@@ -320,330 +320,362 @@ const AddPage = () => {
   }
 
   return (
-    <div className={s.pageContainer}>
-      <div className={s.maxWidthContainerLg + " " + s.headerContainer}>
-        <div className={s.headerFlexContainer}>
-          <div className={s.headerIconContainer}>
-            <User className="text-white" size={32} />
-          </div>
-          <h1 className={s.headerTitle}>Add New Doctor</h1>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50 px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto">
+        {/* HERO SECTION */}
+        <div className="relative overflow-hidden rounded-[2rem] border border-emerald-100 bg-white/80 backdrop-blur-xl shadow-xl p-6 sm:p-8 mb-8">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-emerald-100 rounded-full blur-3xl opacity-40" />
 
-      {/* Form */}
-      <div className={s.maxWidthContainer + " " + s.formContainer}>
-        <form onSubmit={handleAdd} className={s.formGrid}>
-          <div className="md:col-span-2">
-            <label className={s.label}>Upload Profile Image</label>
-            <div className="flex flex-wrap items-center gap-4">
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept="image/*"
-                onChange={handleImage}
-                className={s.fileInput}
-              />
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-semibold mb-4">
+                <User size={16} />
+                Add Doctor Section
+              </div>
 
-              {form.imagePreview && (
-                <div className="relative-group">
-                  <img
-                    src={form.imagePreview}
-                    alt="preview"
-                    className={s.imagePreview}
-                  />
+              <h1 className="text-3xl sm:text-5xl font-black text-slate-800 leading-tight">
+                Add New
+                <span className="block bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+                  Doctor Profile
+                </span>
+              </h1>
 
-                  <button
-                    type="button"
-                    onClick={removeImage}
-                    className={s.removeImageButton + " " + s.cursorPointer}
-                  >
-                    <XCircle size={14} />
-                  </button>
-                </div>
-              )}
+              <p className="mt-4 text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+                Create and manage doctor profiles, schedules, availability,
+                and appointment slots from one centralized admin panel.
+              </p>
+            </div>
+
+            <div className="hidden lg:flex items-center justify-center">
+              <div className="w-44 h-44 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center shadow-2xl">
+                <User className="text-white" size={80} />
+              </div>
             </div>
           </div>
+        </div>
 
-          <input
-            className={s.inputBase}
-            placeholder="Full Name"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-          <input
-            className={s.inputBase}
-            placeholder="Specialization"
-            value={form.specialization}
-            onChange={(e) =>
-              setForm({ ...form, specialization: e.target.value })
-            }
-          />
-          <input
-            className={s.inputBase}
-            placeholder="Location"
-            value={form.location}
-            onChange={(e) => setForm({ ...form, location: e.target.value })}
-          />
+        {/* FORM */}
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2rem] shadow-xl p-5 sm:p-8">
+          <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* IMAGE */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-bold text-slate-700 mb-3">
+                Upload Profile Image
+              </label>
 
-          <input
-            className={s.inputBase}
-            placeholder="Experience"
-            value={form.experience}
-            onChange={(e) => setForm({ ...form, experience: e.target.value })}
-          />
+              <div className="flex flex-wrap items-center gap-4">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/*"
+                  onChange={handleImage}
+                  className="block w-full text-sm text-slate-500
+                file:mr-4 file:py-3 file:px-5
+                file:rounded-2xl file:border-0
+                file:text-sm file:font-semibold
+                file:bg-emerald-500 file:text-white
+                hover:file:bg-emerald-600"
+                />
 
-          <input
-            className={s.inputBase}
-            placeholder="Qualifications"
-            value={form.qualifications}
-            onChange={(e) =>
-              setForm({ ...form, qualifications: e.target.value })
-            }
-          />
+                {form.imagePreview && (
+                  <div className="relative">
+                    <img
+                      src={form.imagePreview}
+                      alt="preview"
+                      className="w-28 h-28 rounded-3xl object-cover border-4 border-white shadow-lg"
+                    />
 
-          <input
-            className={s.inputBase}
-            placeholder="Consultation Fee"
-            value={form.fee}
-            onChange={(e) => setForm({ ...form, fee: e.target.value })}
-          />
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                    >
+                      <XCircle size={18} />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
 
-          <input
-            className={s.inputBase}
-            placeholder="Rating (1.0 - 5.0)"
-            type="number"
-            min={1}
-            max={5}
-            step={0.1}
-            value={form.rating}
-            onChange={(e) => {
-              const v = e.target.value;
+            {/* INPUTS */}
+            {[
+              ["Full Name", "name"],
+              ["Specialization", "specialization"],
+              ["Location", "location"],
+              ["Experience", "experience"],
+              ["Qualifications", "qualifications"],
+              ["Consultation Fee", "fee"],
+              ["Patients", "patients"],
+              ["Success Rate", "success"],
+            ].map(([placeholder, key]) => (
+              <input
+                key={key}
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all duration-300"
+                placeholder={placeholder}
+                value={form[key]}
+                onChange={(e) =>
+                  setForm({ ...form, [key]: e.target.value })
+                }
+              />
+            ))}
 
-              // allow clearing
-              if (v === "") {
-                setForm((p) => ({ ...p, rating: "" }));
-                return;
-              }
+            {/* RATING */}
+            <input
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all duration-300"
+              placeholder="Rating (1.0 - 5.0)"
+              type="number"
+              min={1}
+              max={5}
+              step={0.1}
+              value={form.rating}
+              onChange={(e) => {
+                const v = e.target.value;
 
-              const n = Number(v);
-              if (Number.isNaN(n)) return;
+                if (v === "") {
+                  setForm((p) => ({ ...p, rating: "" }));
+                  return;
+                }
 
-              // clamp between 1 and 5
-              const clamped = Math.max(1, Math.min(5, n));
-
-              // keep only 1 decimal place
-              const fixed = Math.round(clamped * 10) / 10;
-
-              setForm((p) => ({ ...p, rating: fixed.toString() }));
-            }}
-            onBlur={() => {
-              // force 1 decimal place on blur
-              setForm((p) => {
-                if (!p.rating) return p;
-                const n = Number(p.rating);
-                if (Number.isNaN(n)) return { ...p, rating: "" };
+                const n = Number(v);
+                if (Number.isNaN(n)) return;
 
                 const clamped = Math.max(1, Math.min(5, n));
-                return { ...p, rating: clamped.toFixed(1) };
-              });
-            }}
-          />
-          <input
-            className={s.inputBase}
-            placeholder="Patients"
-            value={form.patients}
-            onChange={(e) => setForm({ ...form, patients: e.target.value })}
-          />
+                const fixed = Math.round(clamped * 10) / 10;
 
-          <input
-            className={s.inputBase}
-            placeholder="Success Rate"
-            value={form.success}
-            onChange={(e) => setForm({ ...form, success: e.target.value })}
-          />
-          <input
-            className={s.inputBase}
-            placeholder="Doctor Email"
-            value={form.email}
-            type="email"
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-          />
-
-          <div className="relative">
-            <input
-              className={s.inputBase + " " + s.inputWithIcon}
-              placeholder="Doctor Password"
-              type={showPassword ? "text" : "password"}
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
+                setForm((p) => ({
+                  ...p,
+                  rating: fixed.toString(),
+                }));
+              }}
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword((s) => !s)}
-              className={s.passwordToggleButton + " " + s.cursorPointer}
-            >
-              {showPassword ? <Eye size={18} /> : <EyeClosed size={18} />}
-            </button>
-          </div>
 
-          <select
-            className={s.inputBase}
-            value={form.availability}
-            onChange={(e) => setForm({ ...form, availability: e.target.value })}
-          >
-            <option value="Available">Available</option>
-            <option value="Unavailable">Unavailable</option>
-          </select>
+            {/* EMAIL */}
+            <input
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all duration-300"
+              placeholder="Doctor Email"
+              type="email"
+              value={form.email}
+              onChange={(e) =>
+                setForm({ ...form, email: e.target.value })
+              }
+            />
 
-          <textarea
-            className={s.textareaBase + "md:col-span-2"}
-            rows={3}
-            placeholder="About Doctor"
-            value={form.about}
-            onChange={(e) => setForm({ ...form, about: e.target.value })}
-          ></textarea>
-          {/* SCHEDULE */}
-          <div className={s.scheduleContainer + " md:col-span-2"}>
-            <div className={s.scheduleHeader}>
-              <Calendar className="text-emerald-600" />
-              <p className={s.scheduleTitle}>Add Schedule Slots</p>
-            </div>
-
-            <div className={s.scheduleInputsContainer}>
+            {/* PASSWORD */}
+            <div className="relative">
               <input
-                type="date"
-                value={slotDate}
-                min={today}
-                onChange={(e) => setSlotDate(e.target.value)}
-                className={s.scheduleDateInput}
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 pr-12 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all duration-300"
+                placeholder="Doctor Password"
+                type={showPassword ? "text" : "password"}
+                value={form.password}
+                onChange={(e) =>
+                  setForm({ ...form, password: e.target.value })
+                }
               />
-
-              <select
-                value={slotHour}
-                onChange={(e) => setSlotHour(e.target.value)}
-                className={s.scheduleTimeSelect}
-              >
-                <option value="">Hour</option>
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <option key={i} value={String(i + 1)}>
-                    {i + 1}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={slotMinute}
-                onChange={(e) => setSlotMinute(e.target.value)}
-                className={s.scheduleTimeSelect}
-              >
-                {Array.from({ length: 60 }).map((_, i) => (
-                  <option key={i} value={String(i).padStart(2, "0")}>
-                    {String(i).padStart(2, "0")}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={slotAmpm}
-                onChange={(e) => setSlotAmpm(e.target.value)}
-                className={s.scheduleTimeSelect}
-              >
-                <option>AM</option>
-                <option>PM</option>
-              </select>
 
               <button
                 type="button"
-                onClick={addSlotToForm}
-                className={s.addSlotButton + " " + s.cursorPointer}
+                onClick={() => setShowPassword((s) => !s)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500"
               >
-                <Plus size={18} /> Add Slot
+                {showPassword ? (
+                  <Eye size={18} />
+                ) : (
+                  <EyeClosed size={18} />
+                )}
               </button>
             </div>
 
-            <div className={s.slotsGrid}>
-              {getFlatSlots(form.schedule).map(({ date, time }) => (
-                <div
-                  key={date + time}
-                  className={s.slotItem + " " + s.cursorPointer}
-                >
-                  <span>
-                    {formatDateISO(date)} — {time}
-                  </span>
-                  <button
-                    onClick={() => removeSlot(date, time)}
-                    className="text-rose-500"
-                    aria-label={`Remove slot ${date} ${time}`}
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className={s.submitButtonContainer}>
-            <button
-              type="submit"
-              disabled={loading}
-              className={
-                s.submitButton +
-                " " +
-                s.cursorPointer +
-                " " +
-                (loading ? s.submitButtonDisabled : s.submitButtonEnabled)
+            {/* AVAILABILITY */}
+            <select
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all duration-300"
+              value={form.availability}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  availability: e.target.value,
+                })
               }
             >
-              {loading ? "Adding..." : "Add Doctor to Team"}
-            </button>
-          </div>
-        </form>
-      </div>
+              <option value="Available">Available</option>
+              <option value="Unavailable">Unavailable</option>
+            </select>
 
-      {/* TOAST */}
-      {toast.show && (
-        <div
-          className={
-            s.toastContainer +
-            " " +
-            (toast.type === "success" ? s.toastSuccess : s.toastError)
-          }
-        >
-          {toast.type === "success" ? (
-            <CheckCircle size={22} />
-          ) : (
-            <XCircle size={22} />
-          )}
-          <span>{toast.message}</span>
+            {/* ABOUT */}
+            <textarea
+              rows={4}
+              placeholder="About Doctor"
+              value={form.about}
+              onChange={(e) =>
+                setForm({ ...form, about: e.target.value })
+              }
+              className="md:col-span-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all duration-300"
+            />
+
+            {/* SCHEDULE */}
+            <div className="md:col-span-2 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+              <div className="flex items-center gap-2 mb-5">
+                <Calendar className="text-emerald-600" />
+                <h3 className="text-lg font-black text-slate-800">
+                  Add Schedule Slots
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <input
+                  type="date"
+                  value={slotDate}
+                  min={today}
+                  onChange={(e) => setSlotDate(e.target.value)}
+                  className="rounded-2xl border border-slate-200 px-4 py-3"
+                />
+
+                <select
+                  value={slotHour}
+                  onChange={(e) => setSlotHour(e.target.value)}
+                  className="rounded-2xl border border-slate-200 px-4 py-3"
+                >
+                  <option value="">Hour</option>
+
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <option key={i} value={String(i + 1)}>
+                      {i + 1}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  value={slotMinute}
+                  onChange={(e) => setSlotMinute(e.target.value)}
+                  className="rounded-2xl border border-slate-200 px-4 py-3"
+                >
+                  {Array.from({ length: 60 }).map((_, i) => (
+                    <option
+                      key={i}
+                      value={String(i).padStart(2, "0")}
+                    >
+                      {String(i).padStart(2, "0")}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  value={slotAmpm}
+                  onChange={(e) => setSlotAmpm(e.target.value)}
+                  className="rounded-2xl border border-slate-200 px-4 py-3"
+                >
+                  <option>AM</option>
+                  <option>PM</option>
+                </select>
+
+                <button
+                  type="button"
+                  onClick={addSlotToForm}
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-all duration-300"
+                >
+                  <Plus size={18} />
+                  Add Slot
+                </button>
+              </div>
+
+              {/* SLOT LIST */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6">
+                {getFlatSlots(form.schedule).map(({ date, time }) => (
+                  <div
+                    key={date + time}
+                    className="flex items-center justify-between rounded-2xl bg-white border border-slate-200 px-4 py-3"
+                  >
+                    <span className="text-sm font-semibold text-slate-700">
+                      {formatDateISO(date)} — {time}
+                    </span>
+
+                    <button
+                      onClick={() => removeSlot(date, time)}
+                      className="text-red-500"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* SUBMIT */}
+            <div className="md:col-span-2 flex justify-end">
+              <button
+                type="submit"
+                disabled={loading}
+                className={`px-8 py-4 rounded-2xl text-white font-bold shadow-lg transition-all duration-300 ${loading
+                  ? "bg-slate-400"
+                  : "bg-gradient-to-r from-emerald-500 to-cyan-500 hover:scale-105"
+                  }`}
+              >
+                {loading
+                  ? "Adding..."
+                  : "Add Doctor to Team"}
+              </button>
+            </div>
+          </form>
         </div>
-      )}
 
-      {/* Simple overview of added doc */}
-      <div className={s.doctorListContainer}>
-        {doctorList.length ? (
-          <div className={s.doctorListGrid}>
-            {doctorList.map((d) => (
-              <div key={d.id || d._id} className={s.doctorCard}>
-                <div className={s.doctorCardContent}>
-                  <img
-                    src={s.imageUrl || d.imagePreview}
-                    alt={d.name}
-                    className={s.doctorImage}
-                  />
+        {/* TOAST */}
+        {toast.show && (
+          <div
+            className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl text-white ${toast.type === "success"
+              ? "bg-emerald-500"
+              : "bg-red-500"
+              }`}
+          >
+            {toast.type === "success" ? (
+              <CheckCircle size={22} />
+            ) : (
+              <XCircle size={22} />
+            )}
 
-                  <div>
-                    <div className={s.doctorName}>{d.name}</div>
-                    <div className={s.doctorSpecialization}>
-                      {d.specialization}
+            <span className="font-semibold">
+              {toast.message}
+            </span>
+          </div>
+        )}
+
+        {/* DOCTOR LIST */}
+        <div className="mt-8">
+          {doctorList.length ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {doctorList.map((d) => (
+                <div
+                  key={d.id || d._id}
+                  className="rounded-3xl border border-slate-200 bg-white/80 backdrop-blur-xl p-5 shadow-lg"
+                >
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={d.imageUrl || d.imagePreview}
+                      alt={d.name}
+                      className="w-20 h-20 rounded-3xl object-cover"
+                    />
+
+                    <div>
+                      <h3 className="font-black text-slate-800 text-lg">
+                        {d.name}
+                      </h3>
+
+                      <p className="text-sm text-emerald-600 font-semibold">
+                        {d.specialization}
+                      </p>
+
+                      <p className="text-xs text-slate-500 mt-1">
+                        {d.location}
+                      </p>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className={s.emptyState}>No doctors Yet</p>
-        )}
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-14 text-slate-500 font-semibold">
+              No doctors Yet
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

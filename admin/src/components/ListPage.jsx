@@ -206,292 +206,369 @@ const ListPage = () => {
   }
 
   return (
-    <div className={doctorListStyles.container}>
-      <header className={doctorListStyles.headerContainer}>
-        <div className={doctorListStyles.headerTopSection}>
-          <div className={doctorListStyles.headerIconContainer}>
-            <div className={doctorListStyles.headerIcon}>
-              <Users size={20} className={doctorListStyles.headerIconSvg} />
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50 px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto">
+        {/* HERO */}
+        <div className="relative overflow-hidden rounded-[2rem] border border-emerald-100 bg-white/80 backdrop-blur-xl shadow-xl p-6 sm:p-8 mb-8">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-emerald-100 rounded-full blur-3xl opacity-40" />
+
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
-              <h1 className={doctorListStyles.headerTitle}>Find a Doctor</h1>
-              <p className={doctorListStyles.headerSubtitle}>
-                Search by name or specialization
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-semibold mb-4">
+                <Users size={16} />
+                Doctors List
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl font-black text-slate-800 leading-tight">
+                Hospital Doctor
+                <span className="block bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+                  Management Panel
+                </span>
+              </h1>
+
+              <p className="mt-4 text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+                Manage doctors, schedules, availability, ratings and hospital
+                staff information from one centralized panel.
               </p>
             </div>
-          </div>
 
-          <div className={doctorListStyles.headerSearchContainer}>
-            <div className={doctorListStyles.searchBox}>
-              <Search size={16} className={doctorListStyles.searchIcon} />
+            <div className="hidden lg:flex items-center justify-center">
+              <div className="w-44 h-44 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center shadow-2xl">
+                <Users size={80} className="text-white" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* SEARCH + FILTER */}
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-3xl shadow-lg p-5 mb-8">
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+            <div className="relative flex-1">
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search Doctors, Specialization"
-                className={doctorListStyles.searchInput}
+                placeholder="Search doctor, specialization..."
+                className="
+                w-full rounded-2xl border border-slate-200
+                bg-slate-50 px-5 py-3 pr-12
+                text-sm font-medium outline-none
+                focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100
+                transition-all duration-300
+              "
+              />
+
+              <Search
+                size={18}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
               />
             </div>
 
-            <button
-              onClick={() => {
-                setQuery("");
-                setExpanded(null);
-                setShowAll(false);
-                setFilterStatus("all");
-              }}
-              className={doctorListStyles.clearButton}
-            >
-              Clear
-            </button>
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => applyStatusFilter("available")}
+                className={`
+                px-5 py-3 rounded-2xl font-semibold transition-all duration-300
+                ${filterStatus === "available"
+                    ? "bg-emerald-500 text-white"
+                    : "bg-emerald-50 text-emerald-600"
+                  }
+              `}
+              >
+                Available
+              </button>
+
+              <button
+                onClick={() => applyStatusFilter("unavailable")}
+                className={`
+                px-5 py-3 rounded-2xl font-semibold transition-all duration-300
+                ${filterStatus === "unavailable"
+                    ? "bg-red-500 text-white"
+                    : "bg-red-50 text-red-500"
+                  }
+              `}
+              >
+                Unavailable
+              </button>
+
+              <button
+                onClick={() => {
+                  setQuery("");
+                  setExpanded(null);
+                  setShowAll(false);
+                  setFilterStatus("all");
+                }}
+                className="
+                px-5 py-3 rounded-2xl
+                bg-slate-900 text-white font-semibold
+                hover:bg-slate-800 transition-all duration-300
+              "
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className={doctorListStyles.filterContainer}>
-          <button
-            onClick={() => applyStatusFilter("available")}
-            className={doctorListStyles.filterButton(
-              filterStatus === "available",
-              "emerald",
-            )}
-          >
-            Available
-          </button>
-
-          <button
-            onClick={() => applyStatusFilter("unavailable")}
-            className={doctorListStyles.filterButton(
-              filterStatus === "unavailable",
-              "red",
-            )}
-          >
-            Unavailable
-          </button>
-        </div>
-      </header>
-
-      <main className={doctorListStyles.gridContainer}>
+        {/* LOADING */}
         {loading && (
-          <div className={doctorListStyles.loadingContainer}>
+          <div className="bg-white rounded-3xl p-10 text-center font-semibold text-slate-500 shadow-lg">
             Loading Doctors...
           </div>
         )}
+
+        {/* EMPTY */}
         {!loading && filtered.length === 0 && (
-          <div className={doctorListStyles.noResultsContainer}>
-            No Doctors Match your search.
+          <div className="bg-white rounded-3xl p-10 text-center font-semibold text-slate-500 shadow-lg">
+            No Doctors Match your Search.
           </div>
         )}
 
-        {displayed.map((doc) => {
-          const id = doc._id || doc.id;
-          const isOpen = expanded === id;
-          const isAvailable = doc.availability === "Available";
+        {/* DOCTOR GRID */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          {displayed.map((doc) => {
+            const id = doc._id || doc.id;
+            const isOpen = expanded === id;
+            const isAvailable = doc.availability === "Available";
 
-          const scheduleMap = buildScheduleMap(doc.schedule || {});
-          const sortedDated = getSortedScheduleDates(scheduleMap);
+            const scheduleMap = buildScheduleMap(doc.schedule || {});
+            const sortedDated = getSortedScheduleDates(scheduleMap);
 
-          return (
-            <article key={id} className={doctorListStyles.article}>
-              <div className={doctorListStyles.articleContent}>
-                <img
-                  src={doc.imageUrl || doc.image || ""}
-                  alt={doc.name}
-                  className={doctorListStyles.doctorImage}
-                />
+            return (
+              <div
+                key={id}
+                className="
+                group overflow-hidden
+                rounded-[2rem]
+                border border-slate-200
+                bg-white/80 backdrop-blur-xl
+                shadow-xl
+                hover:-translate-y-1 hover:shadow-2xl
+                transition-all duration-300
+              "
+              >
+                <div className="p-6">
+                  {/* TOP */}
+                  <div className="flex flex-col sm:flex-row gap-5">
+                    <img
+                      src={doc.imageUrl || doc.image || ""}
+                      alt={doc.name}
+                      className="
+                      w-28 h-28 rounded-3xl object-cover
+                      border border-slate-200 shadow-md
+                    "
+                    />
 
-                <div className={doctorListStyles.doctorInfoContainer}>
-                  <div className={doctorListStyles.doctorHeader}>
-                    <div className="min-w-0 w-full">
-                      <div className="flex items-center justify-between gap-3">
-                        <h3
-                          className={`${doctorListStyles.doctorName} truncate`}
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <h2 className="text-2xl font-black text-slate-800">
+                            {doc.name}
+                          </h2>
+
+                          <p className="text-slate-500 mt-1">
+                            {doc.specialization}
+                          </p>
+
+                          <p className="text-sm text-slate-400 mt-1">
+                            {doc.experience} Years Experience
+                          </p>
+                        </div>
+
+                        <button
+                          onClick={() => toggle(id)}
+                          className="
+                          w-12 h-12 rounded-2xl
+                          bg-slate-100 hover:bg-slate-200
+                          flex items-center justify-center
+                          transition-all duration-300
+                        "
                         >
-                          {doc.name}
-                        </h3>
+                          <EyeClosed size={18} />
+                        </button>
+                      </div>
 
-                        <span
-                          className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full shrink-0 ${
-                            isAvailable
-                              ? "bg-green-100 text-green-600"
-                              : "bg-red-100 text-red-600"
-                          }`}
+                      {/* BADGES */}
+                      <div className="flex flex-wrap gap-3 mt-5">
+                        <div
+                          className={`
+                          inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold
+                          ${isAvailable
+                              ? "bg-emerald-50 text-emerald-600"
+                              : "bg-red-50 text-red-500"
+                            }
+                        `}
                         >
                           <span
-                            className={`w-2 h-2 rounded-full ${
-                              isAvailable ? "bg-green-500" : "bg-red-500"
-                            }`}
-                          ></span>
-
+                            className={`
+                            w-2 h-2 rounded-full
+                            ${isAvailable
+                                ? "bg-emerald-500"
+                                : "bg-red-500"
+                              }
+                          `}
+                          />
                           {isAvailable ? "Available" : "Unavailable"}
-                        </span>
+                        </div>
+
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-50 text-yellow-600 text-sm font-semibold">
+                          <Star size={14} />
+                          {doc.rating}
+                        </div>
+
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-50 text-cyan-600 text-sm font-semibold">
+                          <BadgeIndianRupee size={14} />
+                          {doc.fee}
+                        </div>
                       </div>
 
-                      <div
-                        className={`${doctorListStyles.doctorDetails} mt-1 text-sm text-gray-500`}
-                      >
-                        {doc.specialization} • {doc.experience} years
-                      </div>
-                    </div>
+                      {/* STATS */}
+                      <div className="grid grid-cols-2 gap-4 mt-6">
+                        <div className="rounded-2xl bg-slate-50 p-4">
+                          <p className="text-xs text-slate-500 font-semibold">
+                            Patients
+                          </p>
 
-                    <div className={doctorListStyles.ratingContainer}>
-                      <div className={doctorListStyles.rating}>
-                        <Star size={14} /> {doc.rating}
-                      </div>
-                      <button
-                        onClick={() => toggle(id)}
-                        className={doctorListStyles.toggleButton(isOpen)}
-                      >
-                        <EyeClosed size={18} />
-                      </button>
-                    </div>
-                  </div>
+                          <h3 className="text-xl font-black text-slate-800 mt-1 flex items-center gap-2">
+                            <Users size={18} />
+                            {doc.patients}
+                          </h3>
+                        </div>
 
-                  <div className={doctorListStyles.statsContainer}>
-                    <div className={doctorListStyles.statsLabel}>Patients</div>
-                    <div className={doctorListStyles.statsValue}>
-                      <Users size={14} /> {doc.patients}
-                    </div>
+                        <div className="rounded-2xl bg-slate-50 p-4">
+                          <p className="text-xs text-slate-500 font-semibold">
+                            Success Rate
+                          </p>
 
-                    <div className={doctorListStyles.actionContainer}>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => removeDoctor(id)}
-                          className={doctorListStyles.deleteButton}
-                        >
-                          <Trash2 size={14} /> Delete
-                        </button>
-
-                        <div className={doctorListStyles.feesLabel}>Fees:</div>
-                        <div className={doctorListStyles.feesValue}>
-                          <BadgeIndianRupee /> {doc.fee}
+                          <h3 className="text-xl font-black text-emerald-600 mt-1">
+                            {doc.success}%
+                          </h3>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* After expand is done */}
-              <div
-                className={doctorListStyles.expandableContent}
-                style={{
-                  maxHeight: isOpen ? "1000px" : "0px",
-                  overflow: "hidden",
-                  transition: "max-height 0.4s ease, padding 0.2s ease",
-                  paddingTop: isOpen ? 16 : 0,
-                  paddingBottom: isOpen ? 16 : 0,
-                }}
-              >
-                {isOpen && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {/* Left */}
-                    <div className={doctorListStyles.aboutSection}>
-                      <h4 className={doctorListStyles.aboutHeading}>About</h4>
-                      <p className={doctorListStyles.aboutText}>
-                        {doc.about || "No details available"}
-                      </p>
+                  {/* EXPANDED */}
+                  {isOpen && (
+                    <div className="mt-8 border-t border-slate-100 pt-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                          <h3 className="text-lg font-black text-slate-800 mb-3">
+                            About Doctor
+                          </h3>
 
-                      <div className="mt-4">
-                        <div className={doctorListStyles.qualificationsHeading}>
-                          Qualifications
-                        </div>
-                        <div className={doctorListStyles.qualificationsText}>
-                          {doc.qualifications || "N/A"}
-                        </div>
-                      </div>
+                          <p className="text-slate-600 leading-relaxed">
+                            {doc.about || "No details available"}
+                          </p>
 
-                      {/* Schedule */}
-                      <div className="mt-4">
-                        <div className={doctorListStyles.scheduleHeading}>
-                          Schedule
+                          <div className="mt-6">
+                            <h4 className="font-bold text-slate-700 mb-2">
+                              Qualifications
+                            </h4>
+
+                            <p className="text-slate-500">
+                              {doc.qualifications || "N/A"}
+                            </p>
+                          </div>
+
+                          <div className="mt-6">
+                            <h4 className="font-bold text-slate-700 mb-2">
+                              Location
+                            </h4>
+
+                            <p className="text-slate-500">
+                              {doc.location || "Unknown"}
+                            </p>
+                          </div>
                         </div>
 
-                        <div className="mt-2 flex flex-wrap gap-3">
-                          {sortedDated.length === 0 ? (
-                            <div className="text-gray-400 text-sm">
-                              No schedule available
-                            </div>
-                          ) : (
-                            sortedDated.map((date) => {
-                              const slots = scheduleMap[date] || [];
+                        {/* SCHEDULE */}
+                        <div>
+                          <h3 className="text-lg font-black text-slate-800 mb-4">
+                            Schedule
+                          </h3>
 
-                              return (
-                                <div
-                                  key={date}
-                                  className="min-w-full md:min-w-0"
-                                >
+                          <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+                            {sortedDated.length === 0 ? (
+                              <div className="text-slate-400 text-sm">
+                                No schedule available
+                              </div>
+                            ) : (
+                              sortedDated.map((date) => {
+                                const slots = scheduleMap[date] || [];
+
+                                return (
                                   <div
-                                    className={doctorListStyles.scheduleDate}
+                                    key={date}
+                                    className="rounded-2xl bg-slate-50 p-4"
                                   >
-                                    {formatDateISO(date)}
-                                  </div>
+                                    <div className="font-bold text-slate-700 mb-3">
+                                      {formatDateISO(date)}
+                                    </div>
 
-                                  <div className="mt-1 flex flex-wrap gap-2">
-                                    {slots.length === 0 ? (
-                                      <span className="text-gray-400 text-xs">
-                                        No slots
-                                      </span>
-                                    ) : (
-                                      slots.map((s, i) => (
+                                    <div className="flex flex-wrap gap-2">
+                                      {slots.map((s, i) => (
                                         <span
                                           key={i}
-                                          className={
-                                            doctorListStyles.scheduleSlot
-                                          }
+                                          className="
+                                          px-3 py-2 rounded-xl
+                                          bg-emerald-100 text-emerald-700
+                                          text-xs font-semibold
+                                        "
                                         >
                                           {s}
                                         </span>
-                                      ))
-                                    )}
+                                      ))}
+                                    </div>
                                   </div>
-                                </div>
-                              );
-                            })
-                          )}
+                                );
+                              })
+                            )}
+                          </div>
                         </div>
                       </div>
+
+                      {/* ACTIONS */}
+                      <div className="mt-8 flex justify-end">
+                        <button
+                          onClick={() => removeDoctor(id)}
+                          className="
+                          inline-flex items-center gap-2
+                          px-5 py-3 rounded-2xl
+                          bg-red-500 text-white font-semibold
+                          hover:bg-red-600
+                          transition-all duration-300
+                        "
+                        >
+                          <Trash2 size={16} />
+                          Delete Doctor
+                        </button>
+                      </div>
                     </div>
-
-                    {/* Right */}
-                    <aside className={doctorListStyles.statsSidebar}>
-                      <div className={doctorListStyles.statsItemHeading}>
-                        Success
-                      </div>
-                      <div className={doctorListStyles.statsItemValue}>
-                        {doc.success ?? 0}%
-                      </div>
-
-                      <div className={doctorListStyles.statsItemHeading}>
-                        Patients
-                      </div>
-                      <div className={doctorListStyles.statsItemValue}>
-                        {doc.patients ?? 0}
-                      </div>
-
-                      <div className={doctorListStyles.statsItemHeading}>
-                        Location
-                      </div>
-                      <div className={doctorListStyles.locationValue}>
-                        {doc.location || "Unknown"}
-                      </div>
-                    </aside>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </article>
-          );
-        })}
+            );
+          })}
+        </div>
 
+        {/* SHOW MORE */}
         {filtered.length > 6 && (
-          <div className={doctorListStyles.showMoreContainer}>
+          <div className="flex justify-center py-10">
             <button
               onClick={() => setShowAll((s) => !s)}
-              className={doctorListStyles.showMoreButton}
+              className="
+              px-8 py-4 rounded-2xl
+              bg-slate-900 text-white font-semibold
+              hover:scale-105 transition-all duration-300
+            "
             >
-              {showAll ? "Show Less" : `Show more (${filtered.length - 4})`}
+              {showAll
+                ? "Show Less"
+                : `Show More (${filtered.length - 6})`}
             </button>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 };

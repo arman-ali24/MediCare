@@ -641,7 +641,7 @@ export const getServiceAppointmentStats = async (req, res) => {
     ]); // It will give you total appointment, complete appt
     // Cancel appt and total earning done by them
     return res.json({
-      seccess: true,
+      success: true,
       services,
       totalServices: services.length,
     });
