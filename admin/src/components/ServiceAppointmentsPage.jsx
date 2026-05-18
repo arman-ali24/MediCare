@@ -294,15 +294,14 @@ const ServiceAppointmentsPage = () => {
         .map((a) => {
           const timeStr =
             a.time ||
-            (a.slot && a.slot.time) ||
-            (a.hour !== undefined && a.minute !== undefined)
-              ? `${formatTwo(a.hour || 12)}:${formatTwo(a.minute ?? 0)} ${
-                  a.ampm || "AM"
-                }`
+              (a.slot && a.slot.time) ||
+              (a.hour !== undefined && a.minute !== undefined)
+              ? `${formatTwo(a.hour || 12)}:${formatTwo(a.minute ?? 0)} ${a.ampm || "AM"
+              }`
               : a.rescheduledTo?.time ||
-                (a.slot && a.slot.time) ||
-                a.time ||
-                "";
+              (a.slot && a.slot.time) ||
+              a.time ||
+              "";
           const parsed = parseTimeToParts(timeStr);
           return {
             id: a._id || a.id,
@@ -390,29 +389,29 @@ const ServiceAppointmentsPage = () => {
         prev.map((a) =>
           a.id === id
             ? {
-                ...a,
-                status: updated.status || newStatus,
-                date: updated.date || updated.rescheduledTo?.date || a.date,
-                hour: parseTimeToParts(
-                  updated.time ||
-                    updated.rescheduledTo?.time ||
-                    a.raw?.time ||
-                    `${formatTwo(a.hour)}:${formatTwo(a.minute)} ${a.ampm}`,
-                ).hour,
-                minute: parseTimeToParts(
-                  updated.time ||
-                    updated.rescheduledTo?.time ||
-                    a.raw?.time ||
-                    `${formatTwo(a.hour)}:${formatTwo(a.minute)} ${a.ampm}`,
-                ).minute,
-                ampm: parseTimeToParts(
-                  updated.time ||
-                    updated.rescheduledTo?.time ||
-                    a.raw?.time ||
-                    `${formatTwo(a.hour)}:${formatTwo(a.minute)} ${a.ampm}`,
-                ).ampm,
-                raw: updated || a.raw,
-              }
+              ...a,
+              status: updated.status || newStatus,
+              date: updated.date || updated.rescheduledTo?.date || a.date,
+              hour: parseTimeToParts(
+                updated.time ||
+                updated.rescheduledTo?.time ||
+                a.raw?.time ||
+                `${formatTwo(a.hour)}:${formatTwo(a.minute)} ${a.ampm}`,
+              ).hour,
+              minute: parseTimeToParts(
+                updated.time ||
+                updated.rescheduledTo?.time ||
+                a.raw?.time ||
+                `${formatTwo(a.hour)}:${formatTwo(a.minute)} ${a.ampm}`,
+              ).minute,
+              ampm: parseTimeToParts(
+                updated.time ||
+                updated.rescheduledTo?.time ||
+                a.raw?.time ||
+                `${formatTwo(a.hour)}:${formatTwo(a.minute)} ${a.ampm}`,
+              ).ampm,
+              raw: updated || a.raw,
+            }
             : a,
         ),
       );
@@ -439,13 +438,13 @@ const ServiceAppointmentsPage = () => {
       prev.map((a) =>
         a.id === id
           ? {
-              ...a,
-              date: dateStr,
-              hour: hour12,
-              minute: mm,
-              ampm,
-              status: "Rescheduled",
-            }
+            ...a,
+            date: dateStr,
+            hour: hour12,
+            minute: mm,
+            ampm,
+            status: "Rescheduled",
+          }
           : a,
       ),
     );
@@ -485,14 +484,14 @@ const ServiceAppointmentsPage = () => {
         prev.map((a) =>
           a.id === id
             ? {
-                ...a,
-                date: finalDate,
-                hour: parsed.hour,
-                minute: parsed.minute,
-                ampm: parsed.ampm,
-                status: updated.status || "Rescheduled",
-                raw: updated || a.raw,
-              }
+              ...a,
+              date: finalDate,
+              hour: parsed.hour,
+              minute: parsed.minute,
+              ampm: parsed.ampm,
+              status: updated.status || "Rescheduled",
+              raw: updated || a.raw,
+            }
             : a,
         ),
       );
@@ -549,10 +548,10 @@ const ServiceAppointmentsPage = () => {
         prev.map((a) =>
           a.id === id
             ? {
-                ...a,
-                status: updated.status || "Canceled",
-                raw: updated || a.raw,
-              }
+              ...a,
+              status: updated.status || "Canceled",
+              raw: updated || a.raw,
+            }
             : a,
         ),
       );
@@ -571,7 +570,7 @@ const ServiceAppointmentsPage = () => {
       .filter((a) =>
         q
           ? (a.patientName || "").toLowerCase().includes(q) ||
-            (a.serviceName || "").toLowerCase().includes(q)
+          (a.serviceName || "").toLowerCase().includes(q)
           : true,
       )
       .filter((a) => (statusFilter ? a.status === statusFilter : true));
@@ -597,216 +596,244 @@ const ServiceAppointmentsPage = () => {
     return copy;
   }, [filtered]);
   return (
-    <div className={serviceAppointmentsStyles.container}>
-      <header className={serviceAppointmentsStyles.headerContainer}>
-        <div className={serviceAppointmentsStyles.headerTitleContainer}>
-          <h1 className={serviceAppointmentsStyles.headerTitle}>
-            Appointments
-          </h1>
-          <p className={serviceAppointmentsStyles.headerSubtitle}>
-            Manage patient bookings - quick search & status controls
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50 px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto">
+        {/* HERO HEADER */}
+        <div className="relative overflow-hidden rounded-[2rem] border border-emerald-100 bg-white/80 backdrop-blur-xl shadow-xl p-6 sm:p-8 mb-8">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-emerald-100 rounded-full blur-3xl opacity-40" />
+
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-semibold mb-4">
+                <Calendar size={16} />
+                Service Appointments
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl font-black text-slate-800 leading-tight">
+                Manage Patient
+                <span className="block bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+                  Bookings Efficiently
+                </span>
+              </h1>
+
+              <p className="mt-4 text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+                Search appointments, update statuses, reschedule bookings and
+                manage patient visits with a premium admin dashboard experience.
+              </p>
+            </div>
+
+            <div className="hidden lg:flex items-center justify-center">
+              <div className="w-44 h-44 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center shadow-2xl">
+                <Calendar className="text-white" size={80} />
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className={serviceAppointmentsStyles.searchContainer}>
-          <div className={serviceAppointmentsStyles.searchInputWrapper}>
-            <label className={serviceAppointmentsStyles.searchLabel}>
-              <span className="sr-only">Search Appointments</span>
-              <div className="flex items-center gap-2 relative w-full">
-                <div className={serviceAppointmentsStyles.searchIconContainer}>
-                  <SearchIcon
-                    className={serviceAppointmentsStyles.searchIcon}
-                  />
-                </div>
+        {/* SEARCH + FILTER */}
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2rem] shadow-xl p-5 sm:p-6 mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-5 justify-between">
+            <div className="flex flex-col sm:flex-row gap-4 flex-1">
+              <div className="relative flex-1">
+                <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search by patient or service..."
-                  className={serviceAppointmentsStyles.searchInput}
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-12 pr-12 py-3 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
                 />
+
                 {search ? (
                   <button
-                    className={serviceAppointmentsStyles.clearSearchButton}
                     onClick={() => setSearch("")}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-500 transition"
                   >
-                    <XIcon
-                      className={serviceAppointmentsStyles.clearSearchIcon}
-                    />
+                    <XIcon className="w-5 h-5" />
                   </button>
                 ) : null}
               </div>
-            </label>
 
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className={serviceAppointmentsStyles.statusFilterSelect}
-              title="Filter by status"
-            >
-              <option value="">All</option>
-              <option value="Pending">Pending</option>
-              <option value="Confirmed">Confirmed</option>
-              <option value="Rescheduled">Rescheduled</option>
-              <option value="Completed">Completed</option>
-              <option value="Canceled">Canceled</option>
-            </select>
-          </div>
-
-          <div className={serviceAppointmentsStyles.searchInfo}>
-            <div>
-              {displayList.length} result{displayList.length !== 1 ? "s" : ""}
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
+              >
+                <option value="">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Rescheduled">Rescheduled</option>
+                <option value="Completed">Completed</option>
+                <option value="Canceled">Canceled</option>
+              </select>
             </div>
-            <div>
+
+            <div className="flex items-center justify-between gap-4">
+              <div className="text-sm font-semibold text-slate-500">
+                {displayList.length} result
+                {displayList.length !== 1 ? "s" : ""}
+              </div>
+
               <button
                 onClick={fetchAppointments}
-                className={serviceAppointmentsStyles.refreshButton}
+                className="rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-5 py-3 font-semibold shadow-lg hover:scale-105 transition-all duration-300"
               >
                 Refresh
               </button>
             </div>
           </div>
         </div>
-      </header>
 
-      {loading ? (
-        <div className={serviceAppointmentsStyles.loadingContainer}>
-          <Loader2 className="animate-spin" /> Loading appointments...
-        </div>
-      ) : error ? (
-        <div className={serviceAppointmentsStyles.errorContainer}>{error}</div>
-      ) : (
-        <div className={serviceAppointmentsStyles.gridContainer}>
-          {displayList.length === 0 ? (
-            <div className={serviceAppointmentsStyles.noResultsContainer}>
-              <div className={serviceAppointmentsStyles.noResultsIcon}>
-                <SearchIcon />
+        {/* CONTENT */}
+        {loading ? (
+          <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2rem] shadow-xl p-16 flex flex-col items-center justify-center">
+            <Loader2 className="animate-spin text-emerald-500 w-10 h-10 mb-4" />
+            <p className="text-slate-600 font-semibold">
+              Loading appointments...
+            </p>
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 border border-red-200 text-red-600 rounded-[2rem] p-8 text-center font-semibold shadow-lg">
+            {error}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            {displayList.length === 0 ? (
+              <div className="col-span-full bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2rem] shadow-xl p-16 text-center">
+                <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-5">
+                  <SearchIcon className="w-10 h-10 text-slate-400" />
+                </div>
+
+                <h3 className="text-2xl font-black text-slate-800">
+                  No Appointments Found
+                </h3>
+
+                <p className="text-slate-500 mt-2">
+                  Try another patient name or service.
+                </p>
               </div>
-              <div className={serviceAppointmentsStyles.noResultsText}>
-                No appointments match your search
-              </div>
-              <div className={serviceAppointmentsStyles.noResultsSubtext}>
-                Try a different patient name or service
-              </div>
-            </div>
-          ) : (
-            displayList.map((a) => {
-              const isLocked =
-                a.status === "Completed" || a.status === "Canceled";
-              return (
-                <article
-                  key={a.id}
-                  className={serviceAppointmentsStyles.article}
-                >
-                  <div className={serviceAppointmentsStyles.cardInner}>
-                    <div>
-                      <div className={serviceAppointmentsStyles.cardHeader}>
-                        <div
-                          className={
-                            serviceAppointmentsStyles.patientInfoContainer
-                          }
-                        >
-                          <div
-                            className={serviceAppointmentsStyles.patientAvatar}
-                          >
-                            <User
-                              className={
-                                serviceAppointmentsStyles.patientAvatarIcon
-                              }
-                            />
+            ) : (
+              displayList.map((a) => {
+                const isLocked =
+                  a.status === "Completed" || a.status === "Canceled";
+
+                return (
+                  <article
+                    key={a.id}
+                    className="group relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white/80 backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-500"
+                  >
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-emerald-50/40 to-cyan-50/40" />
+
+                    <div className="relative z-10 p-6">
+                      {/* TOP */}
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center shadow-lg">
+                            <User className="text-white w-8 h-8" />
                           </div>
 
                           <div>
-                            <div
-                              className={serviceAppointmentsStyles.patientName}
-                            >
+                            <h3 className="text-xl font-black text-slate-800">
                               {a.patientName}
-                            </div>
-                            <div
-                              className={
-                                serviceAppointmentsStyles.patientDetails
-                              }
-                            >
-                              {a.gender} • {a.age} yrs
-                            </div>
+                            </h3>
+
+                            <p className="text-slate-500 text-sm font-medium">
+                              {a.gender} • {a.age} years
+                            </p>
                           </div>
                         </div>
 
-                        <div
-                          className={serviceAppointmentsStyles.statusContainer}
-                        >
+                        <div className="flex flex-col items-start sm:items-end gap-3">
                           <StatusBadge status={a.status} />
-                          <div className="mt-1">
-                            <StatusSelect
-                              appointment={a}
-                              onChange={(s) => changeStatusRemote(a.id, s)}
-                              disabled={false}
-                            />
+
+                          <StatusSelect
+                            appointment={a}
+                            onChange={(s) => changeStatusRemote(a.id, s)}
+                            disabled={false}
+                          />
+                        </div>
+                      </div>
+
+                      {/* DETAILS */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+                        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                          <div className="flex items-center gap-3">
+                            <Phone className="w-5 h-5 text-emerald-500" />
+
+                            <div>
+                              <div className="text-xs text-slate-400 font-semibold uppercase">
+                                Phone
+                              </div>
+
+                              <div className="font-bold text-slate-700">
+                                {a.mobile}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                          <div className="flex items-center gap-3">
+                            <BadgeIndianRupee className="w-5 h-5 text-emerald-500" />
+
+                            <div>
+                              <div className="text-xs text-slate-400 font-semibold uppercase">
+                                Fees
+                              </div>
+
+                              <div className="font-bold text-slate-700">
+                                ₹{a.fees}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                          <div className="flex items-center gap-3">
+                            <Calendar className="w-5 h-5 text-cyan-500" />
+
+                            <div>
+                              <div className="text-xs text-slate-400 font-semibold uppercase">
+                                Appointment Date
+                              </div>
+
+                              <div className="font-bold text-slate-700">
+                                {formatDateNice(a.date)}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                          <div className="flex items-center gap-3">
+                            <Clock className="w-5 h-5 text-cyan-500" />
+
+                            <div>
+                              <div className="text-xs text-slate-400 font-semibold uppercase">
+                                Appointment Time
+                              </div>
+
+                              <div className="font-bold text-slate-700">
+                                {formatTimeDisplay(a)}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
 
-                      <div
-                        className={serviceAppointmentsStyles.detailsContainer}
-                      >
-                        <div className={serviceAppointmentsStyles.detailItem}>
-                          <Phone
-                            className={serviceAppointmentsStyles.detailIcon}
-                          />
-                          <span
-                            className={serviceAppointmentsStyles.detailText}
-                          >
-                            {a.mobile}
-                          </span>
+                      {/* SERVICE */}
+                      <div className="mt-6 rounded-2xl bg-gradient-to-r from-emerald-50 to-cyan-50 border border-emerald-100 p-5">
+                        <div className="text-xs text-slate-400 font-semibold uppercase mb-1">
+                          Booked Service
                         </div>
 
-                        <div className={serviceAppointmentsStyles.detailItem}>
-                          <BadgeIndianRupee
-                            className={serviceAppointmentsStyles.detailIcon}
-                          />
-                          <span className={serviceAppointmentsStyles.feesText}>
-                            Fees: ₹{a.fees}
-                          </span>
-                        </div>
-
-                        <div className={serviceAppointmentsStyles.detailItem}>
-                          <Calendar
-                            className={serviceAppointmentsStyles.detailIcon}
-                          />
-                          <span
-                            className={serviceAppointmentsStyles.detailText}
-                          >
-                            Date: {formatDateNice(a.date)}
-                          </span>
-                        </div>
-
-                        <div className={serviceAppointmentsStyles.detailItem}>
-                          <Clock
-                            className={serviceAppointmentsStyles.detailIcon}
-                          />
-                          <span
-                            className={serviceAppointmentsStyles.detailText}
-                          >
-                            Time: {formatTimeDisplay(a)}
-                          </span>
-                        </div>
-
-                        <div className={serviceAppointmentsStyles.serviceText}>
-                          Service:{" "}
-                          <span
-                            className={serviceAppointmentsStyles.serviceName}
-                          >
-                            {a.serviceName}
-                          </span>
+                        <div className="text-lg font-black text-slate-800">
+                          {a.serviceName}
                         </div>
                       </div>
-                    </div>
 
-                    <div className={serviceAppointmentsStyles.actionsContainer}>
-                      <div
-                        className={
-                          serviceAppointmentsStyles.actionsInnerContainer
-                        }
-                      >
+                      {/* ACTIONS */}
+                      <div className="flex flex-col sm:flex-row gap-4 mt-8">
                         <div className="flex-1">
                           <RescheduleButton
                             appointment={a}
@@ -817,69 +844,58 @@ const ServiceAppointmentsPage = () => {
                           />
                         </div>
 
-                        <div className="ml-3">
-                          <button
-                            onClick={() => cancelRemote(a.id)}
-                            disabled={isLocked}
-                            className={serviceAppointmentsStyles.cancelButton(
-                              isLocked,
-                            )}
-                            title={
-                              isLocked ? "Cannot cancel" : "Cancel appointment"
-                            }
-                          >
-                            Cancel
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => cancelRemote(a.id)}
+                          disabled={isLocked}
+                          className={`px-6 py-3 rounded-2xl font-bold transition-all duration-300 ${isLocked
+                              ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                              : "bg-red-500 hover:bg-red-600 text-white shadow-lg hover:scale-105"
+                            }`}
+                        >
+                          Cancel Appointment
+                        </button>
                       </div>
                     </div>
-                  </div>
-                </article>
-              );
-            })
-          )}
-        </div>
-      )}
+                  </article>
+                );
+              })
+            )}
+          </div>
+        )}
 
-      <Toast toasts={toasts} removeToast={removeToast} />
-      <div className={serviceAppointmentsStyles.legendContainer}>
-        <div className={serviceAppointmentsStyles.legendItem}>
-          <div
-            className={`${serviceAppointmentsStyles.legendDot} bg-amber-400`}
-          />{" "}
-          <span>Pending</span>
+        {/* LEGEND */}
+        <div className="mt-8 bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2rem] shadow-xl p-5">
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+              <div className="w-3 h-3 rounded-full bg-amber-400" />
+              Pending
+            </div>
+
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+              <div className="w-3 h-3 rounded-full bg-emerald-400" />
+              Confirmed
+            </div>
+
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+              <div className="w-3 h-3 rounded-full bg-red-400" />
+              Canceled
+            </div>
+
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+              <div className="w-3 h-3 rounded-full bg-sky-400" />
+              Completed
+            </div>
+
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+              <div className="w-3 h-3 rounded-full bg-indigo-400" />
+              Rescheduled
+            </div>
+          </div>
         </div>
 
-        <div className={serviceAppointmentsStyles.legendItem}>
-          <div
-            className={`${serviceAppointmentsStyles.legendDot} bg-emerald-400`}
-          />{" "}
-          <span>Confirmed</span>
-        </div>
-
-        <div className={serviceAppointmentsStyles.legendItem}>
-          <div
-            className={`${serviceAppointmentsStyles.legendDot} bg-red-400`}
-          />{" "}
-          <span>Canceled</span>
-        </div>
-
-        <div className={serviceAppointmentsStyles.legendItem}>
-          <div
-            className={`${serviceAppointmentsStyles.legendDot} bg-sky-400`}
-          />{" "}
-          <span>Completed</span>
-        </div>
-
-        <div className={serviceAppointmentsStyles.legendItem}>
-          <div
-            className={`${serviceAppointmentsStyles.legendDot} bg-indigo-400`}
-          />{" "}
-          <span>Rescheduled</span>
-        </div>
+        {/* TOAST */}
+        <Toast toasts={toasts} removeToast={removeToast} />
       </div>
-
-      <style>{serviceAppointmentsStyles.animatedBorderStyle}</style>
     </div>
   );
 };

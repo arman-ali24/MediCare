@@ -344,451 +344,350 @@ const AddService = ({ serviceId }) => {
     }
   }
 
+  // Replace your current return() UI with this updated modern UI
+  // similar to AddDoctor & ListDoctor pages
+
   return (
-    <div className={addServiceStyles.container.main}>
-      <div className={addServiceStyles.toast.container}>
-        {toast && (
-          <div
-            className={`${addServiceStyles.toast.toastBase} ${toast.type === "error"
-                ? addServiceStyles.toast.toastError
-                : toast.type === "info"
-                  ? addServiceStyles.toast.toastInfo
-                  : addServiceStyles.toast.toastSuccess
-              } animate-slideIn`}
-          >
-            <div className={addServiceStyles.toast.iconContainer(toast.type)}>
-              {toast.type === "error" ? (
-                <AlertTriangle className="w-5 h-5" />
-              ) : toast.type === "info" ? (
-                <Clock className="w-5 h-5" />
-              ) : (
-                <CheckCircle className="w-5 h-5" />
-              )}
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50 px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto">
+        {/* HERO SECTION */}
+        <div className="relative overflow-hidden rounded-[2rem] border border-emerald-100 bg-white/80 backdrop-blur-xl shadow-xl p-6 sm:p-8 mb-8">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-emerald-100 rounded-full blur-3xl opacity-40" />
+
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-semibold mb-4">
+                <Image size={16} />
+                {serviceId ? "Edit Service" : "Add Service"}
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl font-black text-slate-800 leading-tight">
+                Create Amazing
+                <span className="block bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+                  Service Profiles
+                </span>
+              </h1>
+
+              <p className="mt-4 text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+                Add premium healthcare services with schedules, pricing,
+                instructions and availability management.
+              </p>
             </div>
 
-            <div className="flex-1 min-w-0">
-              <div className={addServiceStyles.toast.title}>{toast.title}</div>
-              <div className={addServiceStyles.toast.message}>
-                {toast.message}
+            <div className="hidden lg:flex items-center justify-center">
+              <div className="w-44 h-44 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center shadow-2xl">
+                <Calendar className="text-white" size={80} />
               </div>
             </div>
-            <button
-              onClick={() => setToast(null)}
-              className={addServiceStyles.buttons.toastClose}
-            >
-              <XCircle className="w-4 h-4 text-gray-400 hover:text-gray-600" />
-            </button>
-          </div>
-        )}
-      </div>
-
-      <form onSubmit={handleSubmit} className={addServiceStyles.container.form}>
-        <div
-          className="flex flex-col sm:flex-row items-start sm:items-center
-        justify-between mb-6 sm:mb-8 gap-4"
-        >
-          <div>
-            <h1 className={addServiceStyles.header.title}>
-              {serviceId ? "Edit Service" : "Add Service"}
-            </h1>
-            <p className={addServiceStyles.header.subtitle}>
-              Create a beautiful service card with unique time slots
-            </p>
-          </div>
-          <div className={addServiceStyles.headerActions}>
-            <button
-              type="button"
-              onClick={resetForm}
-              className={addServiceStyles.buttons.reset}
-            >
-              Reset
-            </button>
-            <button
-              type="submit"
-              disabled={submitting}
-              className={addServiceStyles.buttons.submit}
-            >
-              {submitting ? (
-                <>
-                  <div
-                    className="w-4 h-4 border-2 border-white border-t-transparent rounded-full 
-                animate-spin"
-                  >
-                    Saving...
-                  </div>
-                </>
-              ) : (
-                <>
-                  <CheckCircle className="w-4 h-4" />
-                  {serviceId ? "Update Service" : "Save Service"}
-                </>
-              )}
-            </button>
           </div>
         </div>
 
-        {/* Left side */}
-        <div className={addServiceStyles.grids.main}>
-          <div className="lg:col-span-1 md:col-span-1 col-span-1 flex flex-col items-center">
-            <div
-              className={addServiceStyles.imageUpload.container(errors.image)}
-            >
-              <div className={addServiceStyles.imageUpload.preview}>
-                {imagePreview ? (
-                  <img
-                    src={imagePreview}
-                    alt="preview"
-                    className="w-full h-full
-                      object-cover"
-                  />
-                ) : (
-                  <div className={addServiceStyles.imageUpload.placeholder}>
-                    <Image className="w-10 h-10" />
-                    <div className="mt-2 text-sm">Service image (required)</div>
+        {/* FORM */}
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2rem] shadow-xl p-5 sm:p-8">
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* IMAGE SECTION */}
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-3">
+                  Upload Service Image
+                </label>
+
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                  <div className="w-full h-72 rounded-3xl overflow-hidden border-2 border-dashed border-slate-300 flex items-center justify-center bg-white">
+                    {imagePreview ? (
+                      <img
+                        src={imagePreview}
+                        alt="preview"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="text-center text-slate-400">
+                        <Image size={60} className="mx-auto mb-3" />
+                        <p>Upload Service Image</p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-              <div className="w-full flex gap-2 items-center">
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileRef}
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-                <button
-                  type="button"
-                  onClick={() => fileRef.current?.click()}
-                  className={addServiceStyles.buttons.uploadImage}
-                >
-                  <Plus className="w-4 h-4" />{" "}
-                  {imagePreview ? "Replace Image" : "Upload Image"}
-                </button>
 
-                {(imagePreview || hasExistingImage) && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      // If current preview is a blob URL, revoke it
-                      if (imagePreview && imagePreview.startsWith("blob:")) {
-                        try {
-                          URL.revokeObjectURL(imagePreview);
-                        } catch (err) { }
-                      }
-                      setImagePreview(null);
-                      setImageFile(null);
-                      // mark that user wants to remove the existing image
-                      if (hasExistingImage) {
-                        setRemoveImage(true);
-                        setHasExistingImage(false);
-                      }
-                      if (fileRef.current) fileRef.current.value = null;
-                    }}
-                    className={addServiceStyles.buttons.removeImage}
-                  >
-                    <Trash2 className="w-4 h-4 text-red-500" />
-                  </button>
-                )}
-              </div>
-              {hasExistingImage && (
-                <div className="w-full text-xs text-gray-600 mt-2 flex items-center gap-2">
                   <input
-                    id="remove-img"
-                    type="checkbox"
-                    checked={removeImage}
-                    onChange={(e) => {
-                      setRemoveImage(Boolean(e.target.checked));
-                      if (e.target.checked) {
-                        setImagePreview(null);
-                        setImageFile(null);
-                        setHasExistingImage(false);
-                      }
-                    }}
-                    className="rounded"
+                    type="file"
+                    accept="image/*"
+                    ref={fileRef}
+                    onChange={handleImageChange}
+                    className="hidden"
                   />
-                  <label htmlFor="remove-img">Remove existing image</label>
-                </div>
-              )}
-            </div>
-          </div>
 
-          {/* right column - main fields */}
-          <div className="lg:col-span-2 md:col-span-1 col-span-1 space-y-6">
-            <div className={addServiceStyles.grids.formFields}>
-              <div>
-                <label className={addServiceStyles.labels.standard}>
-                  Service name
-                </label>
-                <input
-                  value={serviceName}
-                  onChange={(e) => setServiceName(e.target.value)}
-                  placeholder="e.g. General Consultation"
-                  className={addServiceStyles.formFields.input(
-                    errors.serviceName,
-                  )}
-                />
+                  <div className="flex gap-3 mt-5">
+                    <button
+                      type="button"
+                      onClick={() => fileRef.current?.click()}
+                      className="flex-1 rounded-2xl bg-emerald-500 text-white py-3 font-semibold hover:bg-emerald-600 transition-all"
+                    >
+                      {imagePreview ? "Replace Image" : "Upload Image"}
+                    </button>
+
+                    {imagePreview && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setImagePreview(null);
+                          setImageFile(null);
+                        }}
+                        className="rounded-2xl bg-red-50 text-red-500 px-4 hover:bg-red-100"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label className={addServiceStyles.labels.standard}>
-                  Price
-                </label>
-                <input
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  placeholder="₹ 499"
-                  className={addServiceStyles.formFields.input(errors.price)}
-                  inputMode="numeric"
-                />
+              {/* RIGHT SIDE */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* TOP INPUTS */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <input
+                    value={serviceName}
+                    onChange={(e) => setServiceName(e.target.value)}
+                    placeholder="Service Name"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
+                  />
 
-                <div className="mt-3">
-                  <label className={addServiceStyles.labels.standard}>
-                    Availability
-                  </label>
+                  <input
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="Price ₹"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
+                  />
+
                   <select
                     value={availability}
                     onChange={(e) => setAvailability(e.target.value)}
-                    className={addServiceStyles.formFields.select}
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
                   >
                     <option value="available">Available</option>
                     <option value="unavailable">Unavailable</option>
                   </select>
                 </div>
-              </div>
-            </div>
 
-            <div>
-              <label className={addServiceStyles.labels.standard}>
-                About this service
-              </label>
-              <textarea
-                value={about}
-                onChange={(e) => setAbout(e.target.value)}
-                placeholder="Short description"
-                rows={4}
-                className={addServiceStyles.formFields.textarea(errors.about)}
-              />
-            </div>
+                {/* ABOUT */}
+                <textarea
+                  rows={5}
+                  value={about}
+                  onChange={(e) => setAbout(e.target.value)}
+                  placeholder="About Service"
+                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
+                />
 
-            {/* instructions */}
-            <div>
-              <div className="flex items-center justify-between">
-                <label className={addServiceStyles.labels.standard}>
-                  Instructions (point wise)
-                </label>
-                <button
-                  type="button"
-                  onClick={addInstruction}
-                  className={addServiceStyles.buttons.addInstruction}
-                >
-                  <Plus className="w-4 h-4" /> Add
-                </button>
-              </div>
+                {/* INSTRUCTIONS */}
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                  <div className="flex items-center justify-between mb-5">
+                    <h3 className="text-lg font-black text-slate-800">
+                      Instructions
+                    </h3>
 
-              <div
-                className={addServiceStyles.instructions.container(
-                  errors.instructions,
-                )}
-              >
-                {instructions.map((ins, idx) => (
-                  <div key={idx} className={addServiceStyles.instructions.item}>
-                    <div className={addServiceStyles.icon.number}>
-                      {idx + 1}.
-                    </div>
-                    <input
-                      value={ins}
-                      onChange={(e) => updateInstruction(idx, e.target.value)}
-                      placeholder={`Instruction ${idx + 1}`}
-                      className={addServiceStyles.instructions.input}
-                    />
-                    {instructions.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeInstruction(idx)}
-                        className={addServiceStyles.instructions.removeButton}
+                    <button
+                      type="button"
+                      onClick={addInstruction}
+                      className="flex items-center gap-2 rounded-2xl bg-emerald-500 text-white px-4 py-2 font-semibold hover:bg-emerald-600"
+                    >
+                      <Plus size={18} />
+                      Add
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {instructions.map((ins, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-3"
                       >
-                        <Trash2
-                          className={addServiceStyles.icon.removeInstruction}
+                        <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                          {idx + 1}
+                        </div>
+
+                        <input
+                          value={ins}
+                          onChange={(e) =>
+                            updateInstruction(idx, e.target.value)
+                          }
+                          placeholder={`Instruction ${idx + 1}`}
+                          className="flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-400"
                         />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
 
-            {/* slot controls */}
-            <div className={addServiceStyles.slots.container(errors.slots)}>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2 text-emerald-700 font-medium">
-                  <Calendar className="w-5 h-5" /> Slots & Schedule
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="text-sm text-gray-500">
-                    {slots.length} slot{slots.length !== 1 ? "s" : ""} added
+                        {instructions.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeInstruction(idx)}
+                            className="text-red-500"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
 
-              <div className={addServiceStyles.grids.timeGrid}>
-                <div className="min-w-0">
-                  <label className={addServiceStyles.labels.small}>Day</label>
-                  <select
-                    value={slotDay}
-                    onChange={(e) => setSlotDay(e.target.value)}
-                    className={addServiceStyles.formFields.smallSelect}
-                  >
-                    {days.map((d) => {
-                      const dNum = Number(d);
-                      const disabled =
-                        Number(slotYear) === currentYear &&
-                        Number(slotMonth) === currentMonth &&
-                        dNum < currentDate;
-                      return (
-                        <option key={d} value={d} disabled={disabled}>
-                          {d}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
+                {/* SLOT SECTION */}
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                  <div className="flex items-center gap-2 mb-5">
+                    <Calendar className="text-emerald-600" />
+                    <h3 className="text-lg font-black text-slate-800">
+                      Service Slots
+                    </h3>
+                  </div>
 
-                <div className="min-w-0">
-                  <label className={addServiceStyles.labels.small}>Month</label>
-                  <select
-                    value={slotMonth}
-                    onChange={(e) => setSlotMonth(e.target.value)}
-                    className={addServiceStyles.formFields.smallSelect}
-                  >
-                    {months.map((m, idx) => {
-                      const disabled =
-                        Number(slotYear) === currentYear && idx < currentMonth;
-                      return (
-                        <option key={m} value={String(idx)} disabled={disabled}>
+                  <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+                    <select
+                      value={slotDay}
+                      onChange={(e) => setSlotDay(e.target.value)}
+                      className="rounded-2xl border border-slate-200 px-4 py-3"
+                    >
+                      {days.map((d) => (
+                        <option key={d}>{d}</option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={slotMonth}
+                      onChange={(e) => setSlotMonth(e.target.value)}
+                      className="rounded-2xl border border-slate-200 px-4 py-3"
+                    >
+                      {months.map((m, idx) => (
+                        <option key={m} value={idx}>
                           {m}
                         </option>
-                      );
-                    })}
-                  </select>
-                </div>
+                      ))}
+                    </select>
 
-                <div className="min-w-0">
-                  <label className={addServiceStyles.labels.small}>Year</label>
-                  <select
-                    value={slotYear}
-                    onChange={(e) => setSlotYear(e.target.value)}
-                    className={addServiceStyles.formFields.smallSelect}
-                  >
-                    {years.map((y) => (
-                      <option key={y} value={String(y)}>
-                        {y}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                    <select
+                      value={slotYear}
+                      onChange={(e) => setSlotYear(e.target.value)}
+                      className="rounded-2xl border border-slate-200 px-4 py-3"
+                    >
+                      {years.map((y) => (
+                        <option key={y}>{y}</option>
+                      ))}
+                    </select>
 
-                <div className={addServiceStyles.grids.timeSubGrid}>
-                  <div className="min-w-0">
-                    <label className={addServiceStyles.labels.small}>
-                      Hour
-                    </label>
                     <select
                       value={slotHour}
                       onChange={(e) => setSlotHour(e.target.value)}
-                      className={addServiceStyles.formFields.timeSelect}
+                      className="rounded-2xl border border-slate-200 px-4 py-3"
                     >
                       {hours.map((h) => (
-                        <option key={h} value={h}>
-                          {h}
-                        </option>
+                        <option key={h}>{h}</option>
                       ))}
                     </select>
-                  </div>
 
-                  <div className="min-w-0">
-                    <label className={addServiceStyles.labels.small}>
-                      Minute
-                    </label>
                     <select
                       value={slotMinute}
                       onChange={(e) => setSlotMinute(e.target.value)}
-                      className={addServiceStyles.formFields.timeSelect}
+                      className="rounded-2xl border border-slate-200 px-4 py-3"
                     >
                       {minutes.map((m) => (
-                        <option key={m} value={m}>
-                          {m}
-                        </option>
+                        <option key={m}>{m}</option>
                       ))}
                     </select>
-                  </div>
 
-                  <div className="min-w-0">
-                    <label className={addServiceStyles.labels.small}>
-                      AM/PM
-                    </label>
                     <select
                       value={slotAmPm}
                       onChange={(e) => setSlotAmPm(e.target.value)}
-                      className={addServiceStyles.formFields.ampmSelect}
+                      className="rounded-2xl border border-slate-200 px-4 py-3"
                     >
                       {ampm.map((a) => (
-                        <option key={a} value={a}>
-                          {a}
-                        </option>
+                        <option key={a}>{a}</option>
                       ))}
                     </select>
                   </div>
-                </div>
-              </div>
 
-              <div className="mb-4">
-                <button
-                  type="button"
-                  onClick={addSlot}
-                  className={addServiceStyles.buttons.addSlot}
-                >
-                  <Plus className="w-4 h-4" /> Add This Time Slot
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    onClick={addSlot}
+                    className="mt-5 flex items-center gap-2 rounded-2xl bg-emerald-500 text-white px-5 py-3 font-semibold hover:bg-emerald-600"
+                  >
+                    <Plus size={18} />
+                    Add Slot
+                  </button>
 
-              <div>
-                <div className="text-xs text-gray-500 mb-2">
-                  Added Slots ({slots.length})
-                </div>
+                  {/* SLOT LIST */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6">
+                    {slots.map((s, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between rounded-2xl bg-white border border-slate-200 px-4 py-3"
+                      >
+                        <span className="text-sm font-semibold text-slate-700">
+                          {s}
+                        </span>
 
-                <div className={addServiceStyles.grids.slotsGrid}>
-                  {slots.length === 0 ? (
-                    <div className="text-sm text-gray-400 italic px-4 py-2">
-                      No slots added yet. Select a time and click "Add This Time
-                      Slot"
-                    </div>
-                  ) : (
-                    slots.map((s, idx) => (
-                      <div key={s} className={addServiceStyles.slots.slotItem}>
-                        <div className="flex items-center gap-2 min-w-0">
-                          <Clock className={addServiceStyles.icon.clock} />
-                          <div className={addServiceStyles.slots.slotText}>
-                            {s}
-                          </div>
-                        </div>
                         <button
                           type="button"
                           onClick={() => removeSlot(idx)}
-                          className={addServiceStyles.buttons.slotRemove}
+                          className="text-red-500"
                         >
-                          <Trash2 className={addServiceStyles.icon.trash} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
-                    ))
-                  )}
+                    ))}
+                  </div>
+                </div>
+
+                {/* ACTION BUTTONS */}
+                <div className="flex justify-end gap-4">
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="px-6 py-3 rounded-2xl border border-slate-200 font-semibold hover:bg-slate-100"
+                  >
+                    Reset
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className={`px-8 py-3 rounded-2xl text-white font-bold shadow-lg transition-all duration-300 ${submitting
+                        ? "bg-slate-400"
+                        : "bg-gradient-to-r from-emerald-500 to-cyan-500 hover:scale-105"
+                      }`}
+                  >
+                    {submitting
+                      ? "Saving..."
+                      : serviceId
+                        ? "Update Service"
+                        : "Add Service"}
+                  </button>
                 </div>
               </div>
             </div>
-          </div>
+          </form>
         </div>
-      </form>
 
-      <style>{addServiceStyles.customCSS}</style>
+        {/* TOAST */}
+        {toast && (
+          <div
+            className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl text-white ${toast.type === "success"
+                ? "bg-emerald-500"
+                : toast.type === "info"
+                  ? "bg-cyan-500"
+                  : "bg-red-500"
+              }`}
+          >
+            {toast.type === "success" ? (
+              <CheckCircle size={22} />
+            ) : toast.type === "info" ? (
+              <Clock size={22} />
+            ) : (
+              <AlertTriangle size={22} />
+            )}
+
+            <div>
+              <div className="font-bold">{toast.title}</div>
+              <div className="text-sm opacity-90">{toast.message}</div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
