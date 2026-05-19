@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 const HomeDoctors = ({ previewCount = 8 }) => {
-  const API_BASE = "http://localhost:4000";
+  const API_BASE = "https://medicare-backend-t2oa.onrender.com";
 
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);

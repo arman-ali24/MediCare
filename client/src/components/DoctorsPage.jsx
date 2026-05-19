@@ -13,7 +13,7 @@ import {
 import { Link } from "react-router-dom";
 
 const DoctorsPage = () => {
-  const API_BASE = "http://localhost:4000";
+  const API_BASE = "https://medicare-backend-t2oa.onrender.com";
 
   const [allDoctors, setAllDoctors] = useState([]);
   const [loading, setLoading] = useState(true);

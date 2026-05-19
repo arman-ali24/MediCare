@@ -244,7 +244,7 @@ const AddPage = () => {
 
       if (form.imageFile) fd.append("image", form.imageFile);
 
-      const API_BASE = "http://localhost:4000/api";
+      const API_BASE = "https://medicare-backend-t2oa.onrender.com/api";
 
       const res = await fetch(`${API_BASE}/doctors`, {
         method: "POST",

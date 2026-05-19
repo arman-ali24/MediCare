@@ -85,7 +85,7 @@ function getSortedScheduleDates(scheduleLike) {
 }
 
 const ListPage = () => {
-  const API_BASE = "http://localhost:4000";
+  const API_BASE = "https://medicare-backend-t2oa.onrender.com";
 
   const [doctors, setDoctors] = useState([]);
   const [expanded, setExpanded] = useState(null);

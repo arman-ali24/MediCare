@@ -11,7 +11,7 @@ import {
   Stethoscope,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = "https://medicare-backend-t2oa.onrender.com";
 const PATIENT_COUNT_API = `${API_BASE}/api/appointments/patients/count`;
 
 const safeNumber = (v, fallback = 0) => {
