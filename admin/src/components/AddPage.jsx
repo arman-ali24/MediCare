@@ -342,7 +342,7 @@ const AddPage = () => {
 
               <p className="mt-4 text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
                 Create and manage doctor profiles, schedules, availability,
-                and appointment slots from one centralized admin panel.
+                and appointment slots from one centralized panel.
               </p>
             </div>
 

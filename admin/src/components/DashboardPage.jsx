@@ -232,13 +232,13 @@ const DashboardPage = () => {
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-semibold mb-4">
                 <Activity size={16} />
-                Medicare Admin Dashboard
+                Admin Dashboard
               </div>
 
               <h1 className="text-3xl sm:text-5xl font-black text-slate-800 leading-tight">
                 Hospital Management
                 <span className="block bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
-                  Overview Panel
+                  Dashboard Overview
                 </span>
               </h1>
 

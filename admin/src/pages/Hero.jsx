@@ -21,12 +21,12 @@ const Hero = ({ role = "admin", userName = "Doctor" }) => {
     },
     {
       title: "Doctors",
-      value: "150+",
+      value: "500+",
       icon: Stethoscope,
     },
     {
       title: "Patients",
-      value: "12K+",
+      value: "10K+",
       icon: Users,
     },
     {
@@ -101,7 +101,7 @@ const Hero = ({ role = "admin", userName = "Doctor" }) => {
                     </h2>
 
                     <p className="text-slate-500 font-semibold tracking-[0.25em] uppercase text-xs mt-1">
-                      Admin Dashboard
+                      Healthcare Solutions
                     </p>
                   </div>
                 </div>
