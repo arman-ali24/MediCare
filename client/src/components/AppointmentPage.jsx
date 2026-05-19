@@ -500,7 +500,7 @@ const AppointmentPage = () => {
           </h1>
 
           <p className="mt-6 text-slate-600 text-lg leading-relaxed">
-            Manage your doctor consultations and service bookings in one unified dashboard.
+            View your appointment history and booked healthcare services from a unified dashboard.
           </p>
         </div>
 
