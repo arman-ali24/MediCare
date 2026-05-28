@@ -60,88 +60,86 @@ const Navbar = () => {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+  .nav-logo-title {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px !important;
+    background: linear-gradient(135deg, #059669, #06b6d4) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+  }
 
-        .nav-logo-title {
-          font-family: 'Plus Jakarta Sans', sans-serif !important;
-          font-weight: 800 !important;
-          letter-spacing: -0.5px !important;
-          background: linear-gradient(135deg, #059669, #06b6d4) !important;
-          -webkit-background-clip: text !important;
-          -webkit-text-fill-color: transparent !important;
-          background-clip: text !important;
-        }
+  .nav-logo-sub {
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.9px !important;
+    color: #64748b !important;
+    text-transform: uppercase !important;
+    font-size: 9px !important;
+  }
 
-        .nav-logo-sub {
-          font-family: 'DM Sans', sans-serif !important;
-          font-weight: 600 !important;
-          letter-spacing: 0.9px !important;
-          color: #64748b !important;
-          text-transform: uppercase !important;
-          font-size: 9px !important;
-        }
+  .nav-item-link {
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.01em !important;
+    position: relative;
+    transition: all 0.3s ease;
+  }
 
-        .nav-item-link {
-          font-family: 'DM Sans', sans-serif !important;
-          font-weight: 500 !important;
-          letter-spacing: 0.01em !important;
-          position: relative;
-          transition: all 0.3s ease;
-        }
+  .nav-item-link::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(to right, #10b981, #06b6d4);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
 
-        .nav-item-link::after {
-          content: '';
-          position: absolute;
-          bottom: -6px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 0%;
-          height: 2px;
-          background: linear-gradient(to right, #10b981, #06b6d4);
-          border-radius: 999px;
-          transition: width 0.3s ease;
-        }
+  .nav-item-link:hover {
+    color: #059669 !important;
+  }
 
-        .nav-item-link:hover {
-          color: #059669 !important;
-        }
+  .nav-item-link:hover::after {
+    width: 70%;
+  }
 
-        .nav-item-link:hover::after {
-          width: 70%;
-        }
+  .nav-item-link-active {
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 700 !important;
+    color: #059669 !important;
+    position: relative;
+  }
 
-        .nav-item-link-active {
-          font-family: 'DM Sans', sans-serif !important;
-          font-weight: 700 !important;
-          color: #059669 !important;
-          position: relative;
-        }
+  .nav-item-link-active::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 2px;
+    background: linear-gradient(to right, #10b981, #06b6d4);
+    border-radius: 999px;
+  }
 
-        .nav-item-link-active::after {
-          content: '';
-          position: absolute;
-          bottom: -6px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 70%;
-          height: 2px;
-          background: linear-gradient(to right, #10b981, #06b6d4);
-          border-radius: 999px;
-        }
+  .nav-doctor-btn {
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em !important;
+  }
 
-        .nav-doctor-btn {
-          font-family: 'DM Sans', sans-serif !important;
-          font-weight: 600 !important;
-          letter-spacing: 0.02em !important;
-        }
-
-        .nav-login-btn {
-          font-family: 'DM Sans', sans-serif !important;
-          font-weight: 700 !important;
-          letter-spacing: 0.04em !important;
-          background: linear-gradient(135deg, #10b981, #06b6d4) !important;
-        }
-      `}</style>
+  .nav-login-btn {
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em !important;
+    background: linear-gradient(135deg, #10b981, #06b6d4) !important;
+  }
+`}</style>
 
       <div className="fixed top-0 left-0 w-full h-[2px] bg-gradient-to-r from-emerald-500 via-cyan-400 to-emerald-500 z-[60]" />
 
@@ -196,8 +194,8 @@ const Navbar = () => {
                     key={item.href}
                     to={item.href}
                     className={`text-[15px] ${isActive
-                        ? "nav-item-link-active"
-                        : "nav-item-link"
+                      ? "nav-item-link-active"
+                      : "nav-item-link"
                       }`}
                   >
                     {item.label}
