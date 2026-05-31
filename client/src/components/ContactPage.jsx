@@ -346,26 +346,26 @@ const ContactPage = () => {
               </h3>
 
               <p className="mt-3 text-slate-600">
-                Ashoka Garden, Bhopal, MP
+                Karol Bagh, New Delhi
               </p>
 
               <div className="mt-5 space-y-4">
                 <p className="flex items-center gap-3 text-slate-700">
                   <Phone size={18} className="text-emerald-500" />
-                  9341973592
+                  1234567890
                 </p>
 
                 <p className="flex items-center gap-3 text-slate-700">
                   <Mail size={18} className="text-cyan-500" />
-                  armanali0178614@gmail.com
+                  example@gmail.com
                 </p>
               </div>
             </div>
 
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14662.66640274496!2d77.41975479961218!3d23.255216314178874!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397c69d7cf48696f%3A0xddbc57014db35da2!2sAshoka%20Garden%2C%20Bhopal%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1778851645347!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d16587.11603520106!2d77.18321184177282!3d28.651631323005233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d029c5f402ed3%3A0x942174294c9dd946!2sKarol%20Bagh%2C%20New%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1780257118534!5m2!1sen!2sin"
               className="w-full h-[320px] rounded-[32px] border border-slate-200 shadow-sm"
-              title="Ashoka Garden Map"
+              title="Karol Bagh Map"
               loading="lazy"
               allowFullScreen
             ></iframe>

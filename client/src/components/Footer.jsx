@@ -114,7 +114,7 @@ const Footer = () => {
                 <Phone className="w-4 h-4 text-emerald-400" />
 
                 <span className="text-sm">
-                  +44 1234567890
+                  +91 1234567890
                 </span>
               </div>
 
@@ -122,7 +122,7 @@ const Footer = () => {
                 <Mail className="w-4 h-4 text-cyan-400" />
 
                 <span className="text-sm">
-                  your@gmail.com
+                  example@gmail.com
                 </span>
               </div>
 
@@ -130,7 +130,7 @@ const Footer = () => {
                 <MapPin className="w-4 h-4 text-emerald-400" />
 
                 <span className="text-sm">
-                  London, England
+                  Delhi, India
                 </span>
               </div>
             </div>
