@@ -27,17 +27,17 @@ const Footer = () => {
     {
       Icon: Facebook,
       name: "Facebook",
-      href: "https://www.linkedin.com/in/arman24",
+      href: "https://iarman.netlify.app",
     },
     {
       Icon: Instagram,
       name: "Instagram",
-      href: "https://www.linkedin.com/in/arman24",
+      href: "https://iarman.netlify.app",
     },
     {
       Icon: Linkedin,
       name: "LinkedIn",
-      href: "https://www.linkedin.com/in/arman24",
+      href: "https://iarman.netlify.app",
     },
   ];
 
@@ -114,7 +114,7 @@ const Footer = () => {
                 <Phone className="w-4 h-4 text-emerald-400" />
 
                 <span className="text-sm">
-                  +91 9341973592
+                  +44 1234567890
                 </span>
               </div>
 
@@ -122,7 +122,7 @@ const Footer = () => {
                 <Mail className="w-4 h-4 text-cyan-400" />
 
                 <span className="text-sm">
-                  armanali0178614@gmail.com
+                  your@gmail.com
                 </span>
               </div>
 
@@ -130,7 +130,7 @@ const Footer = () => {
                 <MapPin className="w-4 h-4 text-emerald-400" />
 
                 <span className="text-sm">
-                  Bhopal, India
+                  London, England
                 </span>
               </div>
             </div>
@@ -167,7 +167,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="text-emerald-400 hover:text-emerald-300 transition-colors duration-300"
             >
-              Er Arman
+              Arman Ali
             </a>
           </div>
         </div>
