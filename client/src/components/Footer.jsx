@@ -27,17 +27,17 @@ const Footer = () => {
     {
       Icon: Facebook,
       name: "Facebook",
-      href: "https://iarman.netlify.app",
+      href: "#",
     },
     {
       Icon: Instagram,
       name: "Instagram",
-      href: "https://iarman.netlify.app",
+      href: "#",
     },
     {
       Icon: Linkedin,
       name: "LinkedIn",
-      href: "https://iarman.netlify.app",
+      href: "#",
     },
   ];
 
@@ -162,7 +162,7 @@ const Footer = () => {
             <span>Designed by</span>
 
             <a
-              href="https://iarman.netlify.app"
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
               className="text-emerald-400 hover:text-emerald-300 transition-colors duration-300"
